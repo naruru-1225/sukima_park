@@ -5,203 +5,346 @@
 
 ---
 
-## 目次
+## 📚 目次
 
-1. [リーダーの役割](#リーダーの役割)
-2. [リポジトリ管理](#リポジトリ管理)
-3. [プルリクエストのレビュー](#プルリクエストのレビュー)
-4. [メンバーへの作業割り当て](#メンバーへの作業割り当て)
-5. [データベース構成](#データベース構成)
-6. [環境の初期セットアップ](#環境の初期セットアップ)
-7. [トラブル対応](#トラブル対応)
+### 🔴 最初にやること
+
+1. [リーダーの役割とは](#リーダーの役割とは) - 📖 読むだけ
+2. [メンバーをGitHubに招待する](#メンバーをgithubに招待する) - 🔴 作業必要
+3. [ブランチ保護を設定する](#ブランチ保護を設定する) - 🔴 作業必要
+
+### 📖 日常業務
+
+4. [プルリクエストをレビューする](#プルリクエストをレビューする)
+5. [メンバーのサポート](#メンバーのサポート)
+6. [進捗管理](#進捗管理)
+
+### 📖 参考情報
+
+7. [メンバー別の担当画面](#メンバー別の担当画面)
+8. [データベース構成](#データベース構成)
+9. [トラブル対応](#トラブル対応)
 
 ---
 
-## リーダーの役割
+## 📖 リーダーの役割とは
 
-| 役割 | 内容 | 例えると |
-|-----|------|---------|
-| **コードレビュー** | メンバーのプルリクエストを確認・マージ | 先生の添削 |
-| **作業管理** | 誰が何を担当するか割り当て | 班長の仕事分担 |
-| **問題解決** | エラーや困りごとの相談対応 | 困った時の相談役 |
-| **品質管理** | コードの一貫性・動作確認 | 最終チェック |
+### リーダーって何をするの？
+
+簡単に言うと、**チームがスムーズに開発できるように支える人**です。
+
+| 役割 | 内容 | 学校で例えると |
+|-----|------|---------------|
+| **コードレビュー** | メンバーのコードをチェックして「OK」を出す | 先生が宿題をチェックする |
+| **作業管理** | 誰が何を担当するか決める | 班長が仕事を分担する |
+| **問題解決** | エラーや困りごとの相談対応 | わからない時の相談役 |
+| **品質管理** | ちゃんと動くか最終確認 | 提出前の最終チェック |
+
+### リーダーがやることリスト
+
+**1回だけやること（最初のみ）**
+- [ ] メンバーをGitHubに招待する
+- [ ] ブランチ保護を設定する
+- [ ] データベース・共通機能を作成する ✅ 完了済み
+
+**毎日やること**
+- [ ] プルリクエストをレビューする
+- [ ] メンバーが困っていないか確認する
+- [ ] 自分もコードを書く（任意）
 
 ---
 
-## リポジトリ管理
+## 🔴 メンバーをGitHubに招待する
 
-### GitHubアカウント作成の案内
+### なぜ招待が必要？
 
-メンバーには以下を案内してください：
+GitHubのリポジトリは、招待されないと使えません。
+メンバー全員を「Collaborator（共同作業者）」として招待する必要があります。
 
-1. https://github.com/ でアカウント作成
-2. ユーザー名をリーダーに伝える
-3. 招待メールを承認する
+### 手順
 
-### Collaboratorsの追加（メンバー招待）
+#### ステップ1: メンバーにGitHubアカウントを作ってもらう
+
+メンバーに以下を伝えてください：
 
 ```
-Settings → Collaborators → Add people → ユーザー名を入力
+1. https://github.com/ にアクセス
+2. 「Sign up」をクリック
+3. メールアドレス、パスワード、ユーザー名を入力
+4. アカウントができたら、ユーザー名（例: tanaka123）を教えてください
 ```
 
-招待後、メンバーに「招待メールが届いたらAcceptしてください」と伝える。
+#### ステップ2: リポジトリにメンバーを招待する
 
-### ブランチ保護ルールの設定
+1. GitHubでリポジトリを開く（https://github.com/あなたのアカウント/sukima_park）
+2. 上部メニューの「Settings」をクリック
+3. 左メニューの「Collaborators」をクリック
+4. 「Add people」をクリック
+5. メンバーのユーザー名を入力して「Add」
+6. メンバーに「招待メールが届くので、Acceptしてね」と伝える
 
-mainブランチに直接プッシュできないようにする設定：
+### よくある質問
+
+**Q: 招待メールが届かないと言われた**
+A: 迷惑メールフォルダを確認してもらってください。または、GitHubの通知（ベルマーク）を確認。
+
+**Q: ユーザー名がわからない**
+A: GitHubにログインした状態で右上のアイコンをクリック→「Your profile」で確認できます。
+
+---
+
+## 🔴 ブランチ保護を設定する
+
+### なぜ設定が必要？
+
+この設定をしないと、メンバーが誤って`main`ブランチに直接コードを書いてしまう可能性があります。
+**必ずプルリクエストを通す**ようにすることで、コードの品質を保てます。
+
+### イメージ
+
+```
+設定なし：
+  メンバー → main（直接変更できてしまう = 危険！）
+
+設定あり：
+  メンバー → ブランチ → プルリクエスト → リーダーがOK → main
+```
+
+### 手順
 
 1. GitHubでリポジトリを開く
-2. Settings → Branches
-3. 「Add branch protection rule」
-4. Branch name pattern: `main`
-5. 以下にチェック:
+2. 「Settings」→「Branches」
+3. 「Add branch protection rule」をクリック
+4. 以下を入力：
+   - Branch name pattern: `main`
+5. 以下にチェック：
    - ☑ Require a pull request before merging
-   - ☑ Require approvals (1人以上)
-6. 「Create」をクリック
+   - ☑ Require approvals（1を入力）
+6. 一番下の「Create」をクリック
+
+### 確認方法
+
+設定後、自分で試してみてください：
+
+1. ローカルで何かのファイルを変更
+2. `git add .` → `git commit -m "テスト"` → `git push`
+3. **エラーが出れば成功！**（直接pushできなくなった）
 
 ---
 
-## プルリクエストのレビュー
+## 📖 プルリクエストをレビューする
+
+### プルリクエストって何？
+
+メンバーが「このコードをmainに入れてほしいです」とお願いすることです。
+リーダーは「いいよ！」（Approve）か「ここを直して」（Request Changes）を判断します。
 
 ### レビューの流れ
 
 ```
 1. メンバーがプルリクエストを作成
-2. GitHubから通知メールが届く
-3. 「Files changed」タブでコードを確認
-4. 問題があればコメント
-5. OKなら「Approve」→「Merge pull request」
+      ↓
+2. あなたに通知が届く（GitHubのベルマーク or メール）
+      ↓
+3. 内容を確認
+      ↓
+4. 問題なし → 「Approve」→「Merge」
+   問題あり → コメントで指摘 → メンバーが修正 → 再確認
 ```
 
-### レビュー時のチェックポイント
+### 具体的な確認手順
 
-| チェック項目 | 確認内容 |
-|------------|---------|
-| 動作確認 | ローカルで動くか |
-| 変数名 | 分かりやすいか |
-| コメント | 不要なコメントアウトがないか |
-| コミットメッセージ | 内容が適切か |
-| ファイル配置 | 正しいフォルダにあるか |
+#### 1. GitHubで変更内容を見る
 
-### ローカルでプルリクエストを確認する方法
+1. リポジトリの「Pull requests」タブをクリック
+2. レビュー待ちのプルリクエストをクリック
+3. 「Files changed」タブで変更内容を確認
+
+#### 2. ローカルで動作確認する（より確実）
 
 ```bash
 # メンバーのブランチを取得
 git fetch origin
 git checkout feature/メンバーのブランチ名
 
-# サーバー起動して動作確認
+# Dockerを起動して確認
 docker compose up -d
+
+# ブラウザで http://localhost を開いて動作確認
 
 # 確認後、mainに戻る
 git checkout main
 ```
 
----
+### チェックポイント
 
-## メンバーへの作業割り当て
+| 確認項目 | 見るところ | OKの例 | NGの例 |
+|---------|-----------|--------|--------|
+| 動く？ | ブラウザ | 画面が表示される | エラーが出る |
+| ファイルの場所 | フォルダ構成 | `views/land/show.blade.php` | `views/show.blade.php` |
+| コミットメッセージ | Commits | 「土地詳細画面を作成」 | 「修正」「更新」 |
+| 変なコードない？ | Files changed | きれいなコード | `console.log`が残ってる |
 
-### システム機能一覧
+### Approveの仕方
 
-| # | 機能 | 説明 | 優先度 | 作成ファイル |
-|---|------|------|-------|-------------|
-| 1 | 会員登録 | 新規ユーザーの登録 | ★★★ | AuthController, register.blade.php |
-| 2 | ログイン/ログアウト | 認証機能 | ★★★ | LoginController, login.blade.php |
-| 3 | プロフィール編集 | ユーザー情報の変更 | ★★ | ProfileController, profile/edit.blade.php |
-| 4 | 土地登録 | オーナーが土地を登録 | ★★★ | LandController@create/store, land/create.blade.php |
-| 5 | 土地一覧・検索 | 条件で土地を検索 | ★★★ | LandController@index/search, land/index.blade.php |
-| 6 | 土地詳細表示 | 土地の詳細情報表示 | ★★★ | LandController@show, land/show.blade.php |
-| 7 | レンタル予約 | 土地の予約申し込み | ★★★ | RentalController@confirm/store |
-| 8 | レンタル承認 | オーナーが予約を承認 | ★★ | RentalController@approve |
-| 9 | レンタル中一覧 | 借りている土地一覧 | ★★ | RentalController@index |
-| 10 | 自己保持土地一覧 | 自分が登録した土地一覧 | ★★ | LandController@myLands |
-| 11 | DM/チャット | ユーザー間のメッセージ | ★ | ChatController |
-| 12 | レビュー・評価 | 取引後の評価 | ★ | ReviewController |
-| 13 | 問い合わせ | サイトへの問い合わせ | ★ | ContactController |
-| 14 | 管理者機能 | ユーザー・問い合わせ管理 | ★ | Admin/UserController, Admin/ContactController |
+1. 「Files changed」タブを開く
+2. 右上の「Review changes」をクリック
+3. 「Approve」を選択
+4. 「Submit review」をクリック
+5. 「Merge pull request」をクリック
+6. 「Confirm merge」をクリック
 
 ---
 
-### メンバー別の担当機能
+## 📖 メンバーのサポート
 
-#### リーダー担当（共通基盤）
+### よくある質問と回答
 
-| 作業内容 | 状態 | 備考 |
-|---------|------|------|
-| データベースマイグレーション作成 | ✅ 完了 | 7テーブル |
-| モデル作成 | ✅ 完了 | 7モデル |
-| 共通レイアウト（ヘッダー、フッター） | ✅ 完了 | `layouts/app.blade.php` |
-| 認証機能の基盤 | ✅ 完了 | AuthController, ミドルウェア設定 |
-| トップ画面 | ✅ 完了 | HomeController, home.blade.php |
+#### 「git pushできません」
 
----
+**原因1: ブランチを作っていない**
+```bash
+# 現在のブランチを確認
+git branch
 
-#### A 小島さん担当
+# mainにいる場合は、ブランチを作成
+git checkout -b feature/自分の名前-機能名
+```
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| 問い合わせ画面 | feature/kojima-contact |
-| 検索結果一覧画面 | feature/kojima-search-result |
-| 土地詳細画面 | feature/kojima-land-detail |
-| レンタル確認画面 | feature/kojima-rental-confirm |
+**原因2: 変更をコミットしていない**
+```bash
+git add .
+git commit -m "作業内容"
+git push origin ブランチ名
+```
 
----
+#### 「画面が真っ白です」
 
-#### B 楠山さん担当
+**原因: PHPのエラー**
+```bash
+# エラーログを確認
+docker compose logs app
+```
+エラーメッセージを見て、どのファイルの何行目か確認。
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| 会員登録画面 | feature/kusuyama-register |
-| ログイン画面 | feature/kusuyama-login |
-| 土地登録画面 | feature/kusuyama-land-register |
-| 土地登録確認画面 | feature/kusuyama-land-confirm |
+#### 「Dockerが動きません」
 
----
-
-#### C 志賀さん担当
-
-| 画面名 | ブランチ名 |
-|------|----------|
-| ユーザ画面(自アカウント) | feature/shiga-user-self |
-| ユーザ画面(他アカウント) | feature/shiga-user-other |
-| トップ画面 | feature/shiga-home |
-| 自己保持土地一覧画面 | feature/shiga-my-lands |
-| 土地貸出画面 | feature/shiga-rental-lend |
-| 貸出中詳細画面 | feature/shiga-lending-detail |
+```bash
+# 1. Docker Desktopが起動しているか確認
+# 2. WSLがシャットダウンされていないか確認
+wsl --shutdown
+# 3. Docker Desktopを再起動
+# 4. 再度起動
+docker compose up -d
+```
 
 ---
 
-#### D 我妻さん担当
+## 📖 進捗管理
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| プロフィール編集画面 | feature/azuma-profile-edit |
-| プロフィール確認画面 | feature/azuma-profile-confirm |
-| DM一覧画面 | feature/azuma-dm-list |
-| DM画面 | feature/azuma-dm-chat |
+### 毎日やること
+
+| 時間帯 | やること |
+|-------|---------|
+| 作業開始時 | 「今日は何をやる？困ってることある？」と聞く |
+| 作業中 | プルリクエストが来たらレビュー |
+| 作業終了時 | 「今日どこまでできた？」と確認 |
+
+### 進捗が遅れている場合
+
+1. **何に困っているか聞く**
+   - 「何で詰まってる？」
+   - 「エラーメッセージ見せて」
+
+2. **一緒に画面を見ながら解決**
+   - 画面共有してもらう
+   - 一緒にコードを見る
+
+3. **他の人に手伝ってもらう**
+   - 進んでいる人にサポートを頼む
 
 ---
 
-#### E 三輪さん担当
+## 📖 メンバー別の担当画面
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| レンタル中一覧画面 | feature/miwa-rental-list |
-| レンタル中詳細画面 | feature/miwa-rental-detail |
-| レビュー画面 | feature/miwa-review |
-| 取引完了一覧画面 | feature/miwa-completed-list |
-| 取引完了詳細画面 | feature/miwa-completed-detail |
+### リーダー担当（共通基盤）✅ 完了済み
+
+| 作業内容 | 状態 |
+|---------|------|
+| データベースマイグレーション | ✅ 完了 |
+| モデル作成 | ✅ 完了 |
+| 共通レイアウト | ✅ 完了 |
+| 認証機能の基盤 | ✅ 完了 |
+| トップ画面 | ✅ 完了 |
 
 ---
 
-#### F 野村さん担当（管理者機能）
+### A 小島さん担当
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| ユーザ一覧画面 | feature/nomura-user-list |
-| ユーザ詳細画面 | feature/nomura-user-detail |
-| 問い合わせ一覧画面 | feature/nomura-contact-list |
-| 問い合わせ詳細画面 | feature/nomura-contact-detail |
+| 画面名 | ブランチ名 | 状態 |
+|------|----------|------|
+| 問い合わせ画面 | feature/kojima-contact | 未着手 |
+| 検索結果一覧画面 | feature/kojima-search-result | 未着手 |
+| 土地詳細画面 | feature/kojima-land-detail | 未着手 |
+| レンタル確認画面 | feature/kojima-rental-confirm | 未着手 |
+
+---
+
+### B 楠山さん担当
+
+| 画面名 | ブランチ名 | 状態 |
+|------|----------|------|
+| 会員登録画面 | feature/kusuyama-register | 未着手 |
+| ログイン画面 | feature/kusuyama-login | 未着手 |
+| 土地登録画面 | feature/kusuyama-land-register | 未着手 |
+| 土地登録確認画面 | feature/kusuyama-land-confirm | 未着手 |
+
+---
+
+### C 志賀さん担当
+
+| 画面名 | ブランチ名 | 状態 |
+|------|----------|------|
+| ユーザ画面(自アカウント) | feature/shiga-user-self | 未着手 |
+| ユーザ画面(他アカウント) | feature/shiga-user-other | 未着手 |
+| トップ画面 | ✅ リーダー実装済み | ✅ 完了 |
+| 自己保持土地一覧画面 | feature/shiga-my-lands | 未着手 |
+| 土地貸出画面 | feature/shiga-rental-lend | 未着手 |
+| 貸出中詳細画面 | feature/shiga-lending-detail | 未着手 |
+
+---
+
+### D 我妻さん担当
+
+| 画面名 | ブランチ名 | 状態 |
+|------|----------|------|
+| プロフィール編集画面 | feature/azuma-profile-edit | 未着手 |
+| プロフィール確認画面 | feature/azuma-profile-confirm | 未着手 |
+| DM一覧画面 | feature/azuma-dm-list | 未着手 |
+| DM画面 | feature/azuma-dm-chat | 未着手 |
+
+---
+
+### E 三輪さん担当
+
+| 画面名 | ブランチ名 | 状態 |
+|------|----------|------|
+| レンタル中一覧画面 | feature/miwa-rental-list | 未着手 |
+| レンタル中詳細画面 | feature/miwa-rental-detail | 未着手 |
+| レビュー画面 | feature/miwa-review | 未着手 |
+| 取引完了一覧画面 | feature/miwa-completed-list | 未着手 |
+| 取引完了詳細画面 | feature/miwa-completed-detail | 未着手 |
+
+---
+
+### F 野村さん担当（管理者機能）
+
+| 画面名 | ブランチ名 | 状態 |
+|------|----------|------|
+| ユーザ一覧画面 | feature/nomura-user-list | 未着手 |
+| ユーザ詳細画面 | feature/nomura-user-detail | 未着手 |
+| 問い合わせ一覧画面 | feature/nomura-contact-list | 未着手 |
+| 問い合わせ詳細画面 | feature/nomura-contact-detail | 未着手 |
 
 ---
 
@@ -218,179 +361,86 @@ git checkout main
 
 ---
 
-### ブランチ名のルール
-
-```
-feature/担当者名-機能名
-例: feature/kojima-search-results
-```
-
-### 作業の進め方
-
-1. **1機能1プルリクエスト**
-   - 大きな変更は分割してPRを出してもらう
-
-2. **毎日の進捗確認**
-   - 困っていることがないか確認
-   - プルリクエストは早めにレビュー
-
-3. **コミットメッセージのルール**
-   ```
-   ✅ 良い例: 土地一覧画面を作成
-   ❌ 悪い例: 修正、更新、あ
-   ```
-
----
-
-## データベース構成
+## 📖 データベース構成
 
 > ✅ **マイグレーション・モデルは作成済み**
 > メンバーが触る必要はありません。
 
 ### テーブル一覧
 
-| テーブル名 | 説明 | カラム数 |
-|-----------|------|---------|
-| MEMBER_TABLE | 会員情報 | 13 |
-| LAND_TABLE | 土地情報 | 16 |
-| RENTAL_RECORD_TABLE | 貸し出し記録 | 9 |
-| REVIEW_COMMENT_TABLE | レビュー・コメント | 9 |
-| CONTACT_TABLE | 問い合わせ | 6 |
-| REPLY_TABLE | 返信 | 5 |
-| CHAT_TABLE | 連絡（DM） | 8 |
-
-### 主要なリレーション
-
-```
-Member (1) ─────→ (多) Land        : 会員は複数の土地を所有できる
-Land (1) ─────→ (多) RentalRecord : 土地には複数の貸出記録がある
-Member (1) ─────→ (多) RentalRecord: 会員は複数回レンタルできる
-```
+| テーブル名 | 日本語名 | 説明 |
+|-----------|---------|------|
+| MEMBER_TABLE | 会員テーブル | ユーザー情報 |
+| LAND_TABLE | 土地テーブル | 登録された土地 |
+| RENTAL_RECORD_TABLE | 貸出記録テーブル | レンタル履歴 |
+| REVIEW_COMMENT_TABLE | レビューテーブル | 評価・コメント |
+| CONTACT_TABLE | 問い合わせテーブル | ユーザーからの問い合わせ |
+| REPLY_TABLE | 返信テーブル | 問い合わせへの返信 |
+| CHAT_TABLE | チャットテーブル | DM機能 |
 
 詳細は `TEAM_SETUP.md` の「データベーステーブル一覧」を参照。
 
 ---
 
-## 環境の初期セットアップ
-
-### 新プロジェクト作成時（リーダーが実行）
-
-```bash
-# 1. Laravelプロジェクト作成
-docker run --rm -v "${PWD}:/app" -w /app composer create-project laravel/laravel sukimapark
-
-# 2. プロジェクトに移動
-cd sukimapark
-
-# 3. Sailインストール
-docker run --rm -v "${PWD}:/app" -w /app composer require laravel/sail --dev
-
-# 4. Git初期化
-git init
-git add .
-git commit -m "Initial Laravel project setup"
-
-# 5. GitHubにプッシュ
-git remote add origin https://github.com/チーム/リポジトリ名.git
-git branch -M main
-git push -u origin main
-```
-
-### データベースマイグレーション作成
-
-```bash
-# マイグレーション作成
-docker compose exec app php artisan make:migration create_テーブル名_table
-
-# マイグレーション実行
-docker compose exec app php artisan migrate
-
-# マイグレーションリセット（開発中のみ）
-docker compose exec app php artisan migrate:fresh
-```
-
----
-
-## トラブル対応
+## 📖 トラブル対応
 
 ### メンバーの環境が動かない場合
 
-**確認手順：**
+**ステップ1: 状況を確認**
+```
+「どんなエラーが出てる？画面見せて」
+```
 
+**ステップ2: よくある原因をチェック**
+
+| 症状 | 原因 | 解決方法 |
+|-----|------|---------|
+| Dockerが起動しない | Docker Desktopが動いていない | Docker Desktopを起動 |
+| localhost が開けない | コンテナが起動していない | `docker compose up -d` |
+| 画面が真っ白 | PHPエラー | `docker compose logs app` で確認 |
+| git pushできない | ブランチを作っていない | `git checkout -b feature/...` |
+
+**ステップ3: それでもダメなら再構築**
 ```bash
-# 1. Docker起動確認
-docker compose ps
-
-# 2. ログ確認
-docker compose logs app
-docker compose logs mysql
-
-# 3. キャッシュクリア
-docker compose exec app php artisan cache:clear
-docker compose exec app php artisan config:clear
-
-# 4. 再構築
 docker compose down
+wsl --shutdown
+# Docker Desktop再起動
 docker compose up -d --build
 ```
 
 ### マージコンフリクト発生時
 
-```bash
-# 最新のmainを取得
-git checkout main
-git pull
+**コンフリクトとは？**
+同じファイルの同じ場所を2人が編集した時に起きます。
 
-# 問題のブランチに移動
-git checkout feature/問題のブランチ
+**解決手順（メンバーと一緒にやる）**
 
-# mainをマージ（コンフリクト発生）
-git merge main
-
-# コンフリクトを解決（ファイルを手動編集）
-# <<<<<<< と >>>>>>> の間を修正
-
-# 解決後
-git add .
-git commit -m "Resolve merge conflict"
-git push
-```
-
-### 環境が壊れた場合
-
-> ⚠️ **WSLシャットダウンの重要性**
->
-> メンバーが作業終了時に `wsl --shutdown` を実行しないと環境が壊れることがあります。
-> トラブル時はまず以下を試してください：
-
-```bash
-# 1. WSLをリセット
-wsl --shutdown
-# 2. Docker Desktopを再起動
-# 3. 再度 docker compose up -d
-```
+1. 問題のファイルを開く
+2. `<<<<<<<` と `>>>>>>>` の間を見る
+3. どちらの変更を残すか決める
+4. マーカーを削除してコードを整える
+5. コミット・プッシュ
 
 ---
 
-## 定期的にやること
+## 📖 定期的にやること
 
 | 頻度 | タスク |
 |-----|-------|
-| 毎日 | プルリクエストのレビュー |
-| 毎日 | メンバーの困りごと確認 |
-| 週1回 | 進捗の全体確認 |
-| リリース前 | 全機能の動作確認 |
+| **毎日** | プルリクエストをレビュー |
+| **毎日** | メンバーの困りごと確認 |
+| **週1回** | 進捗の全体確認 |
+| **リリース前** | 全機能の動作確認 |
 
 ---
 
-## 本番デプロイ前チェックリスト
+## 📖 リリース前チェックリスト
 
 - [ ] 全てのプルリクエストがマージ済み
-- [ ] ローカルで全機能の動作確認
-- [ ] .envの本番設定確認
-- [ ] マイグレーション実行
-- [ ] キャッシュクリア
+- [ ] ローカルで全機能が動く
+- [ ] エラーが出ない
+- [ ] 見た目が崩れていない
 
 ---
 
-*最終更新: 2025-12-16*
+*最終更新: 2025-12-17*
