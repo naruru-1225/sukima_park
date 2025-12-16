@@ -8,20 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('contacts', function (Blueprint $table) {
-            $table->id();
-            $table->string('title', 128);
-            $table->string('message', 1024);
-            $table->unsignedBigInteger('user_id');
-            $table->date('date');
-            $table->tinyInteger('status')->default(0);
-            $table->foreign('user_id')->references('id')->on('members')->onDelete('cascade');
-            $table->timestamps();
+        Schema::create('CONTACT_TABLE', function (Blueprint $table) {
+            $table->integer('CONTACT_ID')->autoIncrement();
+            $table->string('TITLE', 128);
+            $table->string('MESSAGE', 1024);
+            $table->integer('USER_ID');
+            $table->date('DATE');
+            $table->integer('STATUS')->default(0);
+            $table->foreign('USER_ID')->references('USER_ID')->on('MEMBER_TABLE');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('contacts');
+        Schema::dropIfExists('CONTACT_TABLE');
     }
 };

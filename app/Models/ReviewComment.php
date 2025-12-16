@@ -9,36 +9,40 @@ class ReviewComment extends Model
 {
     use HasFactory;
 
+    protected $table = 'REVIEW_COMMENT_TABLE';
+    protected $primaryKey = 'REVIEW_COMMENT_ID';
+    public $timestamps = false;
+
     protected $fillable = [
-        'land_review',
-        'land_comment',
-        'user_review',
-        'user_comment',
-        'date',
-        'user_id',
-        'land_id',
-        'record_id',
+        'LAND_REVIEW',
+        'LAND_COMMENT',
+        'USER_REVIEW',
+        'USER_COMMENT',
+        'DATE',
+        'USER_ID',
+        'LAND_ID',
+        'RECORD_ID',
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'DATE' => 'date',
     ];
 
-    // リレーション: このレビューを書いた会員
+    // このレビューを書いた会員
     public function reviewer()
     {
-        return $this->belongsTo(Member::class, 'user_id');
+        return $this->belongsTo(Member::class, 'USER_ID', 'USER_ID');
     }
 
-    // リレーション: このレビューの土地
+    // このレビューの土地
     public function land()
     {
-        return $this->belongsTo(Land::class, 'land_id');
+        return $this->belongsTo(Land::class, 'LAND_ID', 'LAND_ID');
     }
 
-    // リレーション: このレビューの貸出記録
+    // このレビューの貸出記録
     public function rentalRecord()
     {
-        return $this->belongsTo(RentalRecord::class, 'record_id');
+        return $this->belongsTo(RentalRecord::class, 'RECORD_ID', 'RECORD_ID');
     }
 }

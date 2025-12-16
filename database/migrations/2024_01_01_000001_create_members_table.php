@@ -6,30 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * 会員テーブル (members)
-     * Laravel標準のusersテーブルに追加フィールドを持つ
-     */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
-            $table->id();
-            $table->string('email', 255)->unique();
-            $table->string('password', 255);
-            $table->string('tel', 64);
-            $table->date('birth');
-            $table->boolean('show_birth')->default(false);
-            $table->tinyInteger('gender');
-            $table->boolean('show_gender')->default(false);
-            $table->string('identity', 1024);
-            $table->string('username', 128);
-            $table->rememberToken();
-            $table->timestamps();
+        Schema::create('MEMBER_TABLE', function (Blueprint $table) {
+            $table->integer('USER_ID')->autoIncrement();
+            $table->string('EMAIL', 1024);
+            $table->string('PASSWORD', 64);
+            $table->string('TEL', 64);
+            $table->date('BIRTH');
+            $table->boolean('SHOW_BIRTH')->default(false);
+            $table->integer('GENDER');
+            $table->boolean('SHOW_GENDER')->default(false);
+            $table->string('IDENTITY', 1024);
+            $table->string('USERNAME', 128);
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('MEMBER_TABLE');
     }
 };

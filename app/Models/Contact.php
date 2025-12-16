@@ -9,27 +9,31 @@ class Contact extends Model
 {
     use HasFactory;
 
+    protected $table = 'CONTACT_TABLE';
+    protected $primaryKey = 'CONTACT_ID';
+    public $timestamps = false;
+
     protected $fillable = [
-        'title',
-        'message',
-        'user_id',
-        'date',
-        'status',
+        'TITLE',
+        'MESSAGE',
+        'USER_ID',
+        'DATE',
+        'STATUS',
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'DATE' => 'date',
     ];
 
-    // リレーション: この問い合わせの送信者
+    // この問い合わせの送信者
     public function sender()
     {
-        return $this->belongsTo(Member::class, 'user_id');
+        return $this->belongsTo(Member::class, 'USER_ID', 'USER_ID');
     }
 
-    // リレーション: この問い合わせへの返信
+    // この問い合わせへの返信
     public function replies()
     {
-        return $this->hasMany(Reply::class, 'contact_id');
+        return $this->hasMany(Reply::class, 'CONTACT_ID', 'CONTACT_ID');
     }
 }

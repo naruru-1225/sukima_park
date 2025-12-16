@@ -8,24 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('rental_records', function (Blueprint $table) {
-            $table->id();
-            $table->integer('price');
-            $table->tinyInteger('price_unit');
-            $table->date('rental_start_date');
-            $table->date('rental_end_date');
-            $table->time('rental_start_time');
-            $table->time('rental_end_time');
-            $table->unsignedBigInteger('land_id');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('land_id')->references('id')->on('lands')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('members')->onDelete('cascade');
-            $table->timestamps();
+        Schema::create('RENTAL_RECORD_TABLE', function (Blueprint $table) {
+            $table->integer('RECORD_ID')->autoIncrement();
+            $table->integer('PRICE');
+            $table->integer('PRICE_UNIT');
+            $table->date('RENTAL_START_DATE');
+            $table->date('RENTAL_END_DATE');
+            $table->time('RENTAL_START_TIME');
+            $table->time('RENTAL_END_TIME');
+            $table->integer('LAND_ID');
+            $table->integer('USER_ID');
+            $table->foreign('LAND_ID')->references('LAND_ID')->on('LAND_TABLE');
+            $table->foreign('USER_ID')->references('USER_ID')->on('MEMBER_TABLE');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('rental_records');
+        Schema::dropIfExists('RENTAL_RECORD_TABLE');
     }
 };

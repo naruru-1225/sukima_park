@@ -9,28 +9,34 @@ class Chat extends Model
 {
     use HasFactory;
 
+    protected $table = 'CHAT_TABLE';
+    protected $primaryKey = 'CHAT_ID';
+    public $timestamps = false;
+
     protected $fillable = [
-        'user_id_from',
-        'user_id_to',
-        'message',
-        'image',
-        'sent_date',
-        'sent_time',
+        'USER_ID_FROM',
+        'USER_ID_TO',
+        'MESSAGE',
+        'IMAGE',
+        'YEAR',
+        'DATE',
+        'TIME',
     ];
 
     protected $casts = [
-        'sent_date' => 'date',
+        'YEAR' => 'date',
+        'DATE' => 'date',
     ];
 
-    // リレーション: このメッセージの送信者
+    // このメッセージの送信者
     public function sender()
     {
-        return $this->belongsTo(Member::class, 'user_id_from');
+        return $this->belongsTo(Member::class, 'USER_ID_FROM', 'USER_ID');
     }
 
-    // リレーション: このメッセージの受信者
+    // このメッセージの受信者
     public function receiver()
     {
-        return $this->belongsTo(Member::class, 'user_id_to');
+        return $this->belongsTo(Member::class, 'USER_ID_TO', 'USER_ID');
     }
 }

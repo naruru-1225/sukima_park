@@ -4,62 +4,64 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class Member extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+
+    protected $table = 'MEMBER_TABLE';
+    protected $primaryKey = 'USER_ID';
+    public $timestamps = false;
 
     protected $fillable = [
-        'email',
-        'password',
-        'tel',
-        'birth',
-        'show_birth',
-        'gender',
-        'show_gender',
-        'identity',
-        'username',
+        'EMAIL',
+        'PASSWORD',
+        'TEL',
+        'BIRTH',
+        'SHOW_BIRTH',
+        'GENDER',
+        'SHOW_GENDER',
+        'IDENTITY',
+        'USERNAME',
     ];
 
     protected $hidden = [
-        'password',
-        'remember_token',
+        'PASSWORD',
     ];
 
     protected $casts = [
-        'birth' => 'date',
-        'show_birth' => 'boolean',
-        'show_gender' => 'boolean',
+        'BIRTH' => 'date',
+        'SHOW_BIRTH' => 'boolean',
+        'SHOW_GENDER' => 'boolean',
     ];
 
-    // リレーション: この会員が所有する土地
+    // この会員が所有する土地
     public function lands()
     {
-        return $this->hasMany(Land::class, 'user_id');
+        return $this->hasMany(Land::class, 'USER_ID', 'USER_ID');
     }
 
-    // リレーション: この会員の貸出記録
+    // この会員の貸出記録
     public function rentalRecords()
     {
-        return $this->hasMany(RentalRecord::class, 'user_id');
+        return $this->hasMany(RentalRecord::class, 'USER_ID', 'USER_ID');
     }
 
-    // リレーション: この会員の問い合わせ
+    // この会員の問い合わせ
     public function contacts()
     {
-        return $this->hasMany(Contact::class, 'user_id');
+        return $this->hasMany(Contact::class, 'USER_ID', 'USER_ID');
     }
 
-    // リレーション: この会員が送信したチャット
+    // この会員が送信したチャット
     public function sentChats()
     {
-        return $this->hasMany(Chat::class, 'user_id_from');
+        return $this->hasMany(Chat::class, 'USER_ID_FROM', 'USER_ID');
     }
 
-    // リレーション: この会員が受信したチャット
+    // この会員が受信したチャット
     public function receivedChats()
     {
-        return $this->hasMany(Chat::class, 'user_id_to');
+        return $this->hasMany(Chat::class, 'USER_ID_TO', 'USER_ID');
     }
 }

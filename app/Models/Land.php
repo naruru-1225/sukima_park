@@ -9,33 +9,37 @@ class Land extends Model
 {
     use HasFactory;
 
+    protected $table = 'LAND_TABLE';
+    protected $primaryKey = 'LAND_ID';
+    public $timestamps = false;
+
     protected $fillable = [
-        'prefectures',
-        'city',
-        'street_address',
-        'area',
-        'user_id',
+        'PEREFECTURES',
+        'CITY',
+        'STREET_ADDRESS',
+        'AREA',
+        'USER_ID',
     ];
 
     protected $casts = [
-        'area' => 'decimal:2',
+        'AREA' => 'decimal:2',
     ];
 
-    // リレーション: この土地の所有者
+    // この土地の所有者
     public function owner()
     {
-        return $this->belongsTo(Member::class, 'user_id');
+        return $this->belongsTo(Member::class, 'USER_ID', 'USER_ID');
     }
 
-    // リレーション: この土地の貸出記録
+    // この土地の貸出記録
     public function rentalRecords()
     {
-        return $this->hasMany(RentalRecord::class, 'land_id');
+        return $this->hasMany(RentalRecord::class, 'LAND_ID', 'LAND_ID');
     }
 
-    // リレーション: この土地のレビュー
+    // この土地のレビュー
     public function reviews()
     {
-        return $this->hasMany(ReviewComment::class, 'land_id');
+        return $this->hasMany(ReviewComment::class, 'LAND_ID', 'LAND_ID');
     }
 }

@@ -8,20 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('replies', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('contact_id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('message', 1024);
-            $table->date('date');
-            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('members')->onDelete('cascade');
-            $table->timestamps();
+        Schema::create('REPLY_TABLE', function (Blueprint $table) {
+            $table->integer('REPLY_ID')->autoIncrement();
+            $table->integer('CONTACT_ID');
+            $table->integer('USER_ID');
+            $table->string('MESSAGE', 1024);
+            $table->date('DATE');
+            $table->foreign('CONTACT_ID')->references('CONTACT_ID')->on('CONTACT_TABLE');
+            $table->foreign('USER_ID')->references('USER_ID')->on('MEMBER_TABLE');
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('replies');
+        Schema::dropIfExists('REPLY_TABLE');
     }
 };

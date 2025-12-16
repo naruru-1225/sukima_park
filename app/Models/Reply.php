@@ -9,26 +9,30 @@ class Reply extends Model
 {
     use HasFactory;
 
+    protected $table = 'REPLY_TABLE';
+    protected $primaryKey = 'REPLY_ID';
+    public $timestamps = false;
+
     protected $fillable = [
-        'contact_id',
-        'user_id',
-        'message',
-        'date',
+        'CONTACT_ID',
+        'USER_ID',
+        'MESSAGE',
+        'DATE',
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'DATE' => 'date',
     ];
 
-    // リレーション: この返信の元の問い合わせ
+    // この返信の元の問い合わせ
     public function contact()
     {
-        return $this->belongsTo(Contact::class, 'contact_id');
+        return $this->belongsTo(Contact::class, 'CONTACT_ID', 'CONTACT_ID');
     }
 
-    // リレーション: この返信の送信者
+    // この返信の送信者
     public function sender()
     {
-        return $this->belongsTo(Member::class, 'user_id');
+        return $this->belongsTo(Member::class, 'USER_ID', 'USER_ID');
     }
 }
