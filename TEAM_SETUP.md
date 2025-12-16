@@ -1520,42 +1520,164 @@ public/css/
 @endsection
 ```
 
-### 使えるCSSクラス一覧
+### UIコンポーネント一覧
 
-| クラス名 | 用途 | 例 |
-|---------|------|-----|
-| `.btn` | ボタン | `<button class="btn">` |
-| `.btn-primary` | 緑のボタン | `<button class="btn btn-primary">送信</button>` |
-| `.btn-outline` | 枠線ボタン | `<a class="btn btn-outline">詳細</a>` |
-| `.card` | カード | `<div class="card">...</div>` |
-| `.card-body` | カード内部 | `<div class="card-body">...</div>` |
-| `.form-group` | フォーム項目 | `<div class="form-group">...</div>` |
-| `.form-label` | ラベル | `<label class="form-label">名前</label>` |
-| `.form-input` | 入力欄 | `<input class="form-input">` |
-| `.form-select` | セレクト | `<select class="form-select">...</select>` |
-| `.form-textarea` | テキストエリア | `<textarea class="form-textarea">` |
-| `.alert-success` | 成功メッセージ | `<div class="alert alert-success">` |
-| `.alert-error` | エラーメッセージ | `<div class="alert alert-error">` |
+このプロジェクトで使える共通UIコンポーネントです。
+統一されたデザインのために、必ずこれらのクラスを使ってください。
 
-### フォームの例
+---
+
+#### 1. ボタン
+
+**基本のボタン**:
+
+```html
+{{-- 緑のメインボタン（送信、登録など） --}}
+<button class="btn btn-primary">登録する</button>
+
+{{-- グレーのサブボタン（キャンセルなど） --}}
+<button class="btn btn-secondary">キャンセル</button>
+
+{{-- 枠線のみのボタン（詳細を見るなど） --}}
+<a href="/lands/1" class="btn btn-outline">詳細を見る</a>
+```
+
+| クラス | 見た目 | 使いどころ |
+|-------|-------|----------|
+| `.btn .btn-primary` | 緑背景・白文字 | 送信、登録、確定 |
+| `.btn .btn-secondary` | グレー背景 | キャンセル、戻る |
+| `.btn .btn-outline` | 緑枠線・透明背景 | 詳細を見る、お気に入り |
+
+---
+
+#### 2. カード
+
+**情報をまとめて表示するボックス**:
+
+```html
+<div class="card">
+    {{-- カードのヘッダー（タイトル部分） --}}
+    <div class="card-header">
+        <h3>土地情報</h3>
+    </div>
+    
+    {{-- カードの本体（メインコンテンツ） --}}
+    <div class="card-body">
+        <p>新宿区の土地です。</p>
+        <p>面積: 100㎡</p>
+    </div>
+    
+    {{-- カードのフッター（ボタンなど） --}}
+    <div class="card-footer">
+        <a href="/lands/1" class="btn btn-primary">詳細を見る</a>
+    </div>
+</div>
+```
+
+| クラス | 説明 |
+|-------|------|
+| `.card` | カード全体を囲む |
+| `.card-header` | タイトル部分（任意） |
+| `.card-body` | メインコンテンツ |
+| `.card-footer` | 下部のボタン配置（任意） |
+
+---
+
+#### 3. フォーム
+
+**入力フォームの作り方**:
 
 ```html
 <form action="{{ url('/lands') }}" method="POST">
     @csrf  {{-- セキュリティ用。必ず入れる！ --}}
     
+    {{-- テキスト入力 --}}
     <div class="form-group">
         <label class="form-label required">市区町村</label>
         <input type="text" name="city" class="form-input" required>
     </div>
     
+    {{-- セレクトボックス --}}
+    <div class="form-group">
+        <label class="form-label">都道府県</label>
+        <select name="prefecture" class="form-select">
+            <option value="">選択してください</option>
+            <option value="12">東京都</option>
+            <option value="27">大阪府</option>
+        </select>
+    </div>
+    
+    {{-- テキストエリア --}}
     <div class="form-group">
         <label class="form-label">説明（任意）</label>
-        <textarea name="description" class="form-textarea"></textarea>
+        <textarea name="description" class="form-textarea" placeholder="土地の説明"></textarea>
     </div>
     
     <button type="submit" class="btn btn-primary">登録する</button>
 </form>
 ```
+
+| クラス | 用途 |
+|-------|------|
+| `.form-group` | 入力項目をグループ化 |
+| `.form-label` | ラベル |
+| `.form-label.required` | 必須マーク（*）付きラベル |
+| `.form-input` | テキスト入力欄 |
+| `.form-select` | セレクトボックス |
+| `.form-textarea` | 複数行テキスト入力 |
+
+---
+
+#### 4. アラート（メッセージ）
+
+**成功・エラーメッセージの表示**:
+
+```html
+{{-- 成功メッセージ（緑） --}}
+<div class="alert alert-success">
+    登録が完了しました！
+</div>
+
+{{-- エラーメッセージ（赤） --}}
+<div class="alert alert-error">
+    入力内容に誤りがあります。
+</div>
+```
+
+> 💡 **自動表示**: `app.blade.php` でセッションメッセージを自動表示しています。
+> コントローラで `return redirect()->with('success', 'メッセージ');` を使えばOK。
+
+---
+
+#### 5. コンテナ
+
+**ページのコンテンツを中央寄せ**:
+
+```html
+<div class="container">
+    {{-- この中は最大幅1200pxで中央に配置される --}}
+    <h1>ページタイトル</h1>
+    <p>コンテンツ...</p>
+</div>
+```
+
+---
+
+### カラーパレット（CSS変数）
+
+CSSで使える色の変数です。統一感のあるデザインのために活用してください。
+
+| 変数名 | 色 | 用途 |
+|-------|-----|------|
+| `var(--primary)` | 緑 #2E7D32 | メインカラー |
+| `var(--primary-dark)` | 濃緑 #1B5E20 | ホバー時など |
+| `var(--text-dark)` | 黒 #212121 | 本文テキスト |
+| `var(--text-gray)` | グレー #616161 | サブテキスト |
+| `var(--bg-white)` | 白 #FFFFFF | 背景 |
+| `var(--bg-light)` | 薄グレー #F5F5F5 | 背景（グレー） |
+| `var(--border)` | グレー #E0E0E0 | 枠線 |
+| `var(--error)` | 赤 #F44336 | エラー |
+| `var(--success)` | 緑 #4CAF50 | 成功 |
 
 > 💡 **ポイント**
 >
