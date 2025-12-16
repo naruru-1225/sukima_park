@@ -1,31 +1,50 @@
 # チームリーダー用ガイド
 
 このドキュメントは**チームリーダー専用**の管理ガイドです。
+メンバー向けの環境構築・開発方法は `TEAM_SETUP.md` を参照してください。
 
 ---
 
 ## 目次
+
 1. [リーダーの役割](#リーダーの役割)
 2. [リポジトリ管理](#リポジトリ管理)
 3. [プルリクエストのレビュー](#プルリクエストのレビュー)
 4. [メンバーへの作業割り当て](#メンバーへの作業割り当て)
-5. [環境の初期セットアップ](#環境の初期セットアップ)
-6. [トラブル対応](#トラブル対応)
+5. [データベース構成](#データベース構成)
+6. [環境の初期セットアップ](#環境の初期セットアップ)
+7. [トラブル対応](#トラブル対応)
 
 ---
 
 ## リーダーの役割
 
-| 役割 | 内容 |
-|-----|------|
-| **コードレビュー** | メンバーのプルリクエストを確認・マージ |
-| **作業管理** | 誰が何を担当するか割り当て |
-| **問題解決** | エラーや困りごとの相談対応 |
-| **品質管理** | コードの一貫性・動作確認 |
+| 役割 | 内容 | 例えると |
+|-----|------|---------|
+| **コードレビュー** | メンバーのプルリクエストを確認・マージ | 先生の添削 |
+| **作業管理** | 誰が何を担当するか割り当て | 班長の仕事分担 |
+| **問題解決** | エラーや困りごとの相談対応 | 困った時の相談役 |
+| **品質管理** | コードの一貫性・動作確認 | 最終チェック |
 
 ---
 
 ## リポジトリ管理
+
+### GitHubアカウント作成の案内
+
+メンバーには以下を案内してください：
+
+1. https://github.com/ でアカウント作成
+2. ユーザー名をリーダーに伝える
+3. 招待メールを承認する
+
+### Collaboratorsの追加（メンバー招待）
+
+```
+Settings → Collaborators → Add people → ユーザー名を入力
+```
+
+招待後、メンバーに「招待メールが届いたらAcceptしてください」と伝える。
 
 ### ブランチ保護ルールの設定
 
@@ -39,15 +58,6 @@ mainブランチに直接プッシュできないようにする設定：
    - ☑ Require a pull request before merging
    - ☑ Require approvals (1人以上)
 6. 「Create」をクリック
-
-### Collaboratorsの追加
-
-メンバーをリポジトリに招待：
-
-1. Settings → Collaborators
-2. 「Add people」
-3. メンバーのGitHubユーザー名を入力
-4. 招待メールが送られる
 
 ---
 
@@ -65,13 +75,13 @@ mainブランチに直接プッシュできないようにする設定：
 
 ### レビュー時のチェックポイント
 
-```
-□ コードは動作するか（ローカルで確認）
-□ 変数名・関数名は分かりやすいか
-□ 不要なコメントアウトは残っていないか
-□ コミットメッセージは適切か
-□ ファイルの場所は正しいか
-```
+| チェック項目 | 確認内容 |
+|------------|---------|
+| 動作確認 | ローカルで動くか |
+| 変数名 | 分かりやすいか |
+| コメント | 不要なコメントアウトがないか |
+| コミットメッセージ | 内容が適切か |
+| ファイル配置 | 正しいフォルダにあるか |
 
 ### ローカルでプルリクエストを確認する方法
 
@@ -85,16 +95,6 @@ docker compose up -d
 
 # 確認後、mainに戻る
 git checkout main
-```
-
-### マージ後のクリーンアップ
-
-```bash
-# ローカルのブランチ一覧を更新
-git fetch --prune
-
-# マージ済みのローカルブランチを削除
-git branch -d feature/古いブランチ名
 ```
 
 ---
@@ -118,63 +118,7 @@ git branch -d feature/古いブランチ名
 | 11 | DM/チャット | ユーザー間のメッセージ | ★ |
 | 12 | レビュー・評価 | 取引後の評価 | ★ |
 | 13 | 問い合わせ | サイトへの問い合わせ | ★ |
-| 14 | 管理者：ユーザー管理 | ユーザーの一覧・詳細 | ★ |
-| 15 | 管理者：問い合わせ管理 | 問い合わせ対応 | ★ |
-
----
-
-### 開発フェーズと担当分担（仮）
-
-#### Phase 1: 共通基盤（リーダー担当）
-```
-期間: 1週目
-内容:
-- データベースマイグレーション作成（全テーブル）
-- 共通レイアウト（ヘッダー、フッター）
-- 認証機能の基盤
-```
-
-#### Phase 2: コア機能（週2〜3）
-
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **B 楠山** | 会員登録 | feature/kusuyama-register | AuthController, Member Model |
-| **B 楠山** | ログイン | feature/kusuyama-login | LoginController, auth views |
-| **B 楠山** | 土地登録 | feature/kusuyama-land-register | LandController@create/store |
-| **A 小島** | 土地検索 | feature/kojima-land-search | LandController@search |
-| **A 小島** | 土地詳細 | feature/kojima-land-detail | LandController@show |
-| **C 志賀** | トップページ | feature/shiga-home | HomeController |
-| **C 志賀** | 自己保持土地一覧 | feature/shiga-my-lands | LandController@myLands |
-
-#### Phase 3: レンタル機能（週4）
-
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **A 小島** | レンタル確認 | feature/kojima-rental-confirm | RentalController@confirm |
-| **C 志賀** | 土地貸出承認 | feature/shiga-rental-approve | RentalController@approve |
-| **E 三輪** | レンタル中一覧 | feature/miwa-rental-list | RentalController@index |
-| **E 三輪** | レンタル中詳細 | feature/miwa-rental-detail | RentalController@show |
-| **E 三輪** | 取引完了一覧 | feature/miwa-completed-list | RentalController@completed |
-
-#### Phase 4: ユーザー機能（週5）
-
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **D 我妻** | プロフィール編集 | feature/azuma-profile-edit | ProfileController@edit/update |
-| **D 我妻** | プロフィール確認 | feature/azuma-profile-show | ProfileController@show |
-| **D 我妻** | DM一覧 | feature/azuma-dm-list | ChatController@index |
-| **D 我妻** | DM画面 | feature/azuma-dm-chat | ChatController@show |
-
-#### Phase 5: 管理者機能（週6）
-
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **F 野村** | ユーザー一覧 | feature/nomura-user-list | Admin/UserController@index |
-| **F 野村** | ユーザー詳細 | feature/nomura-user-detail | Admin/UserController@show |
-| **F 野村** | 問い合わせ一覧 | feature/nomura-contact-list | Admin/ContactController@index |
-| **F 野村** | 問い合わせ詳細 | feature/nomura-contact-detail | Admin/ContactController@show |
-
----
+| 14 | 管理者機能 | ユーザー・問い合わせ管理 | ★ |
 
 ### 画面担当一覧（member_.mdより）
 
@@ -187,22 +131,41 @@ git branch -d feature/古いブランチ名
 | E 三輪 | レンタル中一覧、レンタル中詳細、取引完了一覧、取引完了詳細 |
 | F 野村 | ユーザ一覧、ユーザ詳細、問い合わせ一覧、問い合わせ詳細 |
 
+### ブランチ名のルール
+
+```
+feature/担当者名-機能名
+例: feature/kojima-search-results
+```
+
 ---
 
-### 作業の進め方
+## データベース構成
 
-1. **ブランチ名のルール**を徹底
-   ```
-   feature/担当者名-機能名
-   例: feature/kojima-search-results
-   ```
+> ✅ **マイグレーション・モデルは作成済み**
+> メンバーが触る必要はありません。
 
-2. **1機能1プルリクエスト**
-   - 大きな変更は分割してPRを出してもらう
+### テーブル一覧
 
-3. **毎日の進捗確認**
-   - 困っていることがないか確認
-   - プルリクエストは早めにレビュー
+| テーブル名 | 説明 | カラム数 |
+|-----------|------|---------|
+| MEMBER_TABLE | 会員情報 | 13 |
+| LAND_TABLE | 土地情報 | 16 |
+| RENTAL_RECORD_TABLE | 貸し出し記録 | 9 |
+| REVIEW_COMMENT_TABLE | レビュー・コメント | 9 |
+| CONTACT_TABLE | 問い合わせ | 6 |
+| REPLY_TABLE | 返信 | 5 |
+| CHAT_TABLE | 連絡（DM） | 8 |
+
+### 主要なリレーション
+
+```
+Member (1) ─────→ (多) Land        : 会員は複数の土地を所有できる
+Land (1) ─────→ (多) RentalRecord : 土地には複数の貸出記録がある
+Member (1) ─────→ (多) RentalRecord: 会員は複数回レンタルできる
+```
+
+詳細は `TEAM_SETUP.md` の「データベーステーブル一覧」を参照。
 
 ---
 
@@ -233,23 +196,15 @@ git push -u origin main
 
 ### データベースマイグレーション作成
 
-新しいテーブルを追加する場合：
-
 ```bash
-# リーダーがマイグレーション作成
-docker compose exec app php artisan make:migration create_lands_table
+# マイグレーション作成
+docker compose exec app php artisan make:migration create_テーブル名_table
 
-# ファイルを編集後、コミット
-git add database/migrations/
-git commit -m "Add lands table migration"
-git push
-```
+# マイグレーション実行
+docker compose exec app php artisan migrate
 
-### 共通レイアウト作成
-
-```bash
-# レイアウトファイル作成
-resources/views/layouts/app.blade.php
+# マイグレーションリセット（開発中のみ）
+docker compose exec app php artisan migrate:fresh
 ```
 
 ---
@@ -258,29 +213,24 @@ resources/views/layouts/app.blade.php
 
 ### メンバーの環境が動かない場合
 
-1. **Docker起動確認**
-   ```bash
-   docker compose ps
-   # 全てのサービスがrunningか確認
-   ```
+**確認手順：**
 
-2. **ログ確認**
-   ```bash
-   docker compose logs app
-   docker compose logs mysql
-   ```
+```bash
+# 1. Docker起動確認
+docker compose ps
 
-3. **キャッシュクリア**
-   ```bash
-   docker compose exec app php artisan cache:clear
-   docker compose exec app php artisan config:clear
-   ```
+# 2. ログ確認
+docker compose logs app
+docker compose logs mysql
 
-4. **再構築**
-   ```bash
-   docker compose down
-   docker compose up -d --build
-   ```
+# 3. キャッシュクリア
+docker compose exec app php artisan cache:clear
+docker compose exec app php artisan config:clear
+
+# 4. 再構築
+docker compose down
+docker compose up -d --build
+```
 
 ### マージコンフリクト発生時
 
@@ -296,7 +246,7 @@ git checkout feature/問題のブランチ
 git merge main
 
 # コンフリクトを解決（ファイルを手動編集）
-# <<<<< と >>>>> の間を修正
+# <<<<<<< と >>>>>>> の間を修正
 
 # 解決後
 git add .
@@ -304,14 +254,18 @@ git commit -m "Resolve merge conflict"
 git push
 ```
 
-### 本番デプロイ前チェックリスト
+### 環境が壊れた場合
 
-```
-□ 全てのプルリクエストがマージ済み
-□ ローカルで全機能の動作確認
-□ .envの本番設定確認
-□ マイグレーション実行
-□ キャッシュクリア
+> ⚠️ **WSLシャットダウンの重要性**
+>
+> メンバーが作業終了時に `wsl --shutdown` を実行しないと環境が壊れることがあります。
+> トラブル時はまず以下を試してください：
+
+```bash
+# 1. WSLをリセット
+wsl --shutdown
+# 2. Docker Desktopを再起動
+# 3. 再度 docker compose up -d
 ```
 
 ---
@@ -324,6 +278,16 @@ git push
 | 毎日 | メンバーの困りごと確認 |
 | 週1回 | 進捗の全体確認 |
 | リリース前 | 全機能の動作確認 |
+
+---
+
+## 本番デプロイ前チェックリスト
+
+- [ ] 全てのプルリクエストがマージ済み
+- [ ] ローカルで全機能の動作確認
+- [ ] .envの本番設定確認
+- [ ] マイグレーション実行
+- [ ] キャッシュクリア
 
 ---
 

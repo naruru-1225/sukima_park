@@ -426,15 +426,24 @@ git commit -m "作業内容"
 # 2. GitHubにプッシュ
 git push
 
-# 3. Dockerコンテナを停止（PCを軽くする）
+# 3. Dockerコンテナを停止
 docker compose down
+
+# 4. WSLをシャットダウン（重要！環境が壊れる可能性を防ぐ）
+wsl --shutdown
 ```
+
+> ⚠️ **WSLシャットダウンの重要性**
+>
+> WSLを正しくシャットダウンしないと、Dockerの環境が壊れる可能性があります。
+> 必ず `wsl --shutdown` を実行してからPCをシャットダウンしてください。
 
 **チェックリスト:**
 
 - [ ] 全ての変更をコミットした
 - [ ] `git push` した
 - [ ] `docker compose down` した
+- [ ] `wsl --shutdown` した（PowerShellで実行）
 
 ### 作業の流れ（図解）
 
@@ -453,7 +462,7 @@ docker compose down
                            ↓
 ┌─────────────────────────────────────────────────────────────┐
 │                      作業終了                               │
-│  git push → docker compose down                            │
+│  git push → docker compose down → wsl --shutdown           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
