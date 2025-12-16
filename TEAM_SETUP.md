@@ -173,13 +173,75 @@ git branch -d feature/login
 
 ## 必要なソフトのインストール
 
-### 1. Git のインストール
-https://git-scm.com/download/win からダウンロード、全てデフォルトでOK
+> **インストール順序**: WSL2 → Docker Desktop → Git → VS Code の順でインストールしてください
+
+### 1. WSL2（ダブリューエスエル2）のインストール ★重要★
+
+**WSL2とは？**
+```
+WSL2 = Windows Subsystem for Linux 2
+Windowsの中でLinux（サーバーのOS）を動かす機能
+
+なぜ必要？
+- DockerがLinux上で動くため、WSL2があると高速に動作
+- WSL2なし → 遅い、メモリ使用量多い
+- WSL2あり → 高速、安定、本来の性能
+```
+
+**インストール手順**:
+
+#### Step 1: PowerShellを管理者として開く
+1. Windowsキーを押す
+2. 「PowerShell」と入力
+3. 「管理者として実行」をクリック
+
+#### Step 2: WSL2をインストール
+```powershell
+wsl --install
+```
+
+#### Step 3: PCを再起動
+インストール完了後、PCを再起動してください。
+
+#### Step 4: Ubuntuの初期設定
+再起動後、自動的にUbuntuのウィンドウが開きます。
+1. ユーザー名を入力（半角英字、例: `myname`）
+2. パスワードを入力（2回）
+3. 設定完了！
+
+**確認方法**:
+```powershell
+# PowerShellで実行
+wsl --list --verbose
+
+# こう表示されればOK:
+  NAME                   STATE           VERSION
+* Ubuntu                 Running         2
+  docker-desktop         Running         2
+```
+
+---
 
 ### 2. Docker Desktop のインストール
-https://www.docker.com/products/docker-desktop/ からダウンロード、インストール後PC再起動
 
-### 3. VS Code のインストール（推奨）
+1. https://www.docker.com/products/docker-desktop/ にアクセス
+2. 「Download for Windows」をクリック
+3. ダウンロードしたファイルを実行
+4. **「Use WSL 2 instead of Hyper-V」にチェック ✓** ← 重要！
+5. インストール完了後、**PCを再起動**
+
+**WSL2統合の確認**:
+1. Docker Desktopを開く
+2. 右上の歯車アイコン（Settings）をクリック
+3. 左メニュー「Resources」→「WSL Integration」
+4. 「Ubuntu」がONになっていることを確認
+
+---
+
+### 3. Git のインストール
+https://git-scm.com/download/win からダウンロード、全てデフォルトでOK
+
+### 4. VS Code のインストール（推奨）
 https://code.visualstudio.com/ からダウンロード
 
 ---
