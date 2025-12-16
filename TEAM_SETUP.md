@@ -1087,6 +1087,167 @@ $members = Member::where('gender', 0)->get();
 | Reply | replies | 返信 | contact, sender |
 | Chat | chats | DM | sender, receiver |
 
+### クエリメソッド一覧
+
+モデルを使ってデータベースを操作するためのメソッドです。
+
+#### データ取得メソッド
+
+| メソッド | 説明 | 戻り値 |
+|---------|------|-------|
+| `all()` | 全件取得 | Collection（複数） |
+| `find(ID)` | IDで1件取得 | Model or null |
+| `findOrFail(ID)` | IDで1件取得（なければエラー） | Model |
+| `first()` | 最初の1件取得 | Model or null |
+| `get()` | 条件に合う全件取得 | Collection（複数） |
+| `count()` | 件数を取得 | 数値 |
+
+```php
+<?php
+use App\Models\Member;
+
+// ─────────────────────────────────────
+// all() - テーブルの全データを取得
+// ─────────────────────────────────────
+$members = Member::all();
+// ↑ membersテーブルの全レコードを取得
+// ↑ 戻り値: Collection（配列のようなもの）
+
+foreach ($members as $member) {
+    echo $member->username;  // 各会員の名前を表示
+}
+
+// ─────────────────────────────────────
+// find(ID) - IDで1件だけ取得
+// ─────────────────────────────────────
+$member = Member::find(1);
+// ↑ id=1 の会員を取得
+// ↑ 見つからない場合: null が返る
+
+if ($member) {
+    echo $member->username;
+} else {
+    echo "見つかりません";
+}
+
+// ─────────────────────────────────────
+// findOrFail(ID) - IDで取得（なければ404エラー）
+// ─────────────────────────────────────
+$member = Member::findOrFail(1);
+// ↑ id=1 の会員を取得
+// ↑ 見つからない場合: 自動で404エラーページを表示
+// ↑ if文で確認する必要がない
+
+// ─────────────────────────────────────
+// first() - 最初の1件を取得
+// ─────────────────────────────────────
+$member = Member::first();
+// ↑ 最初の1件だけ取得
+// ↑ 条件と組み合わせて使うことが多い
+
+$member = Member::where('gender', 0)->first();
+// ↑ 男性の最初の1件を取得
+
+// ─────────────────────────────────────
+// get() - 条件に合う全件を取得
+// ─────────────────────────────────────
+$members = Member::where('gender', 0)->get();
+// ↑ 男性の会員を全件取得
+// ↑ where()の後に必ずget()をつける
+
+// ─────────────────────────────────────
+// count() - 件数を取得
+// ─────────────────────────────────────
+$total = Member::count();           // 全会員数
+$males = Member::where('gender', 0)->count();  // 男性会員数
+```
+
+#### 条件指定メソッド
+
+| メソッド | 説明 | 例 |
+|---------|------|-----|
+| `where('カラム', '値')` | 等しい | `where('gender', 0)` |
+| `where('カラム', '演算子', '値')` | 比較 | `where('area', '>', 50)` |
+| `orWhere()` | OR条件 | `orWhere('status', 1)` |
+| `whereIn()` | 複数値のいずれか | `whereIn('status', [0, 1])` |
+| `orderBy('カラム', '方向')` | 並び替え | `orderBy('created_at', 'desc')` |
+| `limit(件数)` | 取得件数制限 | `limit(10)` |
+
+```php
+<?php
+use App\Models\Land;
+
+// ─────────────────────────────────────
+// where() - 条件を指定
+// ─────────────────────────────────────
+// 基本形（等しい）
+$lands = Land::where('prefectures', 13)->get();
+// ↑ WHERE prefectures = 13 と同じ
+
+// 比較演算子を使う
+$lands = Land::where('area', '>', 50)->get();     // 50より大きい
+$lands = Land::where('area', '>=', 50)->get();    // 50以上
+$lands = Land::where('area', '<', 100)->get();    // 100未満
+$lands = Land::where('area', '!=', 0)->get();     // 0以外
+
+// 複数条件（AND）
+$lands = Land::where('prefectures', 13)
+             ->where('area', '>', 50)
+             ->get();
+// ↑ 東京都 AND 50㎡以上
+
+// ─────────────────────────────────────
+// orWhere() - OR条件
+// ─────────────────────────────────────
+$lands = Land::where('prefectures', 13)
+             ->orWhere('prefectures', 14)
+             ->get();
+// ↑ 東京都 OR 神奈川県
+
+// ─────────────────────────────────────
+// whereIn() - 複数値のいずれかに一致
+// ─────────────────────────────────────
+$lands = Land::whereIn('prefectures', [13, 14, 11])->get();
+// ↑ 東京都 OR 神奈川県 OR 埼玉県
+
+// ─────────────────────────────────────
+// orderBy() - 並び替え
+// ─────────────────────────────────────
+$lands = Land::orderBy('area', 'desc')->get();  // 面積大きい順
+$lands = Land::orderBy('area', 'asc')->get();   // 面積小さい順
+$lands = Land::orderBy('created_at', 'desc')->get();  // 新しい順
+
+// 複数の並び替え
+$lands = Land::orderBy('prefectures', 'asc')
+             ->orderBy('area', 'desc')
+             ->get();
+// ↑ 都道府県順 → 同じ県内では面積大きい順
+
+// ─────────────────────────────────────
+// limit() - 件数制限
+// ─────────────────────────────────────
+$lands = Land::limit(10)->get();  // 最初の10件だけ
+$lands = Land::orderBy('created_at', 'desc')
+             ->limit(5)
+             ->get();
+// ↑ 新しい順で5件だけ
+```
+
+#### メソッドチェーンの書き方
+
+```php
+<?php
+// メソッドを連続して書くことができる（メソッドチェーン）
+$lands = Land::where('prefectures', 13)   // 東京都
+             ->where('area', '>', 30)      // 30㎡以上
+             ->orderBy('area', 'desc')     // 面積大きい順
+             ->limit(10)                   // 10件まで
+             ->get();                      // 実行
+
+// 上と同じ意味（1行で書く場合）
+$lands = Land::where('prefectures', 13)->where('area', '>', 30)->orderBy('area', 'desc')->limit(10)->get();
+```
+
 ### 基本的なCRUD操作
 
 ```php
