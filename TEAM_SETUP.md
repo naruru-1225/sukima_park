@@ -895,6 +895,57 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
 
 ---
 
+## phpMyAdminの使い方
+
+phpMyAdminはブラウザでデータベースを管理できるツールです。
+
+### アクセス方法
+**URL**: http://localhost:8080
+
+（自動ログイン設定済み。ユーザー: sail / パスワード: password）
+
+### 主な機能
+
+| 機能 | 説明 |
+|-----|------|
+| テーブル一覧 | 左メニューでsukimaparkをクリック |
+| データ参照 | テーブル名をクリック → 「表示」タブ |
+| データ挿入 | テーブル名をクリック → 「挿入」タブ |
+| SQL実行 | 「SQL」タブでクエリを直接実行 |
+| エクスポート | 「エクスポート」タブでバックアップ |
+
+### データベーステーブル一覧
+
+| テーブル名 | 説明 | 主なカラム |
+|-----------|------|-----------|
+| members | 会員情報 | id, email, username, tel, birth, gender |
+| lands | 土地情報 | id, prefectures, city, street_address, area, user_id |
+| rental_records | 貸し出し記録 | id, price, rental_start_date, land_id, user_id |
+| review_comments | レビュー | id, land_review, user_review, record_id |
+| contacts | 問い合わせ | id, title, message, status, user_id |
+| replies | 問い合わせ返信 | id, contact_id, message, user_id |
+| chats | DM/チャット | id, user_id_from, user_id_to, message |
+
+### テーブルの関係（ER図）
+
+```
+members (会員)
+    │
+    ├──< lands (土地)        ← user_id で紐付け
+    │       │
+    │       └──< rental_records (貸出記録) ← land_id で紐付け
+    │               │
+    │               └──< review_comments (レビュー) ← record_id で紐付け
+    │
+    ├──< contacts (問い合わせ) ← user_id で紐付け
+    │       │
+    │       └──< replies (返信) ← contact_id で紐付け
+    │
+    └──< chats (DM) ← user_id_from, user_id_to で紐付け
+```
+
+---
+
 ## よく使うコマンド
 
 ### Git
