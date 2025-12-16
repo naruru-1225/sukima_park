@@ -29,6 +29,7 @@ services:
             MYSQL_PASSWORD: '${DB_PASSWORD:-password}'
         volumes:
             - 'sail-mysql:/var/lib/mysql'
+            - './docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql'
         networks:
             - sail
         healthcheck:
