@@ -122,77 +122,96 @@ git checkout main
 
 ---
 
-### 開発フェーズと担当分担
+### メンバー別の担当機能
 
-#### Phase 1: 共通基盤（リーダー担当）- 1週目
+#### リーダー担当（共通基盤）
 
-| 作業内容 | 状態 |
-|---------|------|
-| データベースマイグレーション作成 | ✅ 完了 |
-| モデル作成 | ✅ 完了 |
-| 共通レイアウト（ヘッダー、フッター） | 未着手 |
-| 認証機能の基盤 | 未着手 |
-
----
-
-#### Phase 2: コア機能 - 週2〜3
-
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **B 楠山** | 会員登録画面 | feature/kusuyama-register | `AuthController`, `views/auth/register.blade.php` |
-| **B 楠山** | ログイン画面 | feature/kusuyama-login | `LoginController`, `views/auth/login.blade.php` |
-| **B 楠山** | 土地登録画面 | feature/kusuyama-land-register | `LandController@create/store`, `views/land/create.blade.php` |
-| **A 小島** | 土地検索画面 | feature/kojima-land-search | `LandController@search`, `views/land/index.blade.php` |
-| **A 小島** | 土地詳細画面 | feature/kojima-land-detail | `LandController@show`, `views/land/show.blade.php` |
-| **C 志賀** | トップページ | feature/shiga-home | `HomeController`, `views/home.blade.php` |
-| **C 志賀** | 自己保持土地一覧 | feature/shiga-my-lands | `LandController@myLands`, `views/land/my-lands.blade.php` |
+| 作業内容 | 状態 | 備考 |
+|---------|------|------|
+| データベースマイグレーション作成 | ✅ 完了 | 7テーブル |
+| モデル作成 | ✅ 完了 | 7モデル |
+| 共通レイアウト（ヘッダー、フッター） | 未着手 | `layouts/app.blade.php` |
+| 認証機能の基盤 | 未着手 | ミドルウェア設定 |
 
 ---
 
-#### Phase 3: レンタル機能 - 週4
+#### A 小島さん担当
 
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **A 小島** | レンタル確認画面 | feature/kojima-rental-confirm | `RentalController@confirm`, `views/rental/confirm.blade.php` |
-| **C 志賀** | 土地貸出承認画面 | feature/shiga-rental-approve | `RentalController@approve`, `views/rental/approve.blade.php` |
-| **E 三輪** | レンタル中一覧 | feature/miwa-rental-list | `RentalController@index`, `views/rental/index.blade.php` |
-| **E 三輪** | レンタル中詳細 | feature/miwa-rental-detail | `RentalController@show`, `views/rental/show.blade.php` |
-| **E 三輪** | 取引完了一覧 | feature/miwa-completed-list | `RentalController@completed`, `views/rental/completed.blade.php` |
-
----
-
-#### Phase 4: ユーザー機能 - 週5
-
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **D 我妻** | プロフィール編集 | feature/azuma-profile-edit | `ProfileController@edit/update`, `views/profile/edit.blade.php` |
-| **D 我妻** | プロフィール確認 | feature/azuma-profile-show | `ProfileController@show`, `views/profile/show.blade.php` |
-| **D 我妻** | DM一覧 | feature/azuma-dm-list | `ChatController@index`, `views/chat/index.blade.php` |
-| **D 我妻** | DM画面 | feature/azuma-dm-chat | `ChatController@show`, `views/chat/show.blade.php` |
+| 機能 | ブランチ名 | 作成ファイル |
+|------|----------|-------------|
+| 土地検索画面 | feature/kojima-land-search | `LandController@search`, `views/land/index.blade.php` |
+| 土地詳細画面 | feature/kojima-land-detail | `LandController@show`, `views/land/show.blade.php` |
+| レンタル確認画面 | feature/kojima-rental-confirm | `RentalController@confirm`, `views/rental/confirm.blade.php` |
+| 問い合わせ画面 | feature/kojima-contact | `ContactController`, `views/contact/create.blade.php` |
 
 ---
 
-#### Phase 5: 管理者機能 - 週6
+#### B 楠山さん担当
 
-| 担当 | 機能 | ブランチ名 | 作成ファイル |
-|-----|------|----------|-------------|
-| **F 野村** | ユーザー一覧 | feature/nomura-user-list | `Admin/UserController@index`, `views/admin/user/index.blade.php` |
-| **F 野村** | ユーザー詳細 | feature/nomura-user-detail | `Admin/UserController@show`, `views/admin/user/show.blade.php` |
-| **F 野村** | 問い合わせ一覧 | feature/nomura-contact-list | `Admin/ContactController@index`, `views/admin/contact/index.blade.php` |
-| **F 野村** | 問い合わせ詳細 | feature/nomura-contact-detail | `Admin/ContactController@show`, `views/admin/contact/show.blade.php` |
+| 機能 | ブランチ名 | 作成ファイル |
+|------|----------|-------------|
+| 会員登録画面 | feature/kusuyama-register | `AuthController`, `views/auth/register.blade.php` |
+| ログイン画面 | feature/kusuyama-login | `LoginController`, `views/auth/login.blade.php` |
+| 土地登録画面 | feature/kusuyama-land-register | `LandController@create/store`, `views/land/create.blade.php` |
+| 土地登録確認画面 | feature/kusuyama-land-confirm | `LandController@confirm`, `views/land/confirm.blade.php` |
 
 ---
 
-### 画面担当一覧（member_.mdより）
+#### C 志賀さん担当
 
-| 担当 | 担当画面 | 画面数 |
-|-----|---------|-------|
-| A 小島 | 問い合わせ、検索結果、土地詳細、レンタル確認 | 4画面 |
-| B 楠山 | 会員登録、ログイン、土地登録、土地登録確認 | 4画面 |
-| C 志賀 | ユーザ画面、トップ、自己保持土地一覧、土地貸出、貸出中詳細 | 5画面 |
-| D 我妻 | プロフィール編集、プロフィール確認、DM一覧、DM画面 | 4画面 |
-| E 三輪 | レンタル中一覧、レンタル中詳細、取引完了一覧、取引完了詳細 | 4画面 |
-| F 野村 | ユーザ一覧、ユーザ詳細、問い合わせ一覧、問い合わせ詳細 | 4画面 |
+| 機能 | ブランチ名 | 作成ファイル |
+|------|----------|-------------|
+| トップページ | feature/shiga-home | `HomeController`, `views/home.blade.php` |
+| ユーザ画面 | feature/shiga-user | `UserController@show`, `views/user/show.blade.php` |
+| 自己保持土地一覧 | feature/shiga-my-lands | `LandController@myLands`, `views/land/my-lands.blade.php` |
+| 土地貸出承認画面 | feature/shiga-rental-approve | `RentalController@approve`, `views/rental/approve.blade.php` |
+| 貸出中詳細画面 | feature/shiga-rental-detail | `RentalController@lendingShow`, `views/rental/lending-show.blade.php` |
+
+---
+
+#### D 我妻さん担当
+
+| 機能 | ブランチ名 | 作成ファイル |
+|------|----------|-------------|
+| プロフィール編集画面 | feature/azuma-profile-edit | `ProfileController@edit/update`, `views/profile/edit.blade.php` |
+| プロフィール確認画面 | feature/azuma-profile-show | `ProfileController@show`, `views/profile/show.blade.php` |
+| DM一覧画面 | feature/azuma-dm-list | `ChatController@index`, `views/chat/index.blade.php` |
+| DM画面 | feature/azuma-dm-chat | `ChatController@show`, `views/chat/show.blade.php` |
+
+---
+
+#### E 三輪さん担当
+
+| 機能 | ブランチ名 | 作成ファイル |
+|------|----------|-------------|
+| レンタル中一覧画面 | feature/miwa-rental-list | `RentalController@index`, `views/rental/index.blade.php` |
+| レンタル中詳細画面 | feature/miwa-rental-detail | `RentalController@show`, `views/rental/show.blade.php` |
+| 取引完了一覧画面 | feature/miwa-completed-list | `RentalController@completed`, `views/rental/completed.blade.php` |
+| 取引完了詳細画面 | feature/miwa-completed-detail | `RentalController@completedShow`, `views/rental/completed-show.blade.php` |
+
+---
+
+#### F 野村さん担当（管理者機能）
+
+| 機能 | ブランチ名 | 作成ファイル |
+|------|----------|-------------|
+| ユーザー一覧画面 | feature/nomura-user-list | `Admin/UserController@index`, `views/admin/user/index.blade.php` |
+| ユーザー詳細画面 | feature/nomura-user-detail | `Admin/UserController@show`, `views/admin/user/show.blade.php` |
+| 問い合わせ一覧画面 | feature/nomura-contact-list | `Admin/ContactController@index`, `views/admin/contact/index.blade.php` |
+| 問い合わせ詳細画面 | feature/nomura-contact-detail | `Admin/ContactController@show`, `views/admin/contact/show.blade.php` |
+
+---
+
+### 担当者サマリー
+
+| 担当 | 画面数 | 主な担当領域 |
+|-----|-------|-------------|
+| A 小島 | 4画面 | 土地検索・詳細、レンタル確認、問い合わせ |
+| B 楠山 | 4画面 | 認証（会員登録・ログイン）、土地登録 |
+| C 志賀 | 5画面 | トップページ、自己保持土地、貸出承認 |
+| D 我妻 | 4画面 | プロフィール、DM/チャット |
+| E 三輪 | 4画面 | レンタル管理（借りる側） |
+| F 野村 | 4画面 | 管理者機能 |
 
 ---
 
