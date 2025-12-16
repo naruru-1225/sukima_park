@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -9,10 +10,8 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// トップページ
-Route::get('/', function () {
-    return view('welcome');
-});
+// トップ画面
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // レイアウト確認用（後で削除）
 Route::get('/test-layout', function () {
