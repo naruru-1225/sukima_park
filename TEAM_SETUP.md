@@ -285,6 +285,149 @@ sukima_park/
 
 ---
 
+## PHP基礎文法
+
+Laravelのコードを読む前に、PHPの基本を理解しましょう。
+
+### 変数
+
+```php
+<?php
+// 変数は $ で始まる
+$name = "田中";           // 文字列
+$age = 25;                // 数値
+$price = 1500.50;         // 小数
+$isActive = true;         // 真偽値（true/false）
+
+// 配列
+$colors = ["赤", "青", "緑"];
+$colors[0];  // → "赤"
+
+// 連想配列（キーと値のペア）
+$user = [
+    "name" => "田中",
+    "age" => 25,
+    "email" => "tanaka@example.com"
+];
+$user["name"];  // → "田中"
+```
+
+### 関数
+
+```php
+<?php
+// 関数の定義
+function greet($name) {
+    return "こんにちは、" . $name . "さん";
+}
+
+// 関数の呼び出し
+$message = greet("田中");  // → "こんにちは、田中さん"
+
+// 引数のデフォルト値
+function greet($name = "ゲスト") {
+    return "こんにちは、" . $name . "さん";
+}
+greet();        // → "こんにちは、ゲストさん"
+greet("佐藤");  // → "こんにちは、佐藤さん"
+```
+
+### 条件分岐
+
+```php
+<?php
+$age = 20;
+
+// if文
+if ($age >= 20) {
+    echo "成人です";
+} elseif ($age >= 18) {
+    echo "18歳以上です";
+} else {
+    echo "未成年です";
+}
+
+// 比較演算子
+// ==  : 等しい
+// === : 型も含めて等しい
+// !=  : 等しくない
+// >   : より大きい
+// <   : より小さい
+// >=  : 以上
+// <=  : 以下
+```
+
+### ループ
+
+```php
+<?php
+// foreach（配列のループ）★よく使う
+$users = ["田中", "佐藤", "鈴木"];
+foreach ($users as $user) {
+    echo $user;  // 田中、佐藤、鈴木の順に表示
+}
+
+// キーと値を取得
+$prices = ["りんご" => 100, "みかん" => 80];
+foreach ($prices as $fruit => $price) {
+    echo $fruit . "は" . $price . "円";
+}
+
+// for文
+for ($i = 0; $i < 5; $i++) {
+    echo $i;  // 0, 1, 2, 3, 4
+}
+```
+
+### クラスとオブジェクト
+
+```php
+<?php
+// クラス = 設計図
+class User {
+    // プロパティ（変数）
+    public $name;
+    public $email;
+
+    // コンストラクタ（初期化処理）
+    public function __construct($name, $email) {
+        $this->name = $name;
+        $this->email = $email;
+    }
+
+    // メソッド（関数）
+    public function greet() {
+        return "こんにちは、" . $this->name . "です";
+    }
+}
+
+// オブジェクト = 設計図から作った実体
+$user = new User("田中", "tanaka@example.com");
+echo $user->name;     // → "田中"
+echo $user->greet();  // → "こんにちは、田中です"
+```
+
+### アロー演算子と記法
+
+```php
+<?php
+// -> : オブジェクトのプロパティやメソッドにアクセス
+$user->name;
+$user->greet();
+
+// => : 連想配列のキーと値を結ぶ
+$array = ["key" => "value"];
+
+// :: : クラスの静的メソッドにアクセス
+User::all();          // Laravelでよく使う
+LandController::class; // クラス名を文字列で取得
+
+// \ : 名前空間の区切り
+App\Models\User       // Appフォルダ内のModelsフォルダ内のUser
+```
+
+---
+
 ## Laravelの書き方
 
 ### 1. ルーティング（routes/web.php）
@@ -293,20 +436,46 @@ sukima_park/
 
 ```php
 <?php
+// ─────────────────────────────────────────
+// use文: 他のファイルのクラスを使う宣言
+// ─────────────────────────────────────────
 use App\Http\Controllers\LandController;
+// ↑ App/Http/Controllers/LandController.php を使う
 
-// 基本形: URLにアクセス → コントローラのメソッドを実行
+// ─────────────────────────────────────────
+// Route::get() - GETリクエストを処理
+// ─────────────────────────────────────────
 Route::get('/lands', [LandController::class, 'index']);
+//         ↑ URL     ↑ コントローラ         ↑ メソッド名
+// 
+// 意味: /lands にアクセスしたら LandController の index メソッドを実行
 
-// パラメータ付き: /lands/1 のようなURL
+// ─────────────────────────────────────────
+// URLパラメータ: {変数名} で受け取る
+// ─────────────────────────────────────────
 Route::get('/lands/{id}', [LandController::class, 'show']);
+// /lands/1 → $id = 1
+// /lands/5 → $id = 5
 
-// フォーム送信（POST）
+// ─────────────────────────────────────────
+// Route::post() - POSTリクエスト（フォーム送信）
+// ─────────────────────────────────────────
 Route::post('/lands', [LandController::class, 'store']);
+// フォームの action="/lands" method="POST" で送信されたら実行
 
-// リソースルート: 一括定義（便利）
+// ─────────────────────────────────────────
+// リソースルート: CRUD操作を一括定義
+// ─────────────────────────────────────────
 Route::resource('lands', LandController::class);
-// ↑ これだけで index, create, store, show, edit, update, destroy を定義
+// ↑ これ1行で以下の7つのルートが自動生成される:
+//
+// GET    /lands           → index()   一覧表示
+// GET    /lands/create    → create()  登録フォーム表示
+// POST   /lands           → store()   登録処理
+// GET    /lands/{id}      → show()    詳細表示
+// GET    /lands/{id}/edit → edit()    編集フォーム表示
+// PUT    /lands/{id}      → update()  更新処理
+// DELETE /lands/{id}      → destroy() 削除処理
 ```
 
 ### 2. コントローラ（app/Http/Controllers/）
@@ -320,53 +489,100 @@ docker compose exec app php artisan make:controller LandController
 
 ```php
 <?php
+// ─────────────────────────────────────────
+// namespace: このファイルの場所を宣言
+// ─────────────────────────────────────────
 namespace App\Http\Controllers;
+// ↑ このファイルは app/Http/Controllers/ にあることを示す
 
-use App\Models\Land;
-use Illuminate\Http\Request;
+// ─────────────────────────────────────────
+// use文: 使用するクラスを宣言
+// ─────────────────────────────────────────
+use App\Models\Land;           // Landモデル
+use Illuminate\Http\Request;   // HTTPリクエスト情報
 
+// ─────────────────────────────────────────
+// クラス定義
+// ─────────────────────────────────────────
 class LandController extends Controller
+//    ↑ クラス名      ↑ Controllerを継承（機能を引き継ぐ）
 {
-    // 一覧表示: GET /lands
+    // ─────────────────────────────────────
+    // 一覧表示メソッド
+    // ─────────────────────────────────────
     public function index()
+    // ↑ public = どこからでも呼び出せる
+    // ↑ function = 関数（メソッド）の定義
     {
-        // 全ての土地を取得
+        // データベースから全件取得
         $lands = Land::all();
-        
-        // ビューにデータを渡す
+        // ↑ Land::all() = landsテーブルの全レコードを取得
+        // ↑ 結果は $lands に配列のような形で格納される
+
+        // ビューにデータを渡して表示
         return view('lands.index', ['lands' => $lands]);
+        // ↑ view('フォルダ.ファイル名', ['変数名' => 値])
+        // ↑ resources/views/lands/index.blade.php を表示
+        // ↑ ビュー内で $lands として使える
     }
 
-    // 詳細表示: GET /lands/1
+    // ─────────────────────────────────────
+    // 詳細表示メソッド
+    // ─────────────────────────────────────
     public function show($id)
+    // ↑ $id は URL /lands/{id} の {id} 部分が入る
     {
         // IDで1件取得
         $land = Land::find($id);
-        
+        // ↑ find(ID) = 主キーで検索して1件取得
+        // ↑ 見つからない場合は null が返る
+
+        // または見つからない場合に404エラーを出す
+        $land = Land::findOrFail($id);
+        // ↑ 見つからない場合は自動で404ページを表示
+
         return view('lands.show', ['land' => $land]);
     }
 
-    // 新規登録フォーム: GET /lands/create
+    // ─────────────────────────────────────
+    // 登録フォーム表示メソッド
+    // ─────────────────────────────────────
     public function create()
     {
+        // フォームのHTMLを表示するだけ
         return view('lands.create');
     }
 
-    // 保存処理: POST /lands
+    // ─────────────────────────────────────
+    // 登録処理メソッド
+    // ─────────────────────────────────────
     public function store(Request $request)
+    // ↑ Request $request = フォームから送信されたデータが入る
     {
-        // バリデーション
+        // バリデーション（入力チェック）
         $validated = $request->validate([
             'name' => 'required|max:50',
+            // ↑ 必須（required）、最大50文字（max:50）
             'location' => 'required',
-            'area' => 'required|numeric',
+            'area' => 'required|numeric|min:1',
+            // ↑ 必須、数値、1以上
+        ]);
+        // ↑ バリデーション失敗時は自動でフォームに戻る
+
+        // データベースに保存
+        Land::create([
+            'name' => $request->name,
+            // ↑ $request->name = フォームの name="name" の値
+            'location' => $request->location,
+            'area' => $request->area,
+            'owner_id' => auth()->id(),
+            // ↑ auth()->id() = ログイン中のユーザーのID
         ]);
 
-        // 保存
-        Land::create($validated);
-
-        // リダイレクト
+        // リダイレクト（別ページに移動）
         return redirect('/lands')->with('success', '登録しました');
+        // ↑ redirect('URL') = 指定URLに移動
+        // ↑ with('キー', '値') = 次のページでセッションメッセージを表示
     }
 }
 ```
@@ -378,6 +594,7 @@ class LandController extends Controller
 ```bash
 # モデル作成コマンド（マイグレーションも一緒に作成）
 docker compose exec app php artisan make:model Land -m
+# ↑ -m オプションでマイグレーションファイルも同時作成
 ```
 
 ```php
@@ -388,7 +605,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Land extends Model
 {
+    // ─────────────────────────────────────
+    // テーブル名（省略可能）
+    // ─────────────────────────────────────
+    protected $table = 'lands';
+    // ↑ 省略した場合、クラス名の複数形（Land → lands）が使われる
+
+    // ─────────────────────────────────────
     // 一括代入を許可するカラム
+    // ─────────────────────────────────────
     protected $fillable = [
         'name',
         'location',
@@ -396,34 +621,81 @@ class Land extends Model
         'description',
         'owner_id',
     ];
+    // ↑ Land::create(['name' => '...']) で保存できるカラム
+    // ↑ セキュリティのため、許可したカラムのみ保存可能
 
+    // ─────────────────────────────────────
     // リレーション: この土地の所有者
+    // ─────────────────────────────────────
     public function owner()
     {
         return $this->belongsTo(Member::class, 'owner_id');
+        // ↑ belongsTo = 「〜に属する」（多対1）
+        // ↑ この土地は1人のMemberに属する
+        // ↑ 'owner_id' = 外部キーのカラム名
+    }
+
+    // ─────────────────────────────────────
+    // リレーション: この土地のレンタル記録
+    // ─────────────────────────────────────
+    public function rentals()
+    {
+        return $this->hasMany(RentalRecord::class);
+        // ↑ hasMany = 「複数持つ」（1対多）
+        // ↑ この土地には複数のレンタル記録がある
     }
 }
 ```
 
-**よく使うクエリ**:
+**よく使うクエリ（データベース操作）**:
+
 ```php
-// 全件取得
-$lands = Land::all();
+<?php
+// ─────────────────────────────────────────
+// 取得（SELECT）
+// ─────────────────────────────────────────
+$lands = Land::all();              // 全件取得
+$land = Land::find(1);             // ID=1を取得
+$land = Land::findOrFail(1);       // ID=1を取得（なければ404）
 
 // 条件付き取得
 $lands = Land::where('area', '>', 100)->get();
+// ↑ WHERE area > 100 と同じ
+// ↑ get() で結果を取得
 
-// 1件取得
-$land = Land::find(1);
 $land = Land::where('name', '駅前スペース')->first();
+// ↑ first() は1件だけ取得
 
-// 作成
-Land::create(['name' => '新しい土地', 'location' => '東京都']);
+// 複数条件
+$lands = Land::where('area', '>', 100)
+             ->where('status', 'available')
+             ->orderBy('created_at', 'desc')
+             ->get();
+// ↑ orderBy で並び替え（desc = 降順、asc = 昇順）
 
-// 更新
+// ─────────────────────────────────────────
+// 作成（INSERT）
+// ─────────────────────────────────────────
+$land = Land::create([
+    'name' => '新しい土地',
+    'location' => '東京都渋谷区',
+    'area' => 50.5,
+]);
+// ↑ 作成されたレコードが $land に入る
+
+// ─────────────────────────────────────────
+// 更新（UPDATE）
+// ─────────────────────────────────────────
+$land = Land::find(1);
+$land->name = '更新後の名前';
+$land->save();
+// または
 $land->update(['name' => '更新後の名前']);
 
-// 削除
+// ─────────────────────────────────────────
+// 削除（DELETE）
+// ─────────────────────────────────────────
+$land = Land::find(1);
 $land->delete();
 ```
 
@@ -444,26 +716,64 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    // ─────────────────────────────────────
+    // up(): マイグレーション実行時の処理
+    // ─────────────────────────────────────
     public function up(): void
     {
         Schema::create('lands', function (Blueprint $table) {
-            $table->id();                              // ID（自動連番）
-            $table->foreignId('owner_id')              // 外部キー
+        //    ↑ テーブル名    ↑ Blueprintでカラムを定義
+
+            // ─── 主キー ───
+            $table->id();
+            // ↑ id という名前の自動連番カラム（BIGINT UNSIGNED AUTO_INCREMENT）
+
+            // ─── 外部キー ───
+            $table->foreignId('owner_id')
                   ->constrained('members')
                   ->onDelete('cascade');
-            $table->string('name', 50);                // 文字列
-            $table->string('location');                // 所在地
-            $table->decimal('area', 10, 2);            // 面積（小数）
-            $table->text('description')->nullable();   // 説明（NULL可）
+            // ↑ foreignId = 外部キー用のカラム
+            // ↑ constrained('members') = membersテーブルのidを参照
+            // ↑ onDelete('cascade') = 親が削除されたら子も削除
+
+            // ─── 文字列 ───
+            $table->string('name', 50);
+            // ↑ VARCHAR(50)
+
+            $table->string('location');
+            // ↑ VARCHAR(255) - 長さ省略時は255
+
+            // ─── テキスト ───
+            $table->text('description')->nullable();
+            // ↑ TEXT型（長い文章用）
+            // ↑ nullable() = NULL許可
+
+            // ─── 数値 ───
+            $table->integer('capacity');     // 整数
+            $table->decimal('area', 10, 2);  // 小数（全体10桁、小数点以下2桁）
+            $table->decimal('price', 10, 0)->default(0);
+            // ↑ default(0) = デフォルト値
+
+            // ─── 列挙型 ───
             $table->enum('status', ['available', 'rented', 'inactive'])
-                  ->default('available');              // 状態
-            $table->timestamps();                      // created_at, updated_at
+                  ->default('available');
+            // ↑ 3つの値のいずれか
+
+            // ─── 日付・時刻 ───
+            $table->date('available_date');        // 日付のみ
+            $table->datetime('start_at');          // 日付と時刻
+            $table->timestamps();
+            // ↑ created_at と updated_at を自動生成
         });
     }
 
+    // ─────────────────────────────────────
+    // down(): ロールバック時の処理
+    // ─────────────────────────────────────
     public function down(): void
     {
         Schema::dropIfExists('lands');
+        // ↑ テーブルが存在すれば削除
     }
 };
 ```
@@ -471,11 +781,19 @@ return new class extends Migration
 ```bash
 # マイグレーション実行
 docker compose exec app php artisan migrate
+
+# ロールバック（1つ戻す）
+docker compose exec app php artisan migrate:rollback
+
+# 全部消してやり直し
+docker compose exec app php artisan migrate:fresh
 ```
 
 ### 5. ビュー（resources/views/）
 
 **画面のHTML（Bladeテンプレート）**
+
+Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを書きやすくします。
 
 **resources/views/lands/index.blade.php**:
 ```html
@@ -487,14 +805,30 @@ docker compose exec app php artisan migrate
 <body>
     <h1>土地一覧</h1>
 
-    {{-- 成功メッセージ --}}
+    {{-- ─── コメント（HTMLに出力されない） ─── --}}
+
+    {{-- ─── 変数の表示 ─── --}}
+    {{ $変数名 }}
+    {{-- ↑ HTMLエスケープ済み（XSS攻撃対策） --}}
+    {{-- ↑ < は &lt; に変換される --}}
+
+    {!! $html変数 !!}
+    {{-- ↑ HTMLをそのまま出力（注意して使う） --}}
+
+    {{-- ─── 条件分岐 ─── --}}
     @if(session('success'))
         <p style="color: green">{{ session('success') }}</p>
     @endif
 
-    {{-- ループ --}}
+    @if($lands->isEmpty())
+        <p>土地が登録されていません</p>
+    @else
+        <p>{{ $lands->count() }}件の土地があります</p>
+    @endif
+
+    {{-- ─── ループ ─── --}}
     @foreach($lands as $land)
-        <div>
+        <div class="land-card">
             <h2>{{ $land->name }}</h2>
             <p>場所: {{ $land->location }}</p>
             <p>面積: {{ $land->area }}㎡</p>
@@ -502,22 +836,59 @@ docker compose exec app php artisan migrate
         </div>
     @endforeach
 
-    {{-- データがない場合 --}}
-    @if($lands->isEmpty())
-        <p>土地が登録されていません</p>
-    @endif
+    {{-- ─── 空の場合の処理 ─── --}}
+    @forelse($lands as $land)
+        <div>{{ $land->name }}</div>
+    @empty
+        <p>データがありません</p>
+    @endforelse
+
+    {{-- ─── レイアウト継承 ─── --}}
+    {{-- layouts/app.blade.php を継承する場合 --}}
 </body>
 </html>
 ```
 
-**Bladeの書き方**:
+**レイアウトの継承**:
+
+**resources/views/layouts/app.blade.php**（共通レイアウト）:
 ```html
-{{ $variable }}        → 変数を表示（HTMLエスケープ済み）
-{!! $html !!}          → HTMLをそのまま表示
-@if / @else / @endif   → 条件分岐
-@foreach / @endforeach → ループ
-@include('部品名')      → 共通部品を読み込み
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@yield('title') - スキマパーク</title>
+    {{-- ↑ @yield = 子テンプレートから挿入される場所 --}}
+</head>
+<body>
+    <header>
+        <nav>ナビゲーション</nav>
+    </header>
+
+    <main>
+        @yield('content')
+        {{-- ↑ ここに各ページのコンテンツが入る --}}
+    </main>
+
+    <footer>フッター</footer>
+</body>
+</html>
 ```
+
+**resources/views/lands/index.blade.php**（子テンプレート）:
+```html
+@extends('layouts.app')
+{{-- ↑ layouts/app.blade.php を継承 --}}
+
+@section('title', '土地一覧')
+{{-- ↑ @yield('title') に '土地一覧' を挿入 --}}
+
+@section('content')
+{{-- ↑ @yield('content') に以下を挿入 --}}
+    <h1>土地一覧</h1>
+    @foreach($lands as $land)
+        <div>{{ $land->name }}</div>
+    @endforeach
+@endsection
 
 ---
 
