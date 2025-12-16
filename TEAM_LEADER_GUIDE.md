@@ -101,16 +101,93 @@ git branch -d feature/古いブランチ名
 
 ## メンバーへの作業割り当て
 
-### 画面担当（member_.mdより）
+### システム機能一覧
 
-| 担当 | 画面 |
-|-----|------|
+| # | 機能 | 説明 | 優先度 |
+|---|------|------|-------|
+| 1 | 会員登録 | 新規ユーザーの登録 | ★★★ |
+| 2 | ログイン/ログアウト | 認証機能 | ★★★ |
+| 3 | プロフィール編集 | ユーザー情報の変更 | ★★ |
+| 4 | 土地登録 | オーナーが土地を登録 | ★★★ |
+| 5 | 土地一覧・検索 | 条件で土地を検索 | ★★★ |
+| 6 | 土地詳細表示 | 土地の詳細情報表示 | ★★★ |
+| 7 | レンタル予約 | 土地の予約申し込み | ★★★ |
+| 8 | レンタル承認 | オーナーが予約を承認 | ★★ |
+| 9 | レンタル中一覧 | 借りている土地一覧 | ★★ |
+| 10 | 自己保持土地一覧 | 自分が登録した土地一覧 | ★★ |
+| 11 | DM/チャット | ユーザー間のメッセージ | ★ |
+| 12 | レビュー・評価 | 取引後の評価 | ★ |
+| 13 | 問い合わせ | サイトへの問い合わせ | ★ |
+| 14 | 管理者：ユーザー管理 | ユーザーの一覧・詳細 | ★ |
+| 15 | 管理者：問い合わせ管理 | 問い合わせ対応 | ★ |
+
+---
+
+### 開発フェーズと担当分担（仮）
+
+#### Phase 1: 共通基盤（リーダー担当）
+```
+期間: 1週目
+内容:
+- データベースマイグレーション作成（全テーブル）
+- 共通レイアウト（ヘッダー、フッター）
+- 認証機能の基盤
+```
+
+#### Phase 2: コア機能（週2〜3）
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **B 楠山** | 会員登録 | feature/kusuyama-register | AuthController, Member Model |
+| **B 楠山** | ログイン | feature/kusuyama-login | LoginController, auth views |
+| **B 楠山** | 土地登録 | feature/kusuyama-land-register | LandController@create/store |
+| **A 小島** | 土地検索 | feature/kojima-land-search | LandController@search |
+| **A 小島** | 土地詳細 | feature/kojima-land-detail | LandController@show |
+| **C 志賀** | トップページ | feature/shiga-home | HomeController |
+| **C 志賀** | 自己保持土地一覧 | feature/shiga-my-lands | LandController@myLands |
+
+#### Phase 3: レンタル機能（週4）
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **A 小島** | レンタル確認 | feature/kojima-rental-confirm | RentalController@confirm |
+| **C 志賀** | 土地貸出承認 | feature/shiga-rental-approve | RentalController@approve |
+| **E 三輪** | レンタル中一覧 | feature/miwa-rental-list | RentalController@index |
+| **E 三輪** | レンタル中詳細 | feature/miwa-rental-detail | RentalController@show |
+| **E 三輪** | 取引完了一覧 | feature/miwa-completed-list | RentalController@completed |
+
+#### Phase 4: ユーザー機能（週5）
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **D 我妻** | プロフィール編集 | feature/azuma-profile-edit | ProfileController@edit/update |
+| **D 我妻** | プロフィール確認 | feature/azuma-profile-show | ProfileController@show |
+| **D 我妻** | DM一覧 | feature/azuma-dm-list | ChatController@index |
+| **D 我妻** | DM画面 | feature/azuma-dm-chat | ChatController@show |
+
+#### Phase 5: 管理者機能（週6）
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **F 野村** | ユーザー一覧 | feature/nomura-user-list | Admin/UserController@index |
+| **F 野村** | ユーザー詳細 | feature/nomura-user-detail | Admin/UserController@show |
+| **F 野村** | 問い合わせ一覧 | feature/nomura-contact-list | Admin/ContactController@index |
+| **F 野村** | 問い合わせ詳細 | feature/nomura-contact-detail | Admin/ContactController@show |
+
+---
+
+### 画面担当一覧（member_.mdより）
+
+| 担当 | 担当画面 |
+|-----|---------|
 | A 小島 | 問い合わせ、検索結果、土地詳細、レンタル確認 |
 | B 楠山 | 会員登録、ログイン、土地登録、土地登録確認 |
 | C 志賀 | ユーザ画面、トップ、自己保持土地一覧、土地貸出、貸出中詳細 |
 | D 我妻 | プロフィール編集、プロフィール確認、DM一覧、DM画面 |
 | E 三輪 | レンタル中一覧、レンタル中詳細、取引完了一覧、取引完了詳細 |
 | F 野村 | ユーザ一覧、ユーザ詳細、問い合わせ一覧、問い合わせ詳細 |
+
+---
 
 ### 作業の進め方
 
