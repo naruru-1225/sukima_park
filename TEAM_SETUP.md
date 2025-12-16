@@ -1271,6 +1271,113 @@ Route::resource('lands', LandController::class);
 
 ---
 
+### 5. ビュー（resources/views/）
+
+**画面のHTML（Bladeテンプレート）**
+
+Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを書きやすくします。
+
+**resources/views/lands/index.blade.php**:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>土地一覧</title>
+</head>
+<body>
+    <h1>土地一覧</h1>
+
+    {{-- ─── コメント（HTMLに出力されない） ─── --}}
+
+    {{-- ─── 変数の表示 ─── --}}
+    {{ $変数名 }}
+    {{-- ↑ HTMLエスケープ済み（XSS攻撃対策） --}}
+    {{-- ↑ < は &lt; に変換される --}}
+
+    {!! $html変数 !!}
+    {{-- ↑ HTMLをそのまま出力（注意して使う） --}}
+
+    {{-- ─── 条件分岐 ─── --}}
+    @if(session('success'))
+        <p style="color: green">{{ session('success') }}</p>
+    @endif
+
+    @if($lands->isEmpty())
+        <p>土地が登録されていません</p>
+    @else
+        <p>{{ $lands->count() }}件の土地があります</p>
+    @endif
+
+    {{-- ─── ループ ─── --}}
+    @foreach($lands as $land)
+        <div class="land-card">
+            <h2>{{ $land->name }}</h2>
+            <p>場所: {{ $land->location }}</p>
+            <p>面積: {{ $land->area }}㎡</p>
+            <a href="/lands/{{ $land->id }}">詳細を見る</a>
+        </div>
+    @endforeach
+
+    {{-- ─── 空の場合の処理 ─── --}}
+    @forelse($lands as $land)
+        <div>{{ $land->name }}</div>
+    @empty
+        <p>データがありません</p>
+    @endforelse
+
+    {{-- ─── レイアウト継承 ─── --}}
+    {{-- layouts/app.blade.php を継承する場合 --}}
+</body>
+</html>
+```
+
+**レイアウトの継承**:
+
+**resources/views/layouts/app.blade.php**（共通レイアウト）:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@yield('title') - スキマパーク</title>
+    {{-- ↑ @yield = 子テンプレートから挿入される場所 --}}
+</head>
+<body>
+    <header>
+        <nav>ナビゲーション</nav>
+    </header>
+
+    <main>
+        @yield('content')
+        {{-- ↑ ここに各ページのコンテンツが入る --}}
+    </main>
+
+    <footer>フッター</footer>
+</body>
+</html>
+```
+
+**resources/views/lands/index.blade.php**（子テンプレート）:
+
+```html
+@extends('layouts.app')
+{{-- ↑ layouts/app.blade.php を継承 --}}
+
+@section('title', '土地一覧')
+{{-- ↑ @yield('title') に '土地一覧' を挿入 --}}
+
+@section('content')
+{{-- ↑ @yield('content') に以下を挿入 --}}
+    <h1>土地一覧</h1>
+    @foreach($lands as $land)
+        <div>{{ $land->name }}</div>
+    @endforeach
+@endsection
+```
+
+---
+
 ## CRUDとは
 
 **CRUD**は、データベース操作の4つの基本機能の頭文字です。
@@ -1601,114 +1708,7 @@ public/css/
 > ⚠️ **注意**: これらのテーブルは既にマイグレーションで定義済みです。
 > `database/migrations/` フォルダ内のファイルで確認できます。
 
----
 
-### 5. ビュー（resources/views/）
-
-**画面のHTML（Bladeテンプレート）**
-
-Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを書きやすくします。
-
-**resources/views/lands/index.blade.php**:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>土地一覧</title>
-</head>
-<body>
-    <h1>土地一覧</h1>
-
-    {{-- ─── コメント（HTMLに出力されない） ─── --}}
-
-    {{-- ─── 変数の表示 ─── --}}
-    {{ $変数名 }}
-    {{-- ↑ HTMLエスケープ済み（XSS攻撃対策） --}}
-    {{-- ↑ < は < に変換される --}}
-
-    {!! $html変数 !!}
-    {{-- ↑ HTMLをそのまま出力（注意して使う） --}}
-
-    {{-- ─── 条件分岐 ─── --}}
-    @if(session('success'))
-        <p style="color: green">{{ session('success') }}</p>
-    @endif
-
-    @if($lands->isEmpty())
-        <p>土地が登録されていません</p>
-    @else
-        <p>{{ $lands->count() }}件の土地があります</p>
-    @endif
-
-    {{-- ─── ループ ─── --}}
-    @foreach($lands as $land)
-        <div class="land-card">
-            <h2>{{ $land->name }}</h2>
-            <p>場所: {{ $land->location }}</p>
-            <p>面積: {{ $land->area }}㎡</p>
-            <a href="/lands/{{ $land->id }}">詳細を見る</a>
-        </div>
-    @endforeach
-
-    {{-- ─── 空の場合の処理 ─── --}}
-    @forelse($lands as $land)
-        <div>{{ $land->name }}</div>
-    @empty
-        <p>データがありません</p>
-    @endforelse
-
-    {{-- ─── レイアウト継承 ─── --}}
-    {{-- layouts/app.blade.php を継承する場合 --}}
-</body>
-</html>
-```
-
-**レイアウトの継承**:
-
-**resources/views/layouts/app.blade.php**（共通レイアウト）:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <title>@yield('title') - スキマパーク</title>
-    {{-- ↑ @yield = 子テンプレートから挿入される場所 --}}
-</head>
-<body>
-    <header>
-        <nav>ナビゲーション</nav>
-    </header>
-
-    <main>
-        @yield('content')
-        {{-- ↑ ここに各ページのコンテンツが入る --}}
-    </main>
-
-    <footer>フッター</footer>
-</body>
-</html>
-```
-
-**resources/views/lands/index.blade.php**（子テンプレート）:
-
-```html
-@extends('layouts.app')
-{{-- ↑ layouts/app.blade.php を継承 --}}
-
-@section('title', '土地一覧')
-{{-- ↑ @yield('title') に '土地一覧' を挿入 --}}
-
-@section('content')
-{{-- ↑ @yield('content') に以下を挿入 --}}
-    <h1>土地一覧</h1>
-    @foreach($lands as $land)
-        <div>{{ $land->name }}</div>
-    @endforeach
-@endsection
-```
-
----
 
 ## phpMyAdminの使い方
 
