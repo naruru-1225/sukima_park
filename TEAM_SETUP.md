@@ -1062,145 +1062,30 @@ members (会員)
 
 ### モデルとは？
 
-**モデル** = **データベースのテーブルをPHPで操作するためのクラス**
+**モデル** = **データベース操作を簡単にするツール**
 
 ```
-┌─────────────┐      ┌─────────────┐      ┌─────────────┐
-│ データベース │ ←──→ │   モデル    │ ←──→ │コントローラ │
-│ (members)   │      │ (Member.php)│      │             │
-└─────────────┘      └─────────────┘      └─────────────┘
-      ↑                    ↑
-   テーブル           PHPクラス
+❌ モデルなし（SQL直書き）
+$results = DB::select('SELECT * FROM members WHERE gender = 0');
+
+✅ モデルあり（シンプルで読みやすい）
+$members = Member::where('gender', 0)->get();
 ```
 
-### モデルファイルの構造（文法解説）
+このプロジェクトでは7つのモデルが用意されています。
+コントローラで `use App\Models\モデル名;` を書くだけで使えます。
 
-```php
-<?php
-// ─────────────────────────────────────────
-// namespace（名前空間）
-// ─────────────────────────────────────────
-namespace App\Models;
-// ↑ このファイルの場所を宣言
-// ↑ app/Models/ フォルダにあることを示す
+### 作成済みモデル一覧
 
-// ─────────────────────────────────────────
-// use文（クラスのインポート）
-// ─────────────────────────────────────────
-use Illuminate\Database\Eloquent\Model;
-// ↑ LaravelのModelクラスを使えるようにする
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-// ↑ テストデータ作成用のトレイト
-
-// ─────────────────────────────────────────
-// クラス定義
-// ─────────────────────────────────────────
-class Land extends Model
-//    ↑ クラス名（単数形・先頭大文字）
-//         ↑ Modelを継承（データベース操作機能を引き継ぐ）
-{
-    // トレイト（機能を追加）
-    use HasFactory;
-    // ↑ Factory機能を使えるようにする
-
-    // ─────────────────────────────────────
-    // $fillable（許可するカラム）
-    // ─────────────────────────────────────
-    protected $fillable = [
-        'prefectures',
-        'city',
-        'street_address',
-        'area',
-        'user_id',
-    ];
-    // ↑ protected = このクラスと子クラスからのみアクセス可能
-    // ↑ $fillable = create()で保存できるカラムを指定
-    // ↑ セキュリティ対策（不正なデータ挿入を防ぐ）
-
-    // ─────────────────────────────────────
-    // $casts（型変換）
-    // ─────────────────────────────────────
-    protected $casts = [
-        'area' => 'decimal:2',     // 小数点2桁
-        'birth' => 'date',          // 日付型
-        'show_birth' => 'boolean',  // true/false
-    ];
-    // ↑ データベースから取得時に自動で型変換される
-
-    // ─────────────────────────────────────
-    // リレーション（関連）メソッド
-    // ─────────────────────────────────────
-    public function owner()
-    // ↑ メソッド名は関連の意味を表す名前にする
-    {
-        return $this->belongsTo(Member::class, 'user_id');
-        //     ↑ $this = このモデル（Land）自身
-        //           ↑ belongsTo = 「〜に属する」の関係
-        //                        ↑ 関連先のモデル
-        //                                       ↑ 外部キーのカラム名
-    }
-
-    public function rentalRecords()
-    {
-        return $this->hasMany(RentalRecord::class, 'land_id');
-        //           ↑ hasMany = 「複数を持つ」の関係
-        //                       ↑ 関連先のモデル
-        //                                          ↑ 相手側の外部キー
-    }
-}
-```
-
-### リレーションの種類
-
-| 種類 | 意味 | 例 |
-|-----|------|-----|
-| `hasMany` | 1対多（親→子） | 会員は複数の土地を持つ |
-| `belongsTo` | 多対1（子→親） | 土地は1人の会員に属する |
-| `hasOne` | 1対1 | 貸出記録は1つのレビューを持つ |
-
-```php
-<?php
-// hasMany: 1対多（親から子を取得）
-// Member（親）から見てLand（子）が複数ある
-class Member extends Model
-{
-    public function lands()  // 複数形
-    {
-        return $this->hasMany(Land::class, 'user_id');
-        // ↑ landsテーブルのuser_idカラムで紐付け
-    }
-}
-
-// belongsTo: 多対1（子から親を取得）
-// Land（子）から見てMember（親）は1人
-class Land extends Model
-{
-    public function owner()  // 単数形
-    {
-        return $this->belongsTo(Member::class, 'user_id');
-        // ↑ このテーブルのuser_idカラムで紐付け
-    }
-}
-
-// 使い方
-$member = Member::find(1);
-$lands = $member->lands;      // 配列（Collection）が返る
-
-$land = Land::find(1);
-$owner = $land->owner;        // 1件のMemberが返る
-```
-
-### モデル一覧
-
-| モデル名 | ファイル | テーブル |
-|---------|---------|---------|
-| Member | app/Models/Member.php | members |
-| Land | app/Models/Land.php | lands |
-| RentalRecord | app/Models/RentalRecord.php | rental_records |
-| ReviewComment | app/Models/ReviewComment.php | review_comments |
-| Contact | app/Models/Contact.php | contacts |
-| Reply | app/Models/Reply.php | replies |
-| Chat | app/Models/Chat.php | chats |
+| モデル名 | テーブル | 説明 | 取得できる関連データ |
+|---------|---------|------|-------------------|
+| Member | members | 会員情報 | lands, rentalRecords, contacts, sentChats, receivedChats |
+| Land | lands | 土地情報 | owner, rentalRecords, reviews |
+| RentalRecord | rental_records | 貸出記録 | land, renter, review |
+| ReviewComment | review_comments | レビュー | reviewer, land, rentalRecord |
+| Contact | contacts | 問い合わせ | sender, replies |
+| Reply | replies | 返信 | contact, sender |
+| Chat | chats | DM | sender, receiver |
 
 ### 基本的なCRUD操作
 
