@@ -103,33 +103,98 @@ git checkout main
 
 ### システム機能一覧
 
-| # | 機能 | 説明 | 優先度 |
-|---|------|------|-------|
-| 1 | 会員登録 | 新規ユーザーの登録 | ★★★ |
-| 2 | ログイン/ログアウト | 認証機能 | ★★★ |
-| 3 | プロフィール編集 | ユーザー情報の変更 | ★★ |
-| 4 | 土地登録 | オーナーが土地を登録 | ★★★ |
-| 5 | 土地一覧・検索 | 条件で土地を検索 | ★★★ |
-| 6 | 土地詳細表示 | 土地の詳細情報表示 | ★★★ |
-| 7 | レンタル予約 | 土地の予約申し込み | ★★★ |
-| 8 | レンタル承認 | オーナーが予約を承認 | ★★ |
-| 9 | レンタル中一覧 | 借りている土地一覧 | ★★ |
-| 10 | 自己保持土地一覧 | 自分が登録した土地一覧 | ★★ |
-| 11 | DM/チャット | ユーザー間のメッセージ | ★ |
-| 12 | レビュー・評価 | 取引後の評価 | ★ |
-| 13 | 問い合わせ | サイトへの問い合わせ | ★ |
-| 14 | 管理者機能 | ユーザー・問い合わせ管理 | ★ |
+| # | 機能 | 説明 | 優先度 | 作成ファイル |
+|---|------|------|-------|-------------|
+| 1 | 会員登録 | 新規ユーザーの登録 | ★★★ | AuthController, register.blade.php |
+| 2 | ログイン/ログアウト | 認証機能 | ★★★ | LoginController, login.blade.php |
+| 3 | プロフィール編集 | ユーザー情報の変更 | ★★ | ProfileController, profile/edit.blade.php |
+| 4 | 土地登録 | オーナーが土地を登録 | ★★★ | LandController@create/store, land/create.blade.php |
+| 5 | 土地一覧・検索 | 条件で土地を検索 | ★★★ | LandController@index/search, land/index.blade.php |
+| 6 | 土地詳細表示 | 土地の詳細情報表示 | ★★★ | LandController@show, land/show.blade.php |
+| 7 | レンタル予約 | 土地の予約申し込み | ★★★ | RentalController@confirm/store |
+| 8 | レンタル承認 | オーナーが予約を承認 | ★★ | RentalController@approve |
+| 9 | レンタル中一覧 | 借りている土地一覧 | ★★ | RentalController@index |
+| 10 | 自己保持土地一覧 | 自分が登録した土地一覧 | ★★ | LandController@myLands |
+| 11 | DM/チャット | ユーザー間のメッセージ | ★ | ChatController |
+| 12 | レビュー・評価 | 取引後の評価 | ★ | ReviewController |
+| 13 | 問い合わせ | サイトへの問い合わせ | ★ | ContactController |
+| 14 | 管理者機能 | ユーザー・問い合わせ管理 | ★ | Admin/UserController, Admin/ContactController |
+
+---
+
+### 開発フェーズと担当分担
+
+#### Phase 1: 共通基盤（リーダー担当）- 1週目
+
+| 作業内容 | 状態 |
+|---------|------|
+| データベースマイグレーション作成 | ✅ 完了 |
+| モデル作成 | ✅ 完了 |
+| 共通レイアウト（ヘッダー、フッター） | 未着手 |
+| 認証機能の基盤 | 未着手 |
+
+---
+
+#### Phase 2: コア機能 - 週2〜3
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **B 楠山** | 会員登録画面 | feature/kusuyama-register | `AuthController`, `views/auth/register.blade.php` |
+| **B 楠山** | ログイン画面 | feature/kusuyama-login | `LoginController`, `views/auth/login.blade.php` |
+| **B 楠山** | 土地登録画面 | feature/kusuyama-land-register | `LandController@create/store`, `views/land/create.blade.php` |
+| **A 小島** | 土地検索画面 | feature/kojima-land-search | `LandController@search`, `views/land/index.blade.php` |
+| **A 小島** | 土地詳細画面 | feature/kojima-land-detail | `LandController@show`, `views/land/show.blade.php` |
+| **C 志賀** | トップページ | feature/shiga-home | `HomeController`, `views/home.blade.php` |
+| **C 志賀** | 自己保持土地一覧 | feature/shiga-my-lands | `LandController@myLands`, `views/land/my-lands.blade.php` |
+
+---
+
+#### Phase 3: レンタル機能 - 週4
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **A 小島** | レンタル確認画面 | feature/kojima-rental-confirm | `RentalController@confirm`, `views/rental/confirm.blade.php` |
+| **C 志賀** | 土地貸出承認画面 | feature/shiga-rental-approve | `RentalController@approve`, `views/rental/approve.blade.php` |
+| **E 三輪** | レンタル中一覧 | feature/miwa-rental-list | `RentalController@index`, `views/rental/index.blade.php` |
+| **E 三輪** | レンタル中詳細 | feature/miwa-rental-detail | `RentalController@show`, `views/rental/show.blade.php` |
+| **E 三輪** | 取引完了一覧 | feature/miwa-completed-list | `RentalController@completed`, `views/rental/completed.blade.php` |
+
+---
+
+#### Phase 4: ユーザー機能 - 週5
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **D 我妻** | プロフィール編集 | feature/azuma-profile-edit | `ProfileController@edit/update`, `views/profile/edit.blade.php` |
+| **D 我妻** | プロフィール確認 | feature/azuma-profile-show | `ProfileController@show`, `views/profile/show.blade.php` |
+| **D 我妻** | DM一覧 | feature/azuma-dm-list | `ChatController@index`, `views/chat/index.blade.php` |
+| **D 我妻** | DM画面 | feature/azuma-dm-chat | `ChatController@show`, `views/chat/show.blade.php` |
+
+---
+
+#### Phase 5: 管理者機能 - 週6
+
+| 担当 | 機能 | ブランチ名 | 作成ファイル |
+|-----|------|----------|-------------|
+| **F 野村** | ユーザー一覧 | feature/nomura-user-list | `Admin/UserController@index`, `views/admin/user/index.blade.php` |
+| **F 野村** | ユーザー詳細 | feature/nomura-user-detail | `Admin/UserController@show`, `views/admin/user/show.blade.php` |
+| **F 野村** | 問い合わせ一覧 | feature/nomura-contact-list | `Admin/ContactController@index`, `views/admin/contact/index.blade.php` |
+| **F 野村** | 問い合わせ詳細 | feature/nomura-contact-detail | `Admin/ContactController@show`, `views/admin/contact/show.blade.php` |
+
+---
 
 ### 画面担当一覧（member_.mdより）
 
-| 担当 | 担当画面 |
-|-----|---------|
-| A 小島 | 問い合わせ、検索結果、土地詳細、レンタル確認 |
-| B 楠山 | 会員登録、ログイン、土地登録、土地登録確認 |
-| C 志賀 | ユーザ画面、トップ、自己保持土地一覧、土地貸出、貸出中詳細 |
-| D 我妻 | プロフィール編集、プロフィール確認、DM一覧、DM画面 |
-| E 三輪 | レンタル中一覧、レンタル中詳細、取引完了一覧、取引完了詳細 |
-| F 野村 | ユーザ一覧、ユーザ詳細、問い合わせ一覧、問い合わせ詳細 |
+| 担当 | 担当画面 | 画面数 |
+|-----|---------|-------|
+| A 小島 | 問い合わせ、検索結果、土地詳細、レンタル確認 | 4画面 |
+| B 楠山 | 会員登録、ログイン、土地登録、土地登録確認 | 4画面 |
+| C 志賀 | ユーザ画面、トップ、自己保持土地一覧、土地貸出、貸出中詳細 | 5画面 |
+| D 我妻 | プロフィール編集、プロフィール確認、DM一覧、DM画面 | 4画面 |
+| E 三輪 | レンタル中一覧、レンタル中詳細、取引完了一覧、取引完了詳細 | 4画面 |
+| F 野村 | ユーザ一覧、ユーザ詳細、問い合わせ一覧、問い合わせ詳細 | 4画面 |
+
+---
 
 ### ブランチ名のルール
 
@@ -137,6 +202,21 @@ git checkout main
 feature/担当者名-機能名
 例: feature/kojima-search-results
 ```
+
+### 作業の進め方
+
+1. **1機能1プルリクエスト**
+   - 大きな変更は分割してPRを出してもらう
+
+2. **毎日の進捗確認**
+   - 困っていることがないか確認
+   - プルリクエストは早めにレビュー
+
+3. **コミットメッセージのルール**
+   ```
+   ✅ 良い例: 土地一覧画面を作成
+   ❌ 悪い例: 修正、更新、あ
+   ```
 
 ---
 
