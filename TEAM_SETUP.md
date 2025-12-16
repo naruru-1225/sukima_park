@@ -433,161 +433,94 @@ App\Models\User       // Appフォルダ内のModelsフォルダ内のUser
 > 機能を作る時は以下の順番で進めます：
 > **1. マイグレーション → 2. モデル → 3. コントローラ → 4. ルーティング → 5. ビュー**
 
-### 4. ルーティング（routes/web.php）
+### 1. マイグレーション（database/migrations/）★最初に作成
 
-**URLと処理を紐付ける設定ファイル**
-
-```php
-<?php
-// ─────────────────────────────────────────
-// use文: 他のファイルのクラスを使う宣言
-// ─────────────────────────────────────────
-use App\Http\Controllers\LandController;
-// ↑ App/Http/Controllers/LandController.php を使う
-
-// ─────────────────────────────────────────
-// Route::get() - GETリクエストを処理
-// ─────────────────────────────────────────
-Route::get('/lands', [LandController::class, 'index']);
-//         ↑ URL     ↑ コントローラ         ↑ メソッド名
-// 
-// 意味: /lands にアクセスしたら LandController の index メソッドを実行
-
-// ─────────────────────────────────────────
-// URLパラメータ: {変数名} で受け取る
-// ─────────────────────────────────────────
-Route::get('/lands/{id}', [LandController::class, 'show']);
-// /lands/1 → $id = 1
-// /lands/5 → $id = 5
-
-// ─────────────────────────────────────────
-// Route::post() - POSTリクエスト（フォーム送信）
-// ─────────────────────────────────────────
-Route::post('/lands', [LandController::class, 'store']);
-// フォームの action="/lands" method="POST" で送信されたら実行
-
-// ─────────────────────────────────────────
-// リソースルート: CRUD操作を一括定義
-// ─────────────────────────────────────────
-Route::resource('lands', LandController::class);
-// ↑ これ1行で以下の7つのルートが自動生成される:
-//
-// GET    /lands           → index()   一覧表示
-// GET    /lands/create    → create()  登録フォーム表示
-// POST   /lands           → store()   登録処理
-// GET    /lands/{id}      → show()    詳細表示
-// GET    /lands/{id}/edit → edit()    編集フォーム表示
-// PUT    /lands/{id}      → update()  更新処理
-// DELETE /lands/{id}      → destroy() 削除処理
-```
-
-### 3. コントローラ（app/Http/Controllers/）
-
-**処理を書く場所**
+**テーブル定義**
 
 ```bash
-# コントローラ作成コマンド
-docker compose exec app php artisan make:controller LandController
+# マイグレーション作成
+docker compose exec app php artisan make:migration create_lands_table
 ```
 
 ```php
 <?php
-// ─────────────────────────────────────────
-// namespace: このファイルの場所を宣言
-// ─────────────────────────────────────────
-namespace App\Http\Controllers;
-// ↑ このファイルは app/Http/Controllers/ にあることを示す
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-// ─────────────────────────────────────────
-// use文: 使用するクラスを宣言
-// ─────────────────────────────────────────
-use App\Models\Land;           // Landモデル
-use Illuminate\Http\Request;   // HTTPリクエスト情報
-
-// ─────────────────────────────────────────
-// クラス定義
-// ─────────────────────────────────────────
-class LandController extends Controller
-//    ↑ クラス名      ↑ Controllerを継承（機能を引き継ぐ）
+return new class extends Migration
 {
     // ─────────────────────────────────────
-    // 一覧表示メソッド
+    // up(): マイグレーション実行時の処理
     // ─────────────────────────────────────
-    public function index()
-    // ↑ public = どこからでも呼び出せる
-    // ↑ function = 関数（メソッド）の定義
+    public function up(): void
     {
-        // データベースから全件取得
-        $lands = Land::all();
-        // ↑ Land::all() = landsテーブルの全レコードを取得
-        // ↑ 結果は $lands に配列のような形で格納される
+        Schema::create('lands', function (Blueprint $table) {
+        //    ↑ テーブル名    ↑ Blueprintでカラムを定義
 
-        // ビューにデータを渡して表示
-        return view('lands.index', ['lands' => $lands]);
-        // ↑ view('フォルダ.ファイル名', ['変数名' => 値])
-        // ↑ resources/views/lands/index.blade.php を表示
-        // ↑ ビュー内で $lands として使える
+            // ─── 主キー ───
+            $table->id();
+            // ↑ id という名前の自動連番カラム（BIGINT UNSIGNED AUTO_INCREMENT）
+
+            // ─── 外部キー ───
+            $table->foreignId('owner_id')
+                  ->constrained('members')
+                  ->onDelete('cascade');
+            // ↑ foreignId = 外部キー用のカラム
+            // ↑ constrained('members') = membersテーブルのidを参照
+            // ↑ onDelete('cascade') = 親が削除されたら子も削除
+
+            // ─── 文字列 ───
+            $table->string('name', 50);
+            // ↑ VARCHAR(50)
+
+            $table->string('location');
+            // ↑ VARCHAR(255) - 長さ省略時は255
+
+            // ─── テキスト ───
+            $table->text('description')->nullable();
+            // ↑ TEXT型（長い文章用）
+            // ↑ nullable() = NULL許可
+
+            // ─── 数値 ───
+            $table->integer('capacity');     // 整数
+            $table->decimal('area', 10, 2);  // 小数（全体10桁、小数点以下2桁）
+            $table->decimal('price', 10, 0)->default(0);
+            // ↑ default(0) = デフォルト値
+
+            // ─── 列挙型 ───
+            $table->enum('status', ['available', 'rented', 'inactive'])
+                  ->default('available');
+            // ↑ 3つの値のいずれか
+
+            // ─── 日付・時刻 ───
+            $table->date('available_date');        // 日付のみ
+            $table->datetime('start_at');          // 日付と時刻
+            $table->timestamps();
+            // ↑ created_at と updated_at を自動生成
+        });
     }
 
     // ─────────────────────────────────────
-    // 詳細表示メソッド
+    // down(): ロールバック時の処理
     // ─────────────────────────────────────
-    public function show($id)
-    // ↑ $id は URL /lands/{id} の {id} 部分が入る
+    public function down(): void
     {
-        // IDで1件取得
-        $land = Land::find($id);
-        // ↑ find(ID) = 主キーで検索して1件取得
-        // ↑ 見つからない場合は null が返る
-
-        // または見つからない場合に404エラーを出す
-        $land = Land::findOrFail($id);
-        // ↑ 見つからない場合は自動で404ページを表示
-
-        return view('lands.show', ['land' => $land]);
+        Schema::dropIfExists('lands');
+        // ↑ テーブルが存在すれば削除
     }
+};
+```
 
-    // ─────────────────────────────────────
-    // 登録フォーム表示メソッド
-    // ─────────────────────────────────────
-    public function create()
-    {
-        // フォームのHTMLを表示するだけ
-        return view('lands.create');
-    }
+```bash
+# マイグレーション実行
+docker compose exec app php artisan migrate
 
-    // ─────────────────────────────────────
-    // 登録処理メソッド
-    // ─────────────────────────────────────
-    public function store(Request $request)
-    // ↑ Request $request = フォームから送信されたデータが入る
-    {
-        // バリデーション（入力チェック）
-        $validated = $request->validate([
-            'name' => 'required|max:50',
-            // ↑ 必須（required）、最大50文字（max:50）
-            'location' => 'required',
-            'area' => 'required|numeric|min:1',
-            // ↑ 必須、数値、1以上
-        ]);
-        // ↑ バリデーション失敗時は自動でフォームに戻る
+# ロールバック（1つ戻す）
+docker compose exec app php artisan migrate:rollback
 
-        // データベースに保存
-        Land::create([
-            'name' => $request->name,
-            // ↑ $request->name = フォームの name="name" の値
-            'location' => $request->location,
-            'area' => $request->area,
-            'owner_id' => auth()->id(),
-            // ↑ auth()->id() = ログイン中のユーザーのID
-        ]);
-
-        // リダイレクト（別ページに移動）
-        return redirect('/lands')->with('success', '登録しました');
-        // ↑ redirect('URL') = 指定URLに移動
-        // ↑ with('キー', '値') = 次のページでセッションメッセージを表示
-    }
-}
+# 全部消してやり直し
+docker compose exec app php artisan migrate:fresh
 ```
 
 ### 2. モデル（app/Models/）
@@ -702,95 +635,273 @@ $land = Land::find(1);
 $land->delete();
 ```
 
-### 1. マイグレーション（database/migrations/）★最初に作成
 
-**テーブル定義**
+### 3. コントローラ（app/Http/Controllers/）
+
+**処理を書く場所**
 
 ```bash
-# マイグレーション作成
-docker compose exec app php artisan make:migration create_lands_table
+# コントローラ作成コマンド
+docker compose exec app php artisan make:controller LandController
 ```
 
 ```php
 <?php
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+// ─────────────────────────────────────────
+// namespace: このファイルの場所を宣言
+// ─────────────────────────────────────────
+namespace App\Http\Controllers;
+// ↑ このファイルは app/Http/Controllers/ にあることを示す
 
-return new class extends Migration
+// ─────────────────────────────────────────
+// use文: 使用するクラスを宣言
+// ─────────────────────────────────────────
+use App\Models\Land;           // Landモデル
+use Illuminate\Http\Request;   // HTTPリクエスト情報
+
+// ─────────────────────────────────────────
+// クラス定義
+// ─────────────────────────────────────────
+class LandController extends Controller
+//    ↑ クラス名      ↑ Controllerを継承（機能を引き継ぐ）
 {
     // ─────────────────────────────────────
-    // up(): マイグレーション実行時の処理
+    // 一覧表示メソッド
     // ─────────────────────────────────────
-    public function up(): void
+    public function index()
+    // ↑ public = どこからでも呼び出せる
+    // ↑ function = 関数（メソッド）の定義
     {
-        Schema::create('lands', function (Blueprint $table) {
-        //    ↑ テーブル名    ↑ Blueprintでカラムを定義
+        // データベースから全件取得
+        $lands = Land::all();
+        // ↑ Land::all() = landsテーブルの全レコードを取得
+        // ↑ 結果は $lands に配列のような形で格納される
 
-            // ─── 主キー ───
-            $table->id();
-            // ↑ id という名前の自動連番カラム（BIGINT UNSIGNED AUTO_INCREMENT）
-
-            // ─── 外部キー ───
-            $table->foreignId('owner_id')
-                  ->constrained('members')
-                  ->onDelete('cascade');
-            // ↑ foreignId = 外部キー用のカラム
-            // ↑ constrained('members') = membersテーブルのidを参照
-            // ↑ onDelete('cascade') = 親が削除されたら子も削除
-
-            // ─── 文字列 ───
-            $table->string('name', 50);
-            // ↑ VARCHAR(50)
-
-            $table->string('location');
-            // ↑ VARCHAR(255) - 長さ省略時は255
-
-            // ─── テキスト ───
-            $table->text('description')->nullable();
-            // ↑ TEXT型（長い文章用）
-            // ↑ nullable() = NULL許可
-
-            // ─── 数値 ───
-            $table->integer('capacity');     // 整数
-            $table->decimal('area', 10, 2);  // 小数（全体10桁、小数点以下2桁）
-            $table->decimal('price', 10, 0)->default(0);
-            // ↑ default(0) = デフォルト値
-
-            // ─── 列挙型 ───
-            $table->enum('status', ['available', 'rented', 'inactive'])
-                  ->default('available');
-            // ↑ 3つの値のいずれか
-
-            // ─── 日付・時刻 ───
-            $table->date('available_date');        // 日付のみ
-            $table->datetime('start_at');          // 日付と時刻
-            $table->timestamps();
-            // ↑ created_at と updated_at を自動生成
-        });
+        // ビューにデータを渡して表示
+        return view('lands.index', ['lands' => $lands]);
+        // ↑ view('フォルダ.ファイル名', ['変数名' => 値])
+        // ↑ resources/views/lands/index.blade.php を表示
+        // ↑ ビュー内で $lands として使える
     }
 
     // ─────────────────────────────────────
-    // down(): ロールバック時の処理
+    // 詳細表示メソッド
     // ─────────────────────────────────────
-    public function down(): void
+    public function show($id)
+    // ↑ $id は URL /lands/{id} の {id} 部分が入る
     {
-        Schema::dropIfExists('lands');
-        // ↑ テーブルが存在すれば削除
+        // IDで1件取得
+        $land = Land::find($id);
+        // ↑ find(ID) = 主キーで検索して1件取得
+        // ↑ 見つからない場合は null が返る
+
+        // または見つからない場合に404エラーを出す
+        $land = Land::findOrFail($id);
+        // ↑ 見つからない場合は自動で404ページを表示
+
+        return view('lands.show', ['land' => $land]);
     }
-};
-```
+
+    // ─────────────────────────────────────
+    // 登録フォーム表示メソッド
+    // ─────────────────────────────────────
+    public function create()
+    {
+        // フォームのHTMLを表示するだけ
+        return view('lands.create');
+    }
+
+    // ─────────────────────────────────────
+    // 登録処理メソッド
+    // ─────────────────────────────────────
+    public function store(Request $request)
+    // ↑ Request $request = フォームから送信されたデータが入る
+    {
+        // バリデーション（入力チェック）
+        $validated = $request->validate([
+            'name' => 'required|max:50',
+            // ↑ 必須（required）、最大50文字（max:50）
+            'location' => 'required',
+            'area' => 'required|numeric|min:1',
+            // ↑ 必須、数値、1以上
+        ]);
+        // ↑ バリデーション失敗時は自動でフォームに戻る
+
+        // データベースに保存
+        Land::create([
+            'name' => $request->name,
+            // ↑ $request->name = フォームの name="name" の値
+            'location' => $request->location,
+            'area' => $request->area,
+            'owner_id' => auth()->id(),
+            // ↑ auth()->id() = ログイン中のユーザーのID
+        ]);
+
+        // リダイレクト（別ページに移動）
+        return redirect('/lands')->with('success', '登録しました');
+        // ↑ redirect('URL') = 指定URLに移動
+        // ↑ with('キー', '値') = 次のページでセッションメッセージを表示
+    }
+}
+```### 3. コントローラ（app/Http/Controllers/）
+
+**処理を書く場所**
 
 ```bash
-# マイグレーション実行
-docker compose exec app php artisan migrate
-
-# ロールバック（1つ戻す）
-docker compose exec app php artisan migrate:rollback
-
-# 全部消してやり直し
-docker compose exec app php artisan migrate:fresh
+# コントローラ作成コマンド
+docker compose exec app php artisan make:controller LandController
 ```
+
+```php
+<?php
+// ─────────────────────────────────────────
+// namespace: このファイルの場所を宣言
+// ─────────────────────────────────────────
+namespace App\Http\Controllers;
+// ↑ このファイルは app/Http/Controllers/ にあることを示す
+
+// ─────────────────────────────────────────
+// use文: 使用するクラスを宣言
+// ─────────────────────────────────────────
+use App\Models\Land;           // Landモデル
+use Illuminate\Http\Request;   // HTTPリクエスト情報
+
+// ─────────────────────────────────────────
+// クラス定義
+// ─────────────────────────────────────────
+class LandController extends Controller
+//    ↑ クラス名      ↑ Controllerを継承（機能を引き継ぐ）
+{
+    // ─────────────────────────────────────
+    // 一覧表示メソッド
+    // ─────────────────────────────────────
+    public function index()
+    // ↑ public = どこからでも呼び出せる
+    // ↑ function = 関数（メソッド）の定義
+    {
+        // データベースから全件取得
+        $lands = Land::all();
+        // ↑ Land::all() = landsテーブルの全レコードを取得
+        // ↑ 結果は $lands に配列のような形で格納される
+
+        // ビューにデータを渡して表示
+        return view('lands.index', ['lands' => $lands]);
+        // ↑ view('フォルダ.ファイル名', ['変数名' => 値])
+        // ↑ resources/views/lands/index.blade.php を表示
+        // ↑ ビュー内で $lands として使える
+    }
+
+    // ─────────────────────────────────────
+    // 詳細表示メソッド
+    // ─────────────────────────────────────
+    public function show($id)
+    // ↑ $id は URL /lands/{id} の {id} 部分が入る
+    {
+        // IDで1件取得
+        $land = Land::find($id);
+        // ↑ find(ID) = 主キーで検索して1件取得
+        // ↑ 見つからない場合は null が返る
+
+        // または見つからない場合に404エラーを出す
+        $land = Land::findOrFail($id);
+        // ↑ 見つからない場合は自動で404ページを表示
+
+        return view('lands.show', ['land' => $land]);
+    }
+
+    // ─────────────────────────────────────
+    // 登録フォーム表示メソッド
+    // ─────────────────────────────────────
+    public function create()
+    {
+        // フォームのHTMLを表示するだけ
+        return view('lands.create');
+    }
+
+    // ─────────────────────────────────────
+    // 登録処理メソッド
+    // ─────────────────────────────────────
+    public function store(Request $request)
+    // ↑ Request $request = フォームから送信されたデータが入る
+    {
+        // バリデーション（入力チェック）
+        $validated = $request->validate([
+            'name' => 'required|max:50',
+            // ↑ 必須（required）、最大50文字（max:50）
+            'location' => 'required',
+            'area' => 'required|numeric|min:1',
+            // ↑ 必須、数値、1以上
+        ]);
+        // ↑ バリデーション失敗時は自動でフォームに戻る
+
+        // データベースに保存
+        Land::create([
+            'name' => $request->name,
+            // ↑ $request->name = フォームの name="name" の値
+            'location' => $request->location,
+            'area' => $request->area,
+            'owner_id' => auth()->id(),
+            // ↑ auth()->id() = ログイン中のユーザーのID
+        ]);
+
+        // リダイレクト（別ページに移動）
+        return redirect('/lands')->with('success', '登録しました');
+        // ↑ redirect('URL') = 指定URLに移動
+        // ↑ with('キー', '値') = 次のページでセッションメッセージを表示
+    }
+}
+```
+
+
+### 4. ルーティング（routes/web.php）
+
+**URLと処理を紐付ける設定ファイル**
+
+```php
+<?php
+// ─────────────────────────────────────────
+// use文: 他のファイルのクラスを使う宣言
+// ─────────────────────────────────────────
+use App\Http\Controllers\LandController;
+// ↑ App/Http/Controllers/LandController.php を使う
+
+// ─────────────────────────────────────────
+// Route::get() - GETリクエストを処理
+// ─────────────────────────────────────────
+Route::get('/lands', [LandController::class, 'index']);
+//         ↑ URL     ↑ コントローラ         ↑ メソッド名
+// 
+// 意味: /lands にアクセスしたら LandController の index メソッドを実行
+
+// ─────────────────────────────────────────
+// URLパラメータ: {変数名} で受け取る
+// ─────────────────────────────────────────
+Route::get('/lands/{id}', [LandController::class, 'show']);
+// /lands/1 → $id = 1
+// /lands/5 → $id = 5
+
+// ─────────────────────────────────────────
+// Route::post() - POSTリクエスト（フォーム送信）
+// ─────────────────────────────────────────
+Route::post('/lands', [LandController::class, 'store']);
+// フォームの action="/lands" method="POST" で送信されたら実行
+
+// ─────────────────────────────────────────
+// リソースルート: CRUD操作を一括定義
+// ─────────────────────────────────────────
+Route::resource('lands', LandController::class);
+// ↑ これ1行で以下の7つのルートが自動生成される:
+//
+// GET    /lands           → index()   一覧表示
+// GET    /lands/create    → create()  登録フォーム表示
+// POST   /lands           → store()   登録処理
+// GET    /lands/{id}      → show()    詳細表示
+// GET    /lands/{id}/edit → edit()    編集フォーム表示
+// PUT    /lands/{id}      → update()  更新処理
+// DELETE /lands/{id}      → destroy() 削除処理
+```
+
+
 
 ### 5. ビュー（resources/views/）
 
