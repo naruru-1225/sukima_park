@@ -23,14 +23,15 @@
 10. [Laravelの書き方](#laravelの書き方)
 11. [CRUDとは](#crudとは)
 12. [共通レイアウトの使い方](#共通レイアウトの使い方)
-13. [データベーステーブル一覧](#データベーステーブル一覧)
-14. [phpMyAdminの使い方](#phpmyadminの使い方)
-15. [モデルの使い方](#モデルの使い方)
-16. [よく使うコマンド](#よく使うコマンド)
-17. [トラブルシューティング](#トラブルシューティング)
-18. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
-19. [理解度チェッククイズ](#-理解度チェッククイズ)
-20. [さらに学ぶために](#-さらに学ぶために)
+13. [認証機能の使い方](#認証機能の使い方)
+14. [データベーステーブル一覧](#データベーステーブル一覧)
+15. [phpMyAdminの使い方](#phpmyadminの使い方)
+16. [モデルの使い方](#モデルの使い方)
+17. [よく使うコマンド](#よく使うコマンド)
+18. [トラブルシューティング](#トラブルシューティング)
+19. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
+20. [理解度チェッククイズ](#-理解度チェッククイズ)
+21. [さらに学ぶために](#-さらに学ぶために)
 
 ---
 
@@ -1685,6 +1686,110 @@ CSSで使える色の変数です。統一感のあるデザインのために�
 > - `@section('content')` ～ `@endsection` の間にコンテンツを書く
 > - フォームには必ず `@csrf` を入れる（セキュリティ対策）
 > - 用意されたCSSクラスを使うと統一感が出る
+
+---
+
+## 認証機能の使い方
+
+このプロジェクトでは、ログイン状態の確認機能が用意されています。
+各画面でユーザーのログイン状態に応じた表示切り替えに使ってください。
+
+### ビュー（Blade）での使い方
+
+```html
+{{-- ログイン済みかどうかで表示を切り替え --}}
+@auth
+    {{-- ログイン済みの場合のみ表示 --}}
+    <p>こんにちは、{{ Auth::user()->USERNAME }}さん！</p>
+    <a href="{{ url('/lands/create') }}">土地を登録する</a>
+@endauth
+
+@guest
+    {{-- 未ログインの場合のみ表示 --}}
+    <p>ログインしてください</p>
+    <a href="{{ url('/login') }}">ログイン</a>
+@endguest
+```
+
+### ログインユーザーの情報を取得
+
+```php
+// ビュー（Blade）で使う場合
+{{ Auth::user()->USERNAME }}    // ユーザー名
+{{ Auth::user()->EMAIL }}       // メールアドレス
+{{ Auth::user()->USER_ID }}     // ユーザーID
+{{ Auth::user()->ICON_IMAGE }}  // アイコン画像
+
+// ログインしているかチェック
+@if(Auth::check())
+    ログイン中
+@endif
+```
+
+### コントローラでの使い方
+
+```php
+use Illuminate\Support\Facades\Auth;
+
+class LandController extends Controller
+{
+    public function store(Request $request)
+    {
+        // ログインユーザーのIDを取得
+        $userId = Auth::id();
+        
+        // ログインユーザーの情報を取得
+        $user = Auth::user();
+        $username = $user->USERNAME;
+        
+        // ログインしているかチェック
+        if (Auth::check()) {
+            // ログイン済みの処理
+        }
+        
+        // 土地を登録（ログインユーザーのIDを設定）
+        Land::create([
+            'USER_ID' => Auth::id(),
+            'CITY' => $request->city,
+            // ...
+        ]);
+    }
+}
+```
+
+### ログイン必須のページを作る（ミドルウェア）
+
+```php
+// routes/web.php
+
+// authミドルウェアを使うと、ログインしていないとアクセスできない
+Route::middleware('auth')->group(function () {
+    // この中のルートはログイン必須
+    Route::get('/my-lands', [LandController::class, 'myLands']);
+    Route::get('/lands/create', [LandController::class, 'create']);
+    Route::post('/lands', [LandController::class, 'store']);
+});
+
+// 個別に設定する場合
+Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth');
+```
+
+### よく使うパターン
+
+| やりたいこと | コード |
+|-------------|-------|
+| ログイン中か確認 | `Auth::check()` または `@auth` |
+| ユーザーID取得 | `Auth::id()` |
+| ユーザー名取得 | `Auth::user()->USERNAME` |
+| ログイン必須ページ | `->middleware('auth')` |
+| ログイン時のみ表示 | `@auth ... @endauth` |
+| 未ログイン時のみ表示 | `@guest ... @endguest` |
+
+> ⚠️ **注意**
+>
+> - `Auth::user()` は未ログイン時に `null` を返します
+> - ビューで使う場合は `@auth` で囲むと安全です
+> - コントローラでは `Auth::check()` でチェックするか、`middleware('auth')` を使ってください
 
 ---
 
