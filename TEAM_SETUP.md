@@ -52,7 +52,7 @@
 
 ---
 
-## はじめに読んでほしいこと
+## 📖 はじめに読んでほしいこと
 
 ### このプロジェクトで使うツール
 
@@ -109,7 +109,7 @@ https://github.com/ にアクセス
 
 ---
 
-## Git（ギット）とは
+## 📖 Git（ギット）とは
 
 ### Gitが解決する問題
 
@@ -150,7 +150,7 @@ https://github.com/ にアクセス
 
 ---
 
-## Gitブランチの使い方
+## 📖 Gitブランチの使い方
 
 ### ブランチとは？
 
@@ -266,7 +266,7 @@ git branch -d feature/login
 
 ---
 
-## Docker（ドッカー）とは
+## 📖 Docker（ドッカー）とは
 
 ### Dockerが解決する問題
 
@@ -463,7 +463,7 @@ docker compose logs mysql      # MySQLコンテナのログ
 
 ---
 
-## 毎日の作業の流れ
+## 📖 毎日の作業の流れ
 
 > **重要**: この章を読む前に、「Git（ギット）とは」「Gitブランチの使い方」「Docker（ドッカー）とは」を理解しておいてください。
 
@@ -562,7 +562,7 @@ wsl --shutdown
 
 ---
 
-## 必要なソフトのインストール
+## 🔴 必要なソフトのインストール【作業必要】
 
 > **インストール順序**: WSL2 → Docker Desktop → Git → VS Code の順でインストールしてください
 
@@ -799,7 +799,7 @@ code .
 
 ---
 
-## セットアップ手順
+## 🔴 セットアップ手順【作業必要】
 
 ```bash
 # 1. クローン
@@ -824,7 +824,7 @@ http://localhost でLaravelのロゴが表示されれば完了！
 
 ---
 
-## Laravelのフォルダ構成
+## 📖 Laravelのフォルダ構成
 
 ```
 sukima_park/
@@ -2029,7 +2029,7 @@ Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth');
 
 
 
-## phpMyAdminの使い方
+## 📖 phpMyAdminの使い方
 
 phpMyAdminはブラウザでデータベースを管理できるツールです。
 
@@ -2081,7 +2081,7 @@ members (会員)
 
 ---
 
-## モデルの使い方
+## 📖 モデルの使い方
 
 ### モデルとは？
 
@@ -2545,7 +2545,7 @@ $conversation = Chat::where(function($q) {
 
 ---
 
-## よく使うコマンド
+## 📖 よく使うコマンド
 
 ### Git
 
@@ -2570,7 +2570,7 @@ docker compose exec app php artisan make:model 名前 -m    # モデル+マイ�
 
 ---
 
-## トラブルシューティング
+## 📖 トラブルシューティング
 
 > **困ったときは、まずここを見てください！**
 
