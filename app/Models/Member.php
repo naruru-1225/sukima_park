@@ -39,6 +39,22 @@ class Member extends Authenticatable
         'ACCOUNT_STATUS' => 'integer',
     ];
 
+    /**
+     * Laravel認証用：パスワードカラム名を指定
+     */
+    public function getAuthPassword()
+    {
+        return $this->PASSWORD;
+    }
+
+    /**
+     * Laravel認証用：メールアドレスカラム名を指定
+     */
+    public function getEmailForPasswordReset()
+    {
+        return $this->EMAIL;
+    }
+
     // この会員が所有する土地
     public function lands()
     {
