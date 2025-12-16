@@ -1003,6 +1003,7 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
         <div>{{ $land->name }}</div>
     @endforeach
 @endsection
+```
 
 ---
 
