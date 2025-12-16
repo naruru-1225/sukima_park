@@ -21,13 +21,14 @@
 9. [PHP基礎文法](#php基礎文法)
 10. [Laravelの書き方](#laravelの書き方)
 11. [CRUDとは](#crudとは)
-12. [phpMyAdminの使い方](#phpmyadminの使い方)
-13. [モデルの使い方](#モデルの使い方)
-14. [よく使うコマンド](#よく使うコマンド)
-15. [トラブルシューティング](#トラブルシューティング)
-16. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
-17. [理解度チェッククイズ](#-理解度チェッククイズ)
-18. [さらに学ぶために](#-さらに学ぶために)
+12. [データベーステーブル一覧](#データベーステーブル一覧)
+13. [phpMyAdminの使い方](#phpmyadminの使い方)
+14. [モデルの使い方](#モデルの使い方)
+15. [よく使うコマンド](#よく使うコマンド)
+16. [トラブルシューティング](#トラブルシューティング)
+17. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
+18. [理解度チェッククイズ](#-理解度チェッククイズ)
+19. [さらに学ぶために](#-さらに学ぶために)
 
 ---
 
@@ -1289,6 +1290,136 @@ Route::resource('lands', LandController::class);
 > - **Read** = 表を見る
 > - **Update** = セルの値を書き換える
 > - **Delete** = 行を削除
+
+---
+
+## データベーステーブル一覧
+
+このプロジェクトで使用するテーブルの一覧です。
+
+### テーブル構成図
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                      スキマパーク DB構成                         │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│   MEMBER_TABLE ←──┬──────────────────────────────────────┐     │
+│   （会員）         │                                      │     │
+│        │          │                                      │     │
+│        ▼          │                                      │     │
+│   LAND_TABLE      │                                      │     │
+│   （土地）         │                                      │     │
+│        │          │                                      │     │
+│        ├──────────┼───→ RENTAL_RECORD_TABLE             │     │
+│        │          │      （貸し出し記録）                  │     │
+│        │          │            │                         │     │
+│        │          │            ▼                         │     │
+│        │          │      REVIEW_COMMENT_TABLE            │     │
+│        │          │      （レビュー・コメント）            │     │
+│        │          │                                      │     │
+│        │          └───→ CONTACT_TABLE                   │     │
+│        │                 （問い合わせ）                    │     │
+│        │                       │                         │     │
+│        │                       ▼                         │     │
+│        │                 REPLY_TABLE                     │     │
+│        │                 （返信）                         │     │
+│        │                                                 │     │
+│        └─────────────────→ CHAT_TABLE                   │     │
+│                              （連絡）                     │     │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 1. 会員テーブル（MEMBER_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| USER_ID | INT (AUTO_INCREMENT) | 会員ID（主キー） |
+| EMAIL | VARCHAR(1024) | メールアドレス |
+| PASSWORD | VARCHAR(64) | パスワード（英数混合8〜20文字） |
+| TEL | VARCHAR(64) | 電話番号（XXX-XXXX-XXXX） |
+| BIRTH | DATE | 生年月日（YYYY/MM/DD） |
+| SHOW_BIRTH | BOOLEAN | 生年月日の公開設定 |
+| GENDER | INT | 性別（0:男性, 1:女性, 2:その他） |
+| SHOW_GENDER | BOOLEAN | 性別の公開設定 |
+| IDENTITY | VARCHAR(1024) | 本人確認書類（画像パス） |
+| USERNAME | VARCHAR(128) | ユーザ名 |
+
+### 2. 土地テーブル（LAND_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| LAND_ID | INT (AUTO_INCREMENT) | 土地ID（主キー） |
+| PEREFECTURES | INT | 都道府県（0:北海道〜） |
+| CITY | VARCHAR(256) | 市区町村（50字制限） |
+| STREET_ADDRESS | VARCHAR(256) | 番地（50字制限） |
+| AREA | DECIMAL(5,2) | 面積 |
+
+### 3. 貸し出し記録テーブル（RENTAL_RECORD_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| RECORD_ID | INT (AUTO_INCREMENT) | 記録ID（主キー） |
+| PRICE | INT | 単価 |
+| PRICE_UNIT | INT | 単価単位（0:日, 1:時間, 2:15分） |
+| RENTAL_START_DATE | DATE | 開始日 |
+| RENTAL_END_DATE | DATE | 終了日 |
+| RENTAL_START_TIME | TIME | 開始時間 |
+| RENTAL_END_TIME | TIME | 終了時間 |
+| LAND_ID | INT | 土地ID（外部キー） |
+| USER_ID | INT | 会員ID（外部キー） |
+
+### 4. レビュー・コメントテーブル（REVIEW_COMMENT_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| REVIEW_COMMENT_ID | INT (AUTO_INCREMENT) | ID（主キー） |
+| LAND_REVIEW | INT | 土地レビュー（星1〜5） |
+| LAND_COMMENT | VARCHAR(512) | 土地コメント（150文字） |
+| USER_REVIEW | INT | ユーザレビュー（星1〜5） |
+| USER_COMMENT | VARCHAR(512) | ユーザコメント（150文字） |
+| DATE | DATE | 日付 |
+| USER_ID | INT | 会員ID（外部キー） |
+| LAND_ID | INT | 土地ID（外部キー） |
+| RECORD_ID | INT | 記録ID（外部キー） |
+
+### 5. 問い合わせテーブル（CONTACT_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| CONTACT_ID | INT (AUTO_INCREMENT) | 問い合わせID（主キー） |
+| TITLE | VARCHAR(128) | 主題（40字以下） |
+| MESSAGE | VARCHAR(1024) | 本文（300字以下） |
+| USER_ID | INT | 会員ID（外部キー） |
+| DATE | DATE | 日付 |
+| STATUS | INT | ステータス（0:未対応, 1:対応中, 2:対応済み） |
+
+### 6. 返信テーブル（REPLY_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| REPLY_ID | INT (AUTO_INCREMENT) | 返信ID（主キー） |
+| CONTACT_ID | INT | 問い合わせID（外部キー） |
+| USER_ID | INT | 会員ID（外部キー） |
+| MESSAGE | VARCHAR(1024) | メッセージ（最大300文字） |
+| DATE | DATE | 日付 |
+
+### 7. 連絡テーブル（CHAT_TABLE）
+
+| カラム名 | 型 | 説明 |
+|---------|-----|------|
+| CHAT_ID | INT (AUTO_INCREMENT) | 連絡ID（主キー） |
+| USER_ID_FROM | INT | 連絡元会員ID（外部キー） |
+| USER_ID_TO | INT | 連絡先会員ID（外部キー） |
+| MESSAGE | VARCHAR(512) | メッセージ（120字以内） |
+| IMAGE | VARCHAR(2048) | 画像URL（任意） |
+| YEAR | DATE | 西暦 |
+| DATE | DATE | 日付 |
+| TIME | TIME | 時間 |
+
+> ⚠️ **注意**: これらのテーブルは既にマイグレーションで定義済みです。
+> `database/migrations/` フォルダ内のファイルで確認できます。
 
 ---
 
