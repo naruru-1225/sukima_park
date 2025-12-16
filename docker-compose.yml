@@ -35,6 +35,20 @@ services:
             test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD:-password}"]
             retries: 3
             timeout: 5s
+    phpmyadmin:
+        image: phpmyadmin:latest
+        ports:
+            - '${PMA_PORT:-8080}:80'
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: '${DB_USERNAME:-sail}'
+            PMA_PASSWORD: '${DB_PASSWORD:-password}'
+            UPLOAD_LIMIT: 64M
+        networks:
+            - sail
+        depends_on:
+            mysql:
+                condition: service_healthy
 networks:
     sail:
         driver: bridge
