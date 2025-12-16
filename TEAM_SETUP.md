@@ -2,19 +2,30 @@
 
 このガイドは、**プログラミング初心者**でも迷わず環境構築ができるように詳しく書かれています。
 
+> 🐵 **サルでもわかる**を目指して書いています！
+> 
+> わからない単語があっても大丈夫。このドキュメントに全部書いてあります。
+> 上から順番に読んでいけば、必ず理解できます。
+
 ---
 
 ## 目次
 1. [はじめに読んでほしいこと](#はじめに読んでほしいこと)
-2. [毎日の作業の流れ](#毎日の作業の流れ)
-3. [Git（ギット）とは](#gitギットとは)
-4. [Gitブランチの使い方](#gitブランチの使い方)
+2. [Git（ギット）とは](#gitギットとは)
+3. [Gitブランチの使い方](#gitブランチの使い方)
+4. [毎日の作業の流れ](#毎日の作業の流れ)
 5. [必要なソフトのインストール](#必要なソフトのインストール)
 6. [セットアップ手順](#セットアップ手順)
 7. [Laravelのフォルダ構成](#laravelのフォルダ構成)
-8. [Laravelの書き方](#laravelの書き方)
-9. [よく使うコマンド](#よく使うコマンド)
-10. [トラブルシューティング](#トラブルシューティング)
+8. [PHP基礎文法](#php基礎文法)
+9. [Laravelの書き方](#laravelの書き方)
+10. [phpMyAdminの使い方](#phpmyadminの使い方)
+11. [モデルの使い方](#モデルの使い方)
+12. [よく使うコマンド](#よく使うコマンド)
+13. [トラブルシューティング](#トラブルシューティング)
+14. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
+15. [理解度チェッククイズ](#-理解度チェッククイズ)
+16. [さらに学ぶために](#-さらに学ぶために)
 
 ---
 
@@ -28,91 +39,6 @@
 | **GitHub** | Gitのデータをネット上に保存 | Google Driveのようなもの |
 | **Docker** | 開発環境を作る | パソコンの中に「仮想サーバー」を作る |
 | **Laravel** | Webアプリを作るためのツール | 「Webアプリの骨組み」を提供 |
-
----
-
-## 毎日の作業の流れ
-
-### 作業開始時（必ず実行）
-
-```bash
-# 1. プロジェクトフォルダに移動
-cd sukimapark
-
-# 2. 最新のコードを取得（他のメンバーの変更を反映）
-git pull
-
-# 3. Dockerコンテナを起動
-docker compose up -d
-
-# 4. 動作確認
-#    ブラウザで http://localhost を開く
-#    phpMyAdmin: http://localhost:8080
-```
-
-**チェックリスト:**
-- [ ] `git pull` した
-- [ ] `docker compose up -d` した
-- [ ] ブラウザで動作確認した
-
-### 作業中（こまめにコミット）
-
-```bash
-# 変更を保存（こまめに行う）
-git add .
-git commit -m "変更内容を書く"
-
-# 例
-git commit -m "土地一覧画面を作成"
-git commit -m "バグ修正: ログインできない問題"
-```
-
-**コミットメッセージの書き方:**
-| 良い例 ✅ | 悪い例 ❌ |
-|---------|---------|
-| 土地一覧画面を作成 | 更新 |
-| ログイン機能を追加 | 修正 |
-| バグ修正: 日付表示のエラー | あ |
-
-### 作業終了時（必ず実行）
-
-```bash
-# 1. 変更をコミット（まだしていなければ）
-git add .
-git commit -m "作業内容"
-
-# 2. GitHubにプッシュ
-git push
-
-# 3. Dockerコンテナを停止（PCを軽くする）
-docker compose down
-```
-
-**チェックリスト:**
-- [ ] 全ての変更をコミットした
-- [ ] `git push` した
-- [ ] `docker compose down` した
-
-### 作業の流れ（図解）
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                      作業開始                               │
-│  git pull → docker compose up -d → ブラウザで確認          │
-└─────────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────────┐
-│                      コーディング                           │
-│  コード編集 → git add . → git commit -m "内容"             │
-│              ↑                    ↓                        │
-│              └────── 繰り返す ────┘                        │
-└─────────────────────────────────────────────────────────────┘
-                           ↓
-┌─────────────────────────────────────────────────────────────┐
-│                      作業終了                               │
-│  git push → docker compose down                            │
-└─────────────────────────────────────────────────────────────┘
-```
 
 ---
 
@@ -257,6 +183,93 @@ git branch -d feature/login
 
 ---
 
+## 毎日の作業の流れ
+
+> **重要**: この章を読む前に、上の「Git（ギット）とは」と「Gitブランチの使い方」を理解しておいてください。
+
+### 作業開始時（必ず実行）
+
+```bash
+# 1. プロジェクトフォルダに移動
+cd sukimapark
+
+# 2. 最新のコードを取得（他のメンバーの変更を反映）
+git pull
+
+# 3. Dockerコンテナを起動
+docker compose up -d
+
+# 4. 動作確認
+#    ブラウザで http://localhost を開く
+#    phpMyAdmin: http://localhost:8080
+```
+
+**チェックリスト:**
+- [ ] `git pull` した
+- [ ] `docker compose up -d` した
+- [ ] ブラウザで動作確認した
+
+### 作業中（こまめにコミット）
+
+```bash
+# 変更を保存（こまめに行う）
+git add .
+git commit -m "変更内容を書く"
+
+# 例
+git commit -m "土地一覧画面を作成"
+git commit -m "バグ修正: ログインできない問題"
+```
+
+**コミットメッセージの書き方:**
+| 良い例 ✅ | 悪い例 ❌ |
+|---------|---------| 
+| 土地一覧画面を作成 | 更新 |
+| ログイン機能を追加 | 修正 |
+| バグ修正: 日付表示のエラー | あ |
+
+### 作業終了時（必ず実行）
+
+```bash
+# 1. 変更をコミット（まだしていなければ）
+git add .
+git commit -m "作業内容"
+
+# 2. GitHubにプッシュ
+git push
+
+# 3. Dockerコンテナを停止（PCを軽くする）
+docker compose down
+```
+
+**チェックリスト:**
+- [ ] 全ての変更をコミットした
+- [ ] `git push` した
+- [ ] `docker compose down` した
+
+### 作業の流れ（図解）
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      作業開始                               │
+│  git pull → docker compose up -d → ブラウザで確認          │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│                      コーディング                           │
+│  コード編集 → git add . → git commit -m "内容"             │
+│              ↑                    ↓                        │
+│              └────── 繰り返す ────┘                        │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│                      作業終了                               │
+│  git push → docker compose down                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 必要なソフトのインストール
 
 > **インストール順序**: WSL2 → Docker Desktop → Git → VS Code の順でインストールしてください
@@ -325,10 +338,156 @@ wsl --list --verbose
 ---
 
 ### 3. Git のインストール
-https://git-scm.com/download/win からダウンロード、全てデフォルトでOK
+
+1. https://git-scm.com/download/win にアクセス
+2. 「Download for Windows」をクリック
+3. ダウンロードしたファイルを実行
+4. 全てデフォルトのまま「Next」を押し続ける
+5. 「Install」をクリック
+
+**Gitインストール後の設定（重要！）**:
+```bash
+# PowerShellまたはコマンドプロンプトで実行
+
+# 自分の名前を設定（GitHubに表示される名前）
+git config --global user.name "あなたの名前"
+
+# 例
+git config --global user.name "田中太郎"
+
+# メールアドレスを設定（GitHubアカウントと同じにする）
+git config --global user.email "あなたのメール@example.com"
+
+# 例
+git config --global user.email "tanaka@example.com"
+
+# 設定の確認
+git config --list
+```
+
+**なぜこの設定が必要？**
+```
+Gitは「誰が」「いつ」「何を」変更したか記録します。
+この設定で「誰が」の部分が設定されます。
+
+設定しないと：
+- コミットするとき「Author identity unknown」エラーになる
+- チームメンバーに誰が変更したかわからない
+```
+
+---
 
 ### 4. VS Code のインストール（推奨）
-https://code.visualstudio.com/ からダウンロード
+
+**VS Codeとは？**
+```
+VS Code = Visual Studio Code
+Microsoft製の無料テキストエディタ
+
+なぜVS Codeを使う？
+・無料なのに高機能
+・コードの色分け
+・入力補完（途中まで打つと候補が出る）
+・エラー表示
+・Git連携
+・拡張機能で機能追加できる
+```
+
+**インストール手順**:
+1. https://code.visualstudio.com/ にアクセス
+2. 「Download for Windows」をクリック
+3. ダウンロードしたファイルを実行
+4. ライセンスに同意
+5. **「エクスプローラーのファイルコンテキストメニューに[Codeで開く]を追加」にチェック ✓**
+6. **「エクスプローラーのディレクトリコンテキストメニューに[Codeで開く]を追加」にチェック ✓**
+7. 「Install」をクリック
+
+**日本語化**:
+1. VS Codeを起動
+2. 左側の四角いアイコン（Extensions）をクリック
+3. 検索欄に「Japanese」と入力
+4. 「Japanese Language Pack for Visual Studio Code」をインストール
+5. VS Codeを再起動
+
+**必須の拡張機能をインストール**:
+
+| 拡張機能名 | 説明 | 検索キーワード |
+|-----------|------|---------------|
+| PHP Intelephense | PHPの補完・エラー検出 | `PHP Intelephense` |
+| Laravel Blade Snippets | Bladeテンプレートの補完 | `Laravel Blade` |
+| GitLens | Gitの変更履歴を表示 | `GitLens` |
+| Docker | Dockerの管理 | `Docker` |
+
+**インストール方法**:
+```
+1. 左側の四角いアイコン（Extensions）をクリック
+2. 検索欄に拡張機能名を入力
+3. 「Install」をクリック
+```
+
+**VS Codeでプロジェクトを開く方法**:
+```
+方法1: エクスプローラーから
+1. sukimaparkフォルダを右クリック
+2. 「Codeで開く」を選択
+
+方法2: VS Codeから
+1. VS Codeを起動
+2. 「ファイル」→「フォルダーを開く」
+3. sukimaparkフォルダを選択
+
+方法3: コマンドから
+cd sukimapark
+code .
+```
+
+**VS Codeの画面説明**:
+```
+┌────────────────────────────────────────────────────────────────┐
+│ ファイル  編集  選択  表示  移動  実行  ターミナル  ヘルプ        │
+├────┬───────────────────────────────────────────────────────────┤
+│    │                                                           │
+│ 📁 │   編集エリア（ここでコードを書く）                          │
+│    │                                                           │
+│ 🔍 │   ┌───────────────────────────────────────────────────┐  │
+│    │   │ <?php                                             │  │
+│ 🔀 │   │                                                   │  │
+│    │   │ class LandController extends Controller           │  │
+│ 🐛 │   │ {                                                 │  │
+│    │   │     public function index()                       │  │
+│ 📦 │   │     {                                             │  │
+│    │   │         $lands = Land::all();                     │  │
+│    │   │         return view('lands.index', ['lands' =>    │  │
+│    │   │     }                                             │  │
+│    │   │ }                                                 │  │
+│    │   └───────────────────────────────────────────────────┘  │
+├────┴───────────────────────────────────────────────────────────┤
+│ ターミナル（コマンドを入力できる）                               │
+│ PS C:\Users\xx\sukimapark> docker compose up -d                │
+└────────────────────────────────────────────────────────────────┘
+
+左側のアイコン:
+📁 = エクスプローラー（ファイル一覧）
+🔍 = 検索
+🔀 = ソース管理（Git）
+🐛 = デバッグ
+📦 = 拡張機能
+```
+
+**VS Codeの便利なショートカット**:
+
+| ショートカット | 機能 | よく使う度 |
+|--------------|------|-----------|
+| `Ctrl + S` | 保存 | ★★★★★ |
+| `Ctrl + Z` | 元に戻す | ★★★★★ |
+| `Ctrl + Shift + Z` | やり直し | ★★★★ |
+| `Ctrl + F` | ファイル内検索 | ★★★★★ |
+| `Ctrl + Shift + F` | 全ファイル検索 | ★★★★ |
+| `Ctrl + P` | ファイルを素早く開く | ★★★★ |
+| `Ctrl + /` | コメント化 | ★★★★ |
+| `Ctrl + D` | 同じ単語を選択 | ★★★ |
+| `Alt + ↑/↓` | 行を上下に移動 | ★★★ |
+| `Ctrl + `` ` | ターミナルを開く | ★★★★★ |
 
 ---
 
@@ -1635,17 +1794,577 @@ docker compose exec app php artisan make:model 名前 -m    # モデル+マイ�
 
 ## トラブルシューティング
 
-### 「port is already allocated」
-`.env`に`APP_PORT=8080`を追加、再起動
+> **困ったときは、まずここを見てください！**
 
-### 「変更が反映されない」
-```bash
-docker compose exec app php artisan cache:clear
-docker compose exec app php artisan config:clear
+### 🚨 よくあるエラーと解決方法
+
+---
+
+### 「port is already allocated」（ポートが使用中）
+
+**どういうエラー？**
+```
+Error response from daemon: driver failed programming external connectivity:
+Bind for 0.0.0.0:80: port is already allocated
 ```
 
+**原因**: 別のソフト（Skype、Apache、他のDockerなど）が同じポートを使っている
+
+**解決方法**:
+```bash
+# Step 1: .envファイルを開く（プロジェクトフォルダ内）
+
+# Step 2: 以下の行を追加
+APP_PORT=8081
+
+# Step 3: 再起動
+docker compose down
+docker compose up -d
+
+# Step 4: http://localhost:8081 でアクセス
+```
+
+**図解**:
+```
+❌ ポート80が使用中
+┌────────────┐     ┌────────────┐
+│  Skype     │────▶│  ポート80   │
+└────────────┘     └────────────┘
+                         ↑
+┌────────────┐           │ 衝突！
+│  Docker    │───────────┘
+└────────────┘
+
+✅ ポートを変更して解決
+┌────────────┐     ┌────────────┐
+│  Skype     │────▶│  ポート80   │
+└────────────┘     └────────────┘
+
+┌────────────┐     ┌────────────┐
+│  Docker    │────▶│ ポート8081  │ ← 別のポートを使う！
+└────────────┘     └────────────┘
+```
+
+---
+
+### 「変更が反映されない」
+
+**どういうエラー？**
+コードを変更したのに、ブラウザに反映されない
+
+**原因**: Laravelがキャッシュ（一時保存データ）を使っている
+
+**解決方法**:
+```bash
+# 全てのキャッシュをクリア
+docker compose exec app php artisan cache:clear
+docker compose exec app php artisan config:clear
+docker compose exec app php artisan view:clear
+docker compose exec app php artisan route:clear
+
+# ブラウザも強制リロード
+# Windows: Ctrl + Shift + R
+# Mac: Cmd + Shift + R
+```
+
+**それでもダメなら**:
+```bash
+# Dockerを完全に再起動
+docker compose down
+docker compose up -d --build
+```
+
+---
+
 ### 「git pushできない」
-`git pull`してから再度push
+
+**どういうエラー？**
+```
+! [rejected]        main -> main (fetch first)
+error: failed to push some refs to 'github.com:...'
+```
+
+**原因**: 他のメンバーが先にpushしていて、あなたのローカルが古い
+
+**解決方法**:
+```bash
+# Step 1: 最新を取得
+git pull
+
+# Step 2: 再度push
+git push
+```
+
+**図解**:
+```
+あなた                 GitHub                他のメンバー
+  │                      │                      │
+  │                      │◀──── push ──────────│
+  │                      │  (最新版)             │
+  │                      │                      │
+  │───── push ─────────▶│ ❌ 拒否！            │
+  │  (古い版をpush)      │  「先にpullして」      │
+  │                      │                      │
+  │◀──── pull ──────────│                      │
+  │  (最新を取得)        │                      │
+  │                      │                      │
+  │───── push ─────────▶│ ✅ OK!               │
+  │  (マージ後push)      │                      │
+```
+
+---
+
+### 「SQLSTATE[HY000] [2002] Connection refused」
+
+**どういうエラー？**
+データベースに接続できないエラー
+
+**原因**: MySQLコンテナが起動していない、または起動中
+
+**解決方法**:
+```bash
+# Step 1: コンテナの状態を確認
+docker compose ps
+
+# 全てのサービスが「Up」になっているか確認：
+# NAME           STATUS
+# app            Up 5 minutes
+# mysql          Up 5 minutes   ← これがUpになっていること
+# phpmyadmin     Up 5 minutes
+
+# Step 2: mysqlがUpじゃない場合、再起動
+docker compose down
+docker compose up -d
+
+# Step 3: MySQLの起動を待つ（30秒くらい）
+# その後、再度アクセス
+```
+
+---
+
+### 「Class 'App\Models\Land' not found」
+
+**どういうエラー？**
+モデルが見つからないエラー
+
+**原因**: use文を書き忘れている
+
+**解決方法**:
+```php
+<?php
+// ❌ ダメな例（use文がない）
+class LandController extends Controller
+{
+    public function index()
+    {
+        $lands = Land::all();  // エラー！Landが見つからない
+    }
+}
+
+// ✅ 正しい例（use文を追加）
+use App\Models\Land;  // ← これを追加！
+
+class LandController extends Controller
+{
+    public function index()
+    {
+        $lands = Land::all();  // OK!
+    }
+}
+```
+
+**図解**:
+```
+use文 = 他のファイルのクラスを使う宣言
+
+┌─────────────────────────────┐
+│ app/Models/Land.php         │
+│  class Land { ... }         │◀───┐
+└─────────────────────────────┘    │
+                                    │ use App\Models\Land;
+┌─────────────────────────────┐    │ ↑ この宣言で
+│ app/Http/Controllers/       │    │   Landを使えるようになる
+│ LandController.php          │────┘
+└─────────────────────────────┘
+```
+
+---
+
+### 「Undefined variable $lands」
+
+**どういうエラー？**
+変数が定義されていないエラー
+
+**原因**: コントローラからビューに変数を渡していない
+
+**解決方法**:
+```php
+<?php
+// ❌ ダメな例（変数を渡していない）
+public function index()
+{
+    $lands = Land::all();
+    return view('lands.index');  // $landsを渡していない！
+}
+
+// ✅ 正しい例（変数を渡す）
+public function index()
+{
+    $lands = Land::all();
+    return view('lands.index', ['lands' => $lands]);
+    //                         ↑ これで渡す！
+    
+    // または compact() を使う書き方
+    return view('lands.index', compact('lands'));
+}
+```
+
+---
+
+### 「404 Not Found」
+
+**どういうエラー？**
+ページが見つからないエラー
+
+**原因**: ルーティングが設定されていない
+
+**解決方法**:
+```php
+<?php
+// routes/web.php を確認
+
+// ❌ ルートがない状態
+// /lands にアクセスしても404
+
+// ✅ ルートを追加
+use App\Http\Controllers\LandController;
+
+Route::get('/lands', [LandController::class, 'index']);
+// ↑ これで /lands にアクセスすると LandController の index が呼ばれる
+```
+
+**ルート確認コマンド**:
+```bash
+# 設定されている全ルートを表示
+docker compose exec app php artisan route:list
+```
+
+---
+
+### 「Add [name] to fillable property」
+
+**どういうエラー？**
+```
+Add [name] to fillable property to allow mass assignment on [App\Models\Land].
+```
+
+**原因**: モデルの `$fillable` に保存したいカラムが登録されていない
+
+**解決方法**:
+```php
+<?php
+// app/Models/Land.php
+
+class Land extends Model
+{
+    // ❌ fillableに name がない
+    protected $fillable = [
+        'location',
+        'area',
+    ];
+    
+    // ✅ name を追加
+    protected $fillable = [
+        'name',      // ← 追加！
+        'location',
+        'area',
+    ];
+}
+```
+
+**なぜfillableが必要？**
+```
+セキュリティのため！
+
+悪意のあるユーザーが勝手にデータを送信しても、
+$fillableに書いてあるカラムしか保存できない。
+
+例: admin = true を送っても、
+    $fillableに admin がなければ無視される。
+```
+
+---
+
+### 「Method [show] does not exist on [App\Http\Controllers\LandController]」
+
+**どういうエラー？**
+メソッドが存在しないエラー
+
+**原因**: コントローラにそのメソッドを作っていない
+
+**解決方法**:
+```php
+<?php
+// app/Http/Controllers/LandController.php
+
+class LandController extends Controller
+{
+    // ❌ showメソッドがない
+
+    // ✅ showメソッドを追加
+    public function show($id)
+    {
+        $land = Land::findOrFail($id);
+        return view('lands.show', ['land' => $land]);
+    }
+}
+```
+
+---
+
+## 🔧 初心者がよくやる間違いTOP10
+
+### 1. セミコロン（;）の付け忘れ
+```php
+// ❌
+$name = "田中"
+
+// ✅
+$name = "田中";
+```
+
+### 2. 変数の$を忘れる
+```php
+// ❌
+name = "田中";
+
+// ✅
+$name = "田中";
+```
+
+### 3. ""と''の違いを理解していない
+```php
+$name = "田中";
+
+// ❌ シングルクォートは変数展開されない
+echo 'こんにちは、$nameさん';  // → こんにちは、$nameさん
+
+// ✅ ダブルクォートは変数展開される
+echo "こんにちは、{$name}さん";  // → こんにちは、田中さん
+```
+
+### 4. =と==と===の違い
+```php
+$a = 5;     // 代入（$aに5を入れる）
+$a == 5;    // 比較（$aが5と等しいか？）
+$a === 5;   // 厳密比較（型も含めて等しいか？）
+
+// 例
+$a = "5";           // 文字列の"5"
+$a == 5;            // true（値が同じ）
+$a === 5;           // false（型が違う：文字列 vs 数値）
+```
+
+### 5. ->と=>の違い
+```php
+// -> はオブジェクトのプロパティ/メソッドにアクセス
+$user->name;
+$user->greet();
+
+// => は配列のキーと値を結ぶ
+$array = ["key" => "value"];
+```
+
+### 6. ファイル名の大文字小文字
+```php
+// ❌ ファイル名が違う
+// ファイル: land.php
+use App\Models\Land;  // エラー
+
+// ✅ ファイル名とクラス名を一致させる
+// ファイル: Land.php
+use App\Models\Land;  // OK
+```
+
+### 7. ルートの順番
+```php
+// ❌ 順番が悪い
+Route::get('/lands/{id}', [LandController::class, 'show']);
+Route::get('/lands/create', [LandController::class, 'create']);
+// → /lands/create が /lands/{id} にマッチしてしまう！
+
+// ✅ 固定パスを先に書く
+Route::get('/lands/create', [LandController::class, 'create']);
+Route::get('/lands/{id}', [LandController::class, 'show']);
+```
+
+### 8. foreachで変数名の一致
+```php
+// ❌ コントローラとビューで変数名が違う
+// コントローラ
+$landList = Land::all();
+return view('lands.index', ['landList' => $landList]);
+
+// ビュー
+@foreach($lands as $land)  // エラー！$landsは存在しない
+
+// ✅ 変数名を一致させる
+@foreach($landList as $land)  // OK
+```
+
+### 9. マイグレーション後のモデル更新忘れ
+```
+マイグレーションでカラムを追加したら、
+モデルの$fillableにも追加することを忘れずに！
+
+1. マイグレーション作成・実行
+2. モデルの$fillable更新  ← これを忘れがち！
+```
+
+### 10. Bladeのエスケープ
+```html
+{{-- ❌ HTMLタグがそのまま表示される --}}
+{{ $html }}  <!-- &lt;b&gt;太字&lt;/b&gt; -->
+
+{{-- ✅ HTMLを解釈して表示 --}}
+{!! $html !!}  <!-- <b>太字</b> -->
+
+{{-- 注意: ユーザー入力には {!! !!} を使わない！（XSS攻撃の危険） --}}
+```
+
+---
+
+## 🎓 理解度チェッククイズ
+
+自分の理解度を確認してみましょう！
+
+### Q1: この変数の値は？
+```php
+$a = 10;
+$b = $a + 5;
+$a = 20;
+echo $b;
+```
+<details>
+<summary>答えを見る</summary>
+
+**答え: 15**
+
+$bに代入した時点の$aの値（10）が使われる。
+その後$aを20に変えても、$bには影響しない。
+</details>
+
+### Q2: このコードのエラーは？
+```php
+public function index()
+{
+    $lands = Land::all()
+    return view('lands.index');
+}
+```
+<details>
+<summary>答えを見る</summary>
+
+**答え: セミコロンがない**
+
+正しくは:
+```php
+$lands = Land::all();  // ← セミコロン追加
+```
+</details>
+
+### Q3: MVCで「M」は何？
+<details>
+<summary>答えを見る</summary>
+
+**答え: Model（モデル）**
+
+- M = Model（データベース操作）
+- V = View（画面表示）
+- C = Controller（処理の制御）
+</details>
+
+### Q4: このルートはどのURLにマッチする？
+```php
+Route::get('/lands/{id}', [LandController::class, 'show']);
+```
+<details>
+<summary>答えを見る</summary>
+
+**答え: /lands/1, /lands/2, /lands/abc など**
+
+{id} 部分は何でもマッチする。
+その値はshowメソッドの引数$idに入る。
+</details>
+
+### Q5: belongsToとhasManyの違いは？
+<details>
+<summary>答えを見る</summary>
+
+**答え:**
+- **belongsTo**: 「〜に属する」（多対1）
+  - 例: 土地は所有者（1人）に属する
+  - Land → belongsTo → Member
+  
+- **hasMany**: 「複数持つ」（1対多）
+  - 例: 所有者は土地（複数）を持つ
+  - Member → hasMany → Land
+</details>
+
+---
+
+## 📚 さらに学ぶために
+
+### おすすめの学習リソース
+
+| リソース | URL | 説明 |
+|---------|-----|------|
+| Laravel公式ドキュメント | https://laravel.com/docs | 公式（英語） |
+| Laravel日本語ドキュメント | https://readouble.com/laravel | 日本語訳 |
+| Laracasts | https://laracasts.com | 動画チュートリアル（英語） |
+| ドットインストール | https://dotinstall.com | 日本語の動画レッスン |
+
+### 困ったときの検索方法
+
+```
+検索のコツ:
+1. エラーメッセージをそのままコピペして検索
+2. 「Laravel [やりたいこと]」で検索
+3. 「PHP [わからないこと]」で検索
+
+例:
+- 「Laravel ログイン機能 作り方」
+- 「PHP 配列 ループ」
+- 「SQLSTATE[HY000] [2002]」
+```
+
+---
+
+## 💡 開発のヒント
+
+### VSCodeおすすめ拡張機能
+
+| 拡張機能 | 説明 |
+|---------|------|
+| PHP Intelephense | PHPの補完・エラー検出 |
+| Laravel Blade Snippets | Bladeテンプレートの補完 |
+| Laravel Artisan | コマンドをVSCodeから実行 |
+| GitLens | Gitの履歴を可視化 |
+| Docker | Dockerの管理 |
+
+### コードを見やすくするコツ
+
+```php
+// ❌ 読みにくい
+$lands=Land::where('prefectures',13)->where('area','>',50)->orderBy('area','desc')->limit(10)->get();
+
+// ✅ 読みやすい（改行とインデントを使う）
+$lands = Land::where('prefectures', 13)
+             ->where('area', '>', 50)
+             ->orderBy('area', 'desc')
+             ->limit(10)
+             ->get();
+```
 
 ---
 
