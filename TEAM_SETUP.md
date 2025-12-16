@@ -1057,6 +1057,294 @@ members (会員)
 
 ---
 
+## モデルの使い方
+
+### モデル一覧
+
+| モデル名 | ファイル | テーブル |
+|---------|---------|---------|
+| Member | app/Models/Member.php | members |
+| Land | app/Models/Land.php | lands |
+| RentalRecord | app/Models/RentalRecord.php | rental_records |
+| ReviewComment | app/Models/ReviewComment.php | review_comments |
+| Contact | app/Models/Contact.php | contacts |
+| Reply | app/Models/Reply.php | replies |
+| Chat | app/Models/Chat.php | chats |
+
+### 基本的なCRUD操作
+
+```php
+<?php
+use App\Models\Member;
+use App\Models\Land;
+
+// ─────────────────────────────────────────
+// 取得（SELECT）
+// ─────────────────────────────────────────
+
+// 全件取得
+$members = Member::all();
+
+// IDで1件取得
+$member = Member::find(1);
+$member = Member::findOrFail(1);  // なければ404エラー
+
+// 条件検索
+$members = Member::where('gender', 0)->get();       // 男性のみ
+$members = Member::where('gender', '!=', 0)->get(); // 男性以外
+
+// 複数条件
+$lands = Land::where('prefectures', 13)  // 東京
+             ->where('area', '>', 50)     // 50㎡以上
+             ->orderBy('created_at', 'desc')
+             ->get();
+
+// 最初の1件
+$land = Land::where('city', '渋谷区')->first();
+
+// 件数取得
+$count = Member::count();
+$count = Land::where('prefectures', 13)->count();
+
+// ─────────────────────────────────────────
+// 作成（INSERT）
+// ─────────────────────────────────────────
+
+$member = Member::create([
+    'email' => 'test@example.com',
+    'password' => bcrypt('password123'),
+    'tel' => '090-1234-5678',
+    'birth' => '1990-01-15',
+    'gender' => 0,
+    'identity' => '/uploads/id_card.jpg',
+    'username' => 'テストユーザー',
+]);
+// ↑ 作成されたレコードが $member に入る
+// ↑ $member->id で新しいIDを取得できる
+
+// ─────────────────────────────────────────
+// 更新（UPDATE）
+// ─────────────────────────────────────────
+
+$member = Member::find(1);
+$member->username = '新しい名前';
+$member->save();
+
+// または一括更新
+$member->update([
+    'username' => '新しい名前',
+    'tel' => '080-9876-5432',
+]);
+
+// ─────────────────────────────────────────
+// 削除（DELETE）
+// ─────────────────────────────────────────
+
+$member = Member::find(1);
+$member->delete();
+
+// 条件で一括削除
+Land::where('user_id', 5)->delete();
+```
+
+### リレーション（関連データの取得）
+
+```php
+<?php
+// ─────────────────────────────────────────
+// 1対多（hasMany）: 親 → 子の取得
+// ─────────────────────────────────────────
+
+// 会員の所有する土地を全て取得
+$member = Member::find(1);
+$lands = $member->lands;  // この会員の全ての土地
+
+// 会員の貸出記録を取得
+$records = $member->rentalRecords;
+
+// 土地のレビュー一覧を取得
+$land = Land::find(1);
+$reviews = $land->reviews;
+
+// ─────────────────────────────────────────
+// 多対1（belongsTo）: 子 → 親の取得
+// ─────────────────────────────────────────
+
+// 土地の所有者を取得
+$land = Land::find(1);
+$owner = $land->owner;  // この土地の所有者
+echo $owner->username;
+
+// 貸出記録の土地と借り手を取得
+$record = RentalRecord::find(1);
+$land = $record->land;      // 貸し出された土地
+$renter = $record->renter;  // 借りた人
+
+// レビューの関連情報
+$review = ReviewComment::find(1);
+$land = $review->land;           // レビュー対象の土地
+$record = $review->rentalRecord; // 対応する貸出記録
+$reviewer = $review->reviewer;   // レビューを書いた人
+
+// ─────────────────────────────────────────
+// Eager Loading（N+1問題の解決）
+// ─────────────────────────────────────────
+
+// ❌ 悪い例（N+1問題）
+$lands = Land::all();
+foreach ($lands as $land) {
+    echo $land->owner->username;  // 土地ごとにクエリが発生
+}
+
+// ✅ 良い例（Eager Loading）
+$lands = Land::with('owner')->get();  // 1回のクエリで全取得
+foreach ($lands as $land) {
+    echo $land->owner->username;  // 追加クエリなし
+}
+
+// 複数のリレーションを同時に取得
+$lands = Land::with(['owner', 'rentalRecords', 'reviews'])->get();
+```
+
+### 各モデルの具体例
+
+#### Memberモデル（会員）
+
+```php
+<?php
+use App\Models\Member;
+
+// 会員登録
+$member = Member::create([
+    'email' => 'tanaka@example.com',
+    'password' => bcrypt('Password123'),
+    'tel' => '090-1111-2222',
+    'birth' => '1995-05-20',
+    'show_birth' => false,
+    'gender' => 0,  // 0:男性, 1:女性, 2:その他
+    'show_gender' => true,
+    'identity' => '/uploads/identity/tanaka.jpg',
+    'username' => '田中太郎',
+]);
+
+// この会員が所有する土地
+$lands = $member->lands;
+
+// この会員が借りた土地（貸出記録から）
+$rentals = $member->rentalRecords;
+
+// この会員が送受信したチャット
+$sentChats = $member->sentChats;
+$receivedChats = $member->receivedChats;
+```
+
+#### Landモデル（土地）
+
+```php
+<?php
+use App\Models\Land;
+
+// 土地登録
+$land = Land::create([
+    'prefectures' => 13,  // 東京（0:北海道～）
+    'city' => '渋谷区',
+    'street_address' => '神南1-2-3',
+    'area' => 25.50,  // 25.5㎡
+    'user_id' => 1,   // 所有者のID
+]);
+
+// 土地の所有者を取得
+$owner = $land->owner;
+
+// この土地の貸出記録
+$records = $land->rentalRecords;
+
+// この土地のレビュー一覧
+$reviews = $land->reviews;
+
+// 東京の土地を面積順に取得
+$lands = Land::where('prefectures', 13)
+             ->orderBy('area', 'desc')
+             ->get();
+```
+
+#### RentalRecordモデル（貸出記録）
+
+```php
+<?php
+use App\Models\RentalRecord;
+
+// 貸出記録作成
+$record = RentalRecord::create([
+    'price' => 1000,
+    'price_unit' => 0,  // 0:日, 1:時間, 2:15分
+    'rental_start_date' => '2025-01-15',
+    'rental_end_date' => '2025-01-20',
+    'rental_start_time' => '09:00:00',
+    'rental_end_time' => '18:00:00',
+    'land_id' => 1,
+    'user_id' => 2,  // 借りた人
+]);
+
+// 関連情報取得
+$land = $record->land;      // 貸し出された土地
+$renter = $record->renter;  // 借りた人
+$review = $record->review;  // この貸出に対するレビュー
+
+// 特定の土地の貸出履歴
+$records = RentalRecord::where('land_id', 1)
+                        ->orderBy('rental_start_date', 'desc')
+                        ->get();
+```
+
+#### Contactモデル（問い合わせ）
+
+```php
+<?php
+use App\Models\Contact;
+
+// 問い合わせ作成
+$contact = Contact::create([
+    'title' => 'サービスについて',
+    'message' => 'キャンセル方法を教えてください',
+    'user_id' => 1,
+    'date' => now()->toDateString(),
+    'status' => 0,  // 0:未対応, 1:対応中, 2:対応済み
+]);
+
+// 返信一覧
+$replies = $contact->replies;
+
+// 未対応の問い合わせ
+$pending = Contact::where('status', 0)->get();
+```
+
+#### Chatモデル（DM）
+
+```php
+<?php
+use App\Models\Chat;
+
+// メッセージ送信
+$chat = Chat::create([
+    'user_id_from' => 1,  // 送信者
+    'user_id_to' => 2,    // 受信者
+    'message' => 'こんにちは！土地について質問があります。',
+    'image' => null,
+    'sent_date' => now()->toDateString(),
+    'sent_time' => now()->toTimeString(),
+]);
+
+// 2人のやり取りを取得
+$conversation = Chat::where(function($q) {
+    $q->where('user_id_from', 1)->where('user_id_to', 2);
+})->orWhere(function($q) {
+    $q->where('user_id_from', 2)->where('user_id_to', 1);
+})->orderBy('sent_date')->orderBy('sent_time')->get();
+```
+
+---
+
 ## よく使うコマンド
 
 ### Git
