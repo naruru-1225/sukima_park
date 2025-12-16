@@ -22,14 +22,15 @@
 9. [PHP基礎文法](#php基礎文法)
 10. [Laravelの書き方](#laravelの書き方)
 11. [CRUDとは](#crudとは)
-12. [データベーステーブル一覧](#データベーステーブル一覧)
-13. [phpMyAdminの使い方](#phpmyadminの使い方)
-14. [モデルの使い方](#モデルの使い方)
-15. [よく使うコマンド](#よく使うコマンド)
-16. [トラブルシューティング](#トラブルシューティング)
-17. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
-18. [理解度チェッククイズ](#-理解度チェッククイズ)
-19. [さらに学ぶために](#-さらに学ぶために)
+12. [共通レイアウトの使い方](#共通レイアウトの使い方)
+13. [データベーステーブル一覧](#データベーステーブル一覧)
+14. [phpMyAdminの使い方](#phpmyadminの使い方)
+15. [モデルの使い方](#モデルの使い方)
+16. [よく使うコマンド](#よく使うコマンド)
+17. [トラブルシューティング](#トラブルシューティング)
+18. [初心者がよくやる間違いTOP10](#-初心者がよくやる間違いtop10)
+19. [理解度チェッククイズ](#-理解度チェッククイズ)
+20. [さらに学ぶために](#-さらに学ぶために)
 
 ---
 
@@ -1325,6 +1326,136 @@ Route::resource('lands', LandController::class);
 > - **Read** = 表を見る
 > - **Update** = セルの値を書き換える
 > - **Delete** = 行を削除
+
+---
+
+## 共通レイアウトの使い方
+
+このプロジェクトでは、共通のヘッダー・フッター・CSSが用意されています。
+新しい画面を作るときは、このレイアウトを使ってください。
+
+### ファイル構成
+
+```
+resources/views/
+├── layouts/
+│   ├── app.blade.php      ← メインレイアウト
+│   ├── header.blade.php   ← ヘッダー（ナビゲーション）
+│   └── footer.blade.php   ← フッター
+│
+└── lands/                  ← 各機能のフォルダ
+    ├── index.blade.php
+    └── show.blade.php
+
+public/css/
+└── app.css                 ← 共通CSS
+```
+
+### 基本的な使い方
+
+新しい画面を作るときは、以下のテンプレートを使います：
+
+```html
+{{-- 共通レイアウトを使う宣言 --}}
+@extends('layouts.app')
+
+{{-- ページタイトル（ブラウザのタブに表示） --}}
+@section('title', '土地一覧')
+
+{{-- メインコンテンツ --}}
+@section('content')
+    <h1>土地一覧</h1>
+    
+    {{-- ここに画面の内容を書く --}}
+    <p>ようこそ！</p>
+@endsection
+```
+
+### 実際の例：土地一覧画面
+
+**resources/views/lands/index.blade.php**:
+
+```html
+@extends('layouts.app')
+
+@section('title', '土地一覧')
+
+@section('content')
+    <h1>土地を探す</h1>
+    
+    {{-- 検索フォーム --}}
+    <form action="{{ url('/lands') }}" method="GET" class="card">
+        <div class="card-body">
+            <div class="form-group">
+                <label class="form-label">都道府県</label>
+                <select name="prefecture" class="form-select">
+                    <option value="">すべて</option>
+                    <option value="12">東京都</option>
+                    {{-- ... --}}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">検索</button>
+        </div>
+    </form>
+    
+    {{-- 土地一覧 --}}
+    @foreach ($lands as $land)
+        <div class="card">
+            <div class="card-body">
+                <h2>{{ $land->CITY }}</h2>
+                <p>面積: {{ $land->AREA }}㎡</p>
+                <a href="{{ url('/lands/'.$land->LAND_ID) }}" class="btn btn-outline">
+                    詳細を見る
+                </a>
+            </div>
+        </div>
+    @endforeach
+@endsection
+```
+
+### 使えるCSSクラス一覧
+
+| クラス名 | 用途 | 例 |
+|---------|------|-----|
+| `.btn` | ボタン | `<button class="btn">` |
+| `.btn-primary` | 緑のボタン | `<button class="btn btn-primary">送信</button>` |
+| `.btn-outline` | 枠線ボタン | `<a class="btn btn-outline">詳細</a>` |
+| `.card` | カード | `<div class="card">...</div>` |
+| `.card-body` | カード内部 | `<div class="card-body">...</div>` |
+| `.form-group` | フォーム項目 | `<div class="form-group">...</div>` |
+| `.form-label` | ラベル | `<label class="form-label">名前</label>` |
+| `.form-input` | 入力欄 | `<input class="form-input">` |
+| `.form-select` | セレクト | `<select class="form-select">...</select>` |
+| `.form-textarea` | テキストエリア | `<textarea class="form-textarea">` |
+| `.alert-success` | 成功メッセージ | `<div class="alert alert-success">` |
+| `.alert-error` | エラーメッセージ | `<div class="alert alert-error">` |
+
+### フォームの例
+
+```html
+<form action="{{ url('/lands') }}" method="POST">
+    @csrf  {{-- セキュリティ用。必ず入れる！ --}}
+    
+    <div class="form-group">
+        <label class="form-label required">市区町村</label>
+        <input type="text" name="city" class="form-input" required>
+    </div>
+    
+    <div class="form-group">
+        <label class="form-label">説明（任意）</label>
+        <textarea name="description" class="form-textarea"></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">登録する</button>
+</form>
+```
+
+> 💡 **ポイント**
+>
+> - `@extends('layouts.app')` で共通レイアウトを使う
+> - `@section('content')` ～ `@endsection` の間にコンテンツを書く
+> - フォームには必ず `@csrf` を入れる（セキュリティ対策）
+> - 用意されたCSSクラスを使うと統一感が出る
 
 ---
 
