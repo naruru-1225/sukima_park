@@ -3,13 +3,14 @@
 このガイドは、**プログラミング初心者**でも迷わず環境構築ができるように詳しく書かれています。
 
 > 🐵 **サルでもわかる**を目指して書いています！
-> 
+>
 > わからない単語があっても大丈夫。このドキュメントに全部書いてあります。
 > 上から順番に読んでいけば、必ず理解できます。
 
 ---
 
 ## 目次
+
 1. [はじめに読んでほしいこと](#はじめに読んでほしいこと)
 2. [Git（ギット）とは](#gitギットとは)
 3. [Gitブランチの使い方](#gitブランチの使い方)
@@ -36,21 +37,23 @@
 
 ### このプロジェクトで使うツール
 
-| ツール | 何をするもの？ | 例えると... |
-|-------|--------------|------------|
-| **Git** | コードの変更履歴を管理 | Wordの「変更履歴」機能 |
-| **GitHub** | Gitのデータをネット上に保存 | Google Driveのようなもの |
-| **Docker** | 開発環境を作る | パソコンの中に「仮想サーバー」を作る |
-| **Laravel** | Webアプリを作るためのツール | 「Webアプリの骨組み」を提供 |
+| ツール            | 何をするもの？              | 例えると...                          |
+| ----------------- | --------------------------- | ------------------------------------ |
+| **Git**     | コードの変更履歴を管理      | Wordの「変更履歴」機能               |
+| **GitHub**  | Gitのデータをネット上に保存 | Google Driveのようなもの             |
+| **Docker**  | 開発環境を作る              | パソコンの中に「仮想サーバー」を作る |
+| **Laravel** | Webアプリを作るためのツール | 「Webアプリの骨組み」を提供          |
 
 ### GitHubアカウントの作成（必須）
 
 > ⚠️ **このプロジェクトに参加するには、GitHubアカウントが必要です。**
 
 #### Step 1: GitHubにアクセス
+
 https://github.com/ にアクセス
 
 #### Step 2: アカウント作成
+
 1. 「Sign up」をクリック
 2. メールアドレスを入力
 3. パスワードを作成（15文字以上、または8文字以上で数字と小文字を含む）
@@ -58,6 +61,7 @@ https://github.com/ にアクセス
 5. メール認証を完了
 
 #### Step 3: チームリーダーにユーザー名を伝える
+
 - チームリーダーがリポジトリの**コラボレーター**として追加します
 - 追加されるとメールが届くので「Accept invitation」をクリック
 - これでプロジェクトにpush/pullできるようになります
@@ -73,13 +77,13 @@ https://github.com/ にアクセス
 ### このプロジェクトの開発状況
 
 > ✅ **以下は作成済みです（触らなくてOK）**
-> 
+>
 > - **マイグレーション**: データベースのテーブル定義（`database/migrations/`）
 > - **モデル**: データベース操作用のクラス（`app/Models/`）
 > - **Docker設定**: 開発環境の設定ファイル（`docker-compose.yml`）
-> 
+>
 > 🔧 **これから作成するもの**
-> 
+>
 > - **コントローラ**: 処理を書くファイル（`app/Http/Controllers/`）
 > - **ビュー**: 画面のHTML（`resources/views/`）
 > - **ルーティング**: URLと処理の紐付け（`routes/web.php`）
@@ -106,23 +110,23 @@ https://github.com/ にアクセス
 
 ### Gitの基本用語
 
-| 用語 | 意味 | 🎯 例えると |
-|-----|------|-----------|
-| **リポジトリ** | プロジェクトのフォルダ（変更履歴込み） | 変更履歴付きのプロジェクトフォルダ |
-| **クローン** | GitHubからコピーを作ること | 図書館の本をコピーして持ち帰る |
-| **コミット** | 変更を記録すること | ゲームの「セーブ」ボタン |
-| **プッシュ** | 自分の変更をGitHubにアップロード | クラウドに保存（Google Driveにアップ） |
-| **プル** | 他の人の変更をダウンロード | クラウドから最新版を取得 |
-| **ブランチ** | 作業用の「枝」を作って安全に開発 | 下書き用のコピーを作る |
-| **マージ** | ブランチの変更を統合する | 下書きを本番に反映 |
-| **プルリクエスト** | 変更をレビューしてもらう依頼 | 「これで合ってる？」と確認を依頼 |
+| 用語                     | 意味                                   | 🎯 例えると                            |
+| ------------------------ | -------------------------------------- | -------------------------------------- |
+| **リポジトリ**     | プロジェクトのフォルダ（変更履歴込み） | 変更履歴付きのプロジェクトフォルダ     |
+| **クローン**       | GitHubからコピーを作ること             | 図書館の本をコピーして持ち帰る         |
+| **コミット**       | 変更を記録すること                     | ゲームの「セーブ」ボタン               |
+| **プッシュ**       | 自分の変更をGitHubにアップロード       | クラウドに保存（Google Driveにアップ） |
+| **プル**           | 他の人の変更をダウンロード             | クラウドから最新版を取得               |
+| **ブランチ**       | 作業用の「枝」を作って安全に開発       | 下書き用のコピーを作る                 |
+| **マージ**         | ブランチの変更を統合する               | 下書きを本番に反映                     |
+| **プルリクエスト** | 変更をレビューしてもらう依頼           | 「これで合ってる？」と確認を依頼       |
 
 > 💡 **イメージで覚えよう**
-> 
+>
 > **コミット** = ゲームでいうセーブ。失敗してもセーブポイントに戻れる！
-> 
+>
 > **プッシュ** = クラウドにバックアップ。PCが壊れても安心！
-> 
+>
 > **プル** = 仲間の作業を取り込む。みんなで同じデータを使える！
 
 ---
@@ -138,7 +142,7 @@ main（本番）から枝分かれして作業し、完成したら戻す
 ```
 
 > 💡 **例えると：レポートの下書き**
-> 
+>
 > 提出用レポート（main）を直接編集すると、失敗したときに大変。
 > だから「下書きコピー」を作って、そこで作業。
 > 完成したら提出用にコピーする。ブランチはこの「下書き」のこと！
@@ -288,18 +292,19 @@ git branch -d feature/login
 
 ### Dockerの基本用語
 
-| 用語 | 意味 | 🎯 例えると |
-|-----|------|-----------|
-| **イメージ** | 環境の「設計図」 | 料理のレシピ |
-| **コンテナ** | イメージから作られた「実行中の環境」 | レシピから作った料理 |
-| **docker-compose.yml** | 複数のコンテナをまとめて管理する設定ファイル | フルコースのメニュー表 |
-| **ボリューム** | データを永続化する仕組み | 冷蔵庫（コンテナを消しても中身は残る） |
+| 用語                         | 意味                                         | 🎯 例えると                            |
+| ---------------------------- | -------------------------------------------- | -------------------------------------- |
+| **イメージ**           | 環境の「設計図」                             | 料理のレシピ                           |
+| **コンテナ**           | イメージから作られた「実行中の環境」         | レシピから作った料理                   |
+| **docker-compose.yml** | 複数のコンテナをまとめて管理する設定ファイル | フルコースのメニュー表                 |
+| **ボリューム**         | データを永続化する仕組み                     | 冷蔵庫（コンテナを消しても中身は残る） |
 
 > 💡 **イメージで覚えよう**
-> 
+>
 > Dockerは「仮想のパソコンをパソコンの中に作る」ようなもの。
-> 
+>
 > レストランで例えると：
+>
 > - **イメージ** = レシピ集（何を作るか書いてある）
 > - **コンテナ** = 実際のキッチンと料理人（レシピを元に料理を作る）
 > - **docker-compose.yml** = 「前菜、メイン、デザートを同時に準備して」という指示書
@@ -386,6 +391,7 @@ docker compose up -d
 ```
 
 **チェックリスト:**
+
 - [ ] `git pull` した
 - [ ] `docker compose up -d` した
 - [ ] ブラウザで動作確認した
@@ -403,11 +409,12 @@ git commit -m "バグ修正: ログインできない問題"
 ```
 
 **コミットメッセージの書き方:**
-| 良い例 ✅ | 悪い例 ❌ |
-|---------|---------| 
-| 土地一覧画面を作成 | 更新 |
-| ログイン機能を追加 | 修正 |
-| バグ修正: 日付表示のエラー | あ |
+
+| 良い例 ✅                  | 悪い例 ❌ |
+| -------------------------- | --------- |
+| 土地一覧画面を作成         | 更新      |
+| ログイン機能を追加         | 修正      |
+| バグ修正: 日付表示のエラー | あ        |
 
 ### 作業終了時（必ず実行）
 
@@ -424,6 +431,7 @@ docker compose down
 ```
 
 **チェックリスト:**
+
 - [ ] 全ての変更をコミットした
 - [ ] `git push` した
 - [ ] `docker compose down` した
@@ -458,6 +466,7 @@ docker compose down
 ### 1. WSL2（ダブリューエスエル2）のインストール ★重要★
 
 **WSL2とは？**
+
 ```
 WSL2 = Windows Subsystem for Linux 2
 Windowsの中でLinux（サーバーのOS）を動かす機能
@@ -471,25 +480,31 @@ Windowsの中でLinux（サーバーのOS）を動かす機能
 **インストール手順**:
 
 #### Step 1: PowerShellを管理者として開く
+
 1. Windowsキーを押す
 2. 「PowerShell」と入力
 3. 「管理者として実行」をクリック
 
 #### Step 2: WSL2をインストール
+
 ```powershell
 wsl --install
 ```
 
 #### Step 3: PCを再起動
+
 インストール完了後、PCを再起動してください。
 
 #### Step 4: Ubuntuの初期設定
+
 再起動後、自動的にUbuntuのウィンドウが開きます。
+
 1. ユーザー名を入力（半角英字、例: `myname`）
 2. パスワードを入力（2回）
 3. 設定完了！
 
 **確認方法**:
+
 ```powershell
 # PowerShellで実行
 wsl --list --verbose
@@ -511,6 +526,7 @@ wsl --list --verbose
 5. インストール完了後、**PCを再起動**
 
 **WSL2統合の確認**:
+
 1. Docker Desktopを開く
 2. 右上の歯車アイコン（Settings）をクリック
 3. 左メニュー「Resources」→「WSL Integration」
@@ -527,6 +543,7 @@ wsl --list --verbose
 5. 「Install」をクリック
 
 **Gitインストール後の設定（重要！）**:
+
 ```bash
 # PowerShellまたはコマンドプロンプトで実行
 
@@ -547,6 +564,7 @@ git config --list
 ```
 
 **なぜこの設定が必要？**
+
 ```
 Gitは「誰が」「いつ」「何を」変更したか記録します。
 この設定で「誰が」の部分が設定されます。
@@ -561,6 +579,7 @@ Gitは「誰が」「いつ」「何を」変更したか記録します。
 ### 4. VS Code のインストール（推奨）
 
 **VS Codeとは？**
+
 ```
 VS Code = Visual Studio Code
 Microsoft製の無料テキストエディタ
@@ -575,6 +594,7 @@ Microsoft製の無料テキストエディタ
 ```
 
 **インストール手順**:
+
 1. https://code.visualstudio.com/ にアクセス
 2. 「Download for Windows」をクリック
 3. ダウンロードしたファイルを実行
@@ -584,6 +604,7 @@ Microsoft製の無料テキストエディタ
 7. 「Install」をクリック
 
 **日本語化**:
+
 1. VS Codeを起動
 2. 左側の四角いアイコン（Extensions）をクリック
 3. 検索欄に「Japanese」と入力
@@ -592,14 +613,15 @@ Microsoft製の無料テキストエディタ
 
 **必須の拡張機能をインストール**:
 
-| 拡張機能名 | 説明 | 検索キーワード |
-|-----------|------|---------------|
-| PHP Intelephense | PHPの補完・エラー検出 | `PHP Intelephense` |
-| Laravel Blade Snippets | Bladeテンプレートの補完 | `Laravel Blade` |
-| GitLens | Gitの変更履歴を表示 | `GitLens` |
-| Docker | Dockerの管理 | `Docker` |
+| 拡張機能名             | 説明                    | 検索キーワード       |
+| ---------------------- | ----------------------- | -------------------- |
+| PHP Intelephense       | PHPの補完・エラー検出   | `PHP Intelephense` |
+| Laravel Blade Snippets | Bladeテンプレートの補完 | `Laravel Blade`    |
+| GitLens                | Gitの変更履歴を表示     | `GitLens`          |
+| Docker                 | Dockerの管理            | `Docker`           |
 
 **インストール方法**:
+
 ```
 1. 左側の四角いアイコン（Extensions）をクリック
 2. 検索欄に拡張機能名を入力
@@ -607,6 +629,7 @@ Microsoft製の無料テキストエディタ
 ```
 
 **VS Codeでプロジェクトを開く方法**:
+
 ```
 方法1: エクスプローラーから
 1. sukimaparkフォルダを右クリック
@@ -623,6 +646,7 @@ code .
 ```
 
 **VS Codeの画面説明**:
+
 ```
 ┌────────────────────────────────────────────────────────────────┐
 │ ファイル  編集  選択  表示  移動  実行  ターミナル  ヘルプ        │
@@ -657,18 +681,18 @@ code .
 
 **VS Codeの便利なショートカット**:
 
-| ショートカット | 機能 | よく使う度 |
-|--------------|------|-----------|
-| `Ctrl + S` | 保存 | ★★★★★ |
-| `Ctrl + Z` | 元に戻す | ★★★★★ |
-| `Ctrl + Shift + Z` | やり直し | ★★★★ |
-| `Ctrl + F` | ファイル内検索 | ★★★★★ |
-| `Ctrl + Shift + F` | 全ファイル検索 | ★★★★ |
-| `Ctrl + P` | ファイルを素早く開く | ★★★★ |
-| `Ctrl + /` | コメント化 | ★★★★ |
-| `Ctrl + D` | 同じ単語を選択 | ★★★ |
-| `Alt + ↑/↓` | 行を上下に移動 | ★★★ |
-| `Ctrl + `` ` | ターミナルを開く | ★★★★★ |
+| ショートカット       | 機能                 | よく使う度 |
+| -------------------- | -------------------- | ---------- |
+| `Ctrl + S`         | 保存                 | ★★★★★ |
+| `Ctrl + Z`         | 元に戻す             | ★★★★★ |
+| `Ctrl + Shift + Z` | やり直し             | ★★★★   |
+| `Ctrl + F`         | ファイル内検索       | ★★★★★ |
+| `Ctrl + Shift + F` | 全ファイル検索       | ★★★★   |
+| `Ctrl + P`         | ファイルを素早く開く | ★★★★   |
+| `Ctrl + /`         | コメント化           | ★★★★   |
+| `Ctrl + D`         | 同じ単語を選択       | ★★★     |
+| `Alt + ↑/↓`      | 行を上下に移動       | ★★★     |
+| `Ctrl + `` `       | ターミナルを開く     | ★★★★★ |
 
 ---
 
@@ -1061,7 +1085,6 @@ $land = Land::find(1);
 $land->delete();
 ```
 
-
 ### 3. コントローラ（app/Http/Controllers/）
 
 **処理を書く場所**
@@ -1172,8 +1195,9 @@ class LandController extends Controller
 ```
 
 > 💡 **コントローラの役割を例えると**
-> 
+>
 > コントローラは「司令塔」や「交通整理」のようなもの。
+>
 > - ユーザーからのリクエスト（URLアクセス）を受け取る
 > - 必要なデータをモデルから取得する
 > - ビューにデータを渡して画面を表示する
@@ -1229,8 +1253,9 @@ Route::resource('lands', LandController::class);
 ```
 
 > 💡 **ルーティングを例えると**
-> 
+>
 > ルーティングは「電話の内線番号表」のようなもの。
+>
 > - URL（電話番号）→ コントローラのメソッド（担当者）
 > - `/lands` にかかってきた電話は `LandController` の `index` さんが対応
 
@@ -1253,12 +1278,12 @@ Route::resource('lands', LandController::class);
 
 ### CRUDとLaravelの対応表
 
-| CRUD | 意味 | HTTP | URL例 | コントローラメソッド | SQL |
-|------|------|------|-------|---------------------|-----|
-| **C**reate | 作成 | POST | /lands | store() | INSERT |
-| **R**ead | 読取 | GET | /lands, /lands/1 | index(), show() | SELECT |
-| **U**pdate | 更新 | PUT/PATCH | /lands/1 | update() | UPDATE |
-| **D**elete | 削除 | DELETE | /lands/1 | destroy() | DELETE |
+| CRUD             | 意味 | HTTP      | URL例            | コントローラメソッド | SQL    |
+| ---------------- | ---- | --------- | ---------------- | -------------------- | ------ |
+| **C**reate | 作成 | POST      | /lands           | store()              | INSERT |
+| **R**ead   | 読取 | GET       | /lands, /lands/1 | index(), show()      | SELECT |
+| **U**pdate | 更新 | PUT/PATCH | /lands/1         | update()             | UPDATE |
+| **D**elete | 削除 | DELETE    | /lands/1         | destroy()            | DELETE |
 
 ### 具体例：土地（Land）のCRUD
 
@@ -1284,8 +1309,9 @@ Route::resource('lands', LandController::class);
 ```
 
 > 💡 **CRUDを例えると**
-> 
+>
 > Excelの表で考えると分かりやすい：
+>
 > - **Create** = 新しい行を追加
 > - **Read** = 表を見る
 > - **Update** = セルの値を書き換える
@@ -1333,90 +1359,104 @@ Route::resource('lands', LandController::class);
 
 ### 1. 会員テーブル（MEMBER_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| USER_ID | INT (AUTO_INCREMENT) | 会員ID（主キー） |
-| EMAIL | VARCHAR(1024) | メールアドレス |
-| PASSWORD | VARCHAR(64) | パスワード（英数混合8〜20文字） |
-| TEL | VARCHAR(64) | 電話番号（XXX-XXXX-XXXX） |
-| BIRTH | DATE | 生年月日（YYYY/MM/DD） |
-| SHOW_BIRTH | BOOLEAN | 生年月日の公開設定 |
-| GENDER | INT | 性別（0:男性, 1:女性, 2:その他） |
-| SHOW_GENDER | BOOLEAN | 性別の公開設定 |
-| IDENTITY | VARCHAR(1024) | 本人確認書類（画像パス） |
-| USERNAME | VARCHAR(128) | ユーザ名 |
+| カラム名          | 型                   | 説明                                   |
+| ----------------- | -------------------- | -------------------------------------- |
+| USER_ID           | INT (AUTO_INCREMENT) | 会員ID（主キー）                       |
+| EMAIL             | VARCHAR(1024)        | メールアドレス                         |
+| PASSWORD          | VARCHAR(64)          | パスワード（英数混合8〜20文字）        |
+| TEL               | VARCHAR(64)          | 電話番号（XXX-XXXX-XXXX）              |
+| BIRTH             | DATE                 | 生年月日（YYYY/MM/DD）                 |
+| SHOW_BIRTH        | BOOLEAN              | 生年月日の公開設定                     |
+| GENDER            | INT                  | 性別（0:男性, 1:女性, 2:その他）       |
+| SHOW_GENDER       | BOOLEAN              | 性別の公開設定                         |
+| IDENTITY          | VARCHAR(1024)        | 本人確認書類（画像パス）               |
+| USERNAME          | VARCHAR(128)         | ユーザ名（32文字以内）                 |
+| SELF_INTRODUCTION | VARCHAR(512)         | 自己紹介（140字以内、NULL可）          |
+| ICON_IMAGE        | VARCHAR(1024)        | アイコン画像パス                       |
+| ACCOUNT_STATUS    | INT                  | アカウント状態（0:ユーザ, 1:凍結, 2:管理者） |
 
 ### 2. 土地テーブル（LAND_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| LAND_ID | INT (AUTO_INCREMENT) | 土地ID（主キー） |
-| PEREFECTURES | INT | 都道府県（0:北海道〜） |
-| CITY | VARCHAR(256) | 市区町村（50字制限） |
-| STREET_ADDRESS | VARCHAR(256) | 番地（50字制限） |
-| AREA | DECIMAL(5,2) | 面積 |
+| カラム名          | 型                   | 説明                                     |
+| ----------------- | -------------------- | ---------------------------------------- |
+| LAND_ID           | INT (AUTO_INCREMENT) | 土地ID（主キー）                         |
+| PEREFECTURES      | INT                  | 都道府県（0:北海道〜46:沖縄）            |
+| CITY              | VARCHAR(256)         | 市区町村（50字制限）                     |
+| STREET_ADDRESS    | VARCHAR(256)         | 番地（50字制限）                         |
+| AREA              | DECIMAL(5,2)         | 面積                                     |
+| IMAGE             | VARCHAR(2048)        | 写真（画像パス、NULL可）                 |
+| TITLE_DEED        | VARCHAR(2048)        | 権利書（画像URL）                        |
+| DESCRIPTION       | VARCHAR(4096)        | 説明（1200文字以下、NULL可）             |
+| RENTAL_START_DATE | DATE                 | 貸し出し受付開始日（NULL可）             |
+| RENTAL_END_DATE   | DATE                 | 貸し出し受付終了日（NULL可）             |
+| RENTAL_START_TIME | TIME                 | 貸し出し受付開始時間（NULL可）           |
+| RENTAL_END_TIME   | TIME                 | 貸し出し受付終了時間（NULL可）           |
+| PRICE             | INT                  | 単価                                     |
+| PRICE_UNIT        | INT                  | 単価単位（0:日, 1:時間, 2:15分）         |
+| USER_ID           | INT                  | 所有者会員ID（外部キー）                 |
+| STATUS            | BOOLEAN              | ステータス（0:非公開, 1:公開中）         |
 
 ### 3. 貸し出し記録テーブル（RENTAL_RECORD_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| RECORD_ID | INT (AUTO_INCREMENT) | 記録ID（主キー） |
-| PRICE | INT | 単価 |
-| PRICE_UNIT | INT | 単価単位（0:日, 1:時間, 2:15分） |
-| RENTAL_START_DATE | DATE | 開始日 |
-| RENTAL_END_DATE | DATE | 終了日 |
-| RENTAL_START_TIME | TIME | 開始時間 |
-| RENTAL_END_TIME | TIME | 終了時間 |
-| LAND_ID | INT | 土地ID（外部キー） |
-| USER_ID | INT | 会員ID（外部キー） |
+| カラム名          | 型                   | 説明                             |
+| ----------------- | -------------------- | -------------------------------- |
+| RECORD_ID         | INT (AUTO_INCREMENT) | 記録ID（主キー）                 |
+| PRICE             | INT                  | 単価                             |
+| PRICE_UNIT        | INT                  | 単価単位（0:日, 1:時間, 2:15分） |
+| RENTAL_START_DATE | DATE                 | 開始日                           |
+| RENTAL_END_DATE   | DATE                 | 終了日                           |
+| RENTAL_START_TIME | TIME                 | 開始時間                         |
+| RENTAL_END_TIME   | TIME                 | 終了時間                         |
+| LAND_ID           | INT                  | 土地ID（外部キー）               |
+| USER_ID           | INT                  | 会員ID（外部キー）               |
 
 ### 4. レビュー・コメントテーブル（REVIEW_COMMENT_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| REVIEW_COMMENT_ID | INT (AUTO_INCREMENT) | ID（主キー） |
-| LAND_REVIEW | INT | 土地レビュー（星1〜5） |
-| LAND_COMMENT | VARCHAR(512) | 土地コメント（150文字） |
-| USER_REVIEW | INT | ユーザレビュー（星1〜5） |
-| USER_COMMENT | VARCHAR(512) | ユーザコメント（150文字） |
-| DATE | DATE | 日付 |
-| USER_ID | INT | 会員ID（外部キー） |
-| LAND_ID | INT | 土地ID（外部キー） |
-| RECORD_ID | INT | 記録ID（外部キー） |
+| カラム名          | 型                   | 説明                      |
+| ----------------- | -------------------- | ------------------------- |
+| REVIEW_COMMENT_ID | INT (AUTO_INCREMENT) | ID（主キー）              |
+| LAND_REVIEW       | INT                  | 土地レビュー（星1〜5）    |
+| LAND_COMMENT      | VARCHAR(512)         | 土地コメント（150文字）   |
+| USER_REVIEW       | INT                  | ユーザレビュー（星1〜5）  |
+| USER_COMMENT      | VARCHAR(512)         | ユーザコメント（150文字） |
+| DATE              | DATE                 | 日付                      |
+| USER_ID           | INT                  | 会員ID（外部キー）        |
+| LAND_ID           | INT                  | 土地ID（外部キー）        |
+| RECORD_ID         | INT                  | 記録ID（外部キー）        |
 
 ### 5. 問い合わせテーブル（CONTACT_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| CONTACT_ID | INT (AUTO_INCREMENT) | 問い合わせID（主キー） |
-| TITLE | VARCHAR(128) | 主題（40字以下） |
-| MESSAGE | VARCHAR(1024) | 本文（300字以下） |
-| USER_ID | INT | 会員ID（外部キー） |
-| DATE | DATE | 日付 |
-| STATUS | INT | ステータス（0:未対応, 1:対応中, 2:対応済み） |
+| カラム名   | 型                   | 説明                                         |
+| ---------- | -------------------- | -------------------------------------------- |
+| CONTACT_ID | INT (AUTO_INCREMENT) | 問い合わせID（主キー）                       |
+| TITLE      | VARCHAR(128)         | 主題（40字以下）                             |
+| MESSAGE    | VARCHAR(1024)        | 本文（300字以下）                            |
+| USER_ID    | INT                  | 会員ID（外部キー）                           |
+| DATE       | DATE                 | 日付                                         |
+| STATUS     | INT                  | ステータス（0:未対応, 1:対応中, 2:対応済み） |
 
 ### 6. 返信テーブル（REPLY_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| REPLY_ID | INT (AUTO_INCREMENT) | 返信ID（主キー） |
-| CONTACT_ID | INT | 問い合わせID（外部キー） |
-| USER_ID | INT | 会員ID（外部キー） |
-| MESSAGE | VARCHAR(1024) | メッセージ（最大300文字） |
-| DATE | DATE | 日付 |
+| カラム名   | 型                   | 説明                      |
+| ---------- | -------------------- | ------------------------- |
+| REPLY_ID   | INT (AUTO_INCREMENT) | 返信ID（主キー）          |
+| CONTACT_ID | INT                  | 問い合わせID（外部キー）  |
+| USER_ID    | INT                  | 会員ID（外部キー）        |
+| MESSAGE    | VARCHAR(1024)        | メッセージ（最大300文字） |
+| DATE       | DATE                 | 日付                      |
 
 ### 7. 連絡テーブル（CHAT_TABLE）
 
-| カラム名 | 型 | 説明 |
-|---------|-----|------|
-| CHAT_ID | INT (AUTO_INCREMENT) | 連絡ID（主キー） |
-| USER_ID_FROM | INT | 連絡元会員ID（外部キー） |
-| USER_ID_TO | INT | 連絡先会員ID（外部キー） |
-| MESSAGE | VARCHAR(512) | メッセージ（120字以内） |
-| IMAGE | VARCHAR(2048) | 画像URL（任意） |
-| YEAR | DATE | 西暦 |
-| DATE | DATE | 日付 |
-| TIME | TIME | 時間 |
+| カラム名     | 型                   | 説明                     |
+| ------------ | -------------------- | ------------------------ |
+| CHAT_ID      | INT (AUTO_INCREMENT) | 連絡ID（主キー）         |
+| USER_ID_FROM | INT                  | 連絡元会員ID（外部キー） |
+| USER_ID_TO   | INT                  | 連絡先会員ID（外部キー） |
+| MESSAGE      | VARCHAR(512)         | メッセージ（120字以内）  |
+| IMAGE        | VARCHAR(2048)        | 画像URL（任意）          |
+| YEAR         | DATE                 | 西暦                     |
+| DATE         | DATE                 | 日付                     |
+| TIME         | TIME                 | 時間                     |
 
 > ⚠️ **注意**: これらのテーブルは既にマイグレーションで定義済みです。
 > `database/migrations/` フォルダ内のファイルで確認できます。
@@ -1430,6 +1470,7 @@ Route::resource('lands', LandController::class);
 Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを書きやすくします。
 
 **resources/views/lands/index.blade.php**:
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -1444,7 +1485,7 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
     {{-- ─── 変数の表示 ─── --}}
     {{ $変数名 }}
     {{-- ↑ HTMLエスケープ済み（XSS攻撃対策） --}}
-    {{-- ↑ < は &lt; に変換される --}}
+    {{-- ↑ < は < に変換される --}}
 
     {!! $html変数 !!}
     {{-- ↑ HTMLをそのまま出力（注意して使う） --}}
@@ -1486,6 +1527,7 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
 **レイアウトの継承**:
 
 **resources/views/layouts/app.blade.php**（共通レイアウト）:
+
 ```html
 <!DOCTYPE html>
 <html>
@@ -1509,6 +1551,7 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
 ```
 
 **resources/views/lands/index.blade.php**（子テンプレート）:
+
 ```html
 @extends('layouts.app')
 {{-- ↑ layouts/app.blade.php を継承 --}}
@@ -1532,31 +1575,32 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
 phpMyAdminはブラウザでデータベースを管理できるツールです。
 
 ### アクセス方法
+
 **URL**: http://localhost:8080
 
 （自動ログイン設定済み。ユーザー: sail / パスワード: password）
 
 ### 主な機能
 
-| 機能 | 説明 |
-|-----|------|
-| テーブル一覧 | 左メニューでsukimaparkをクリック |
-| データ参照 | テーブル名をクリック → 「表示」タブ |
-| データ挿入 | テーブル名をクリック → 「挿入」タブ |
-| SQL実行 | 「SQL」タブでクエリを直接実行 |
-| エクスポート | 「エクスポート」タブでバックアップ |
+| 機能         | 説明                                 |
+| ------------ | ------------------------------------ |
+| テーブル一覧 | 左メニューでsukimaparkをクリック     |
+| データ参照   | テーブル名をクリック → 「表示」タブ |
+| データ挿入   | テーブル名をクリック → 「挿入」タブ |
+| SQL実行      | 「SQL」タブでクエリを直接実行        |
+| エクスポート | 「エクスポート」タブでバックアップ   |
 
 ### データベーステーブル一覧
 
-| テーブル名 | 説明 | 主なカラム |
-|-----------|------|-----------|
-| members | 会員情報 | id, email, username, tel, birth, gender |
-| lands | 土地情報 | id, prefectures, city, street_address, area, user_id |
-| rental_records | 貸し出し記録 | id, price, rental_start_date, land_id, user_id |
-| review_comments | レビュー | id, land_review, user_review, record_id |
-| contacts | 問い合わせ | id, title, message, status, user_id |
-| replies | 問い合わせ返信 | id, contact_id, message, user_id |
-| chats | DM/チャット | id, user_id_from, user_id_to, message |
+| テーブル名      | 説明           | 主なカラム                                           |
+| --------------- | -------------- | ---------------------------------------------------- |
+| members         | 会員情報       | id, email, username, tel, birth, gender              |
+| lands           | 土地情報       | id, prefectures, city, street_address, area, user_id |
+| rental_records  | 貸し出し記録   | id, price, rental_start_date, land_id, user_id       |
+| review_comments | レビュー       | id, land_review, user_review, record_id              |
+| contacts        | 問い合わせ     | id, title, message, status, user_id                  |
+| replies         | 問い合わせ返信 | id, contact_id, message, user_id                     |
+| chats           | DM/チャット    | id, user_id_from, user_id_to, message                |
 
 ### テーブルの関係（ER図）
 
@@ -1597,15 +1641,15 @@ $members = Member::where('gender', 0)->get();
 
 ### 作成済みモデル一覧
 
-| モデル名 | テーブル | 説明 | 取得できる関連データ |
-|---------|---------|------|-------------------|
-| Member | members | 会員情報 | lands, rentalRecords, contacts, sentChats, receivedChats |
-| Land | lands | 土地情報 | owner, rentalRecords, reviews |
-| RentalRecord | rental_records | 貸出記録 | land, renter, review |
-| ReviewComment | review_comments | レビュー | reviewer, land, rentalRecord |
-| Contact | contacts | 問い合わせ | sender, replies |
-| Reply | replies | 返信 | contact, sender |
-| Chat | chats | DM | sender, receiver |
+| モデル名      | テーブル        | 説明       | 取得できる関連データ                                     |
+| ------------- | --------------- | ---------- | -------------------------------------------------------- |
+| Member        | members         | 会員情報   | lands, rentalRecords, contacts, sentChats, receivedChats |
+| Land          | lands           | 土地情報   | owner, rentalRecords, reviews                            |
+| RentalRecord  | rental_records  | 貸出記録   | land, renter, review                                     |
+| ReviewComment | review_comments | レビュー   | reviewer, land, rentalRecord                             |
+| Contact       | contacts        | 問い合わせ | sender, replies                                          |
+| Reply         | replies         | 返信       | contact, sender                                          |
+| Chat          | chats           | DM         | sender, receiver                                         |
 
 ### クエリメソッド一覧
 
@@ -1613,14 +1657,14 @@ $members = Member::where('gender', 0)->get();
 
 #### データ取得メソッド
 
-| メソッド | 説明 | 戻り値 |
-|---------|------|-------|
-| `all()` | 全件取得 | Collection（複数） |
-| `find(ID)` | IDで1件取得 | Model or null |
-| `findOrFail(ID)` | IDで1件取得（なければエラー） | Model |
-| `first()` | 最初の1件取得 | Model or null |
-| `get()` | 条件に合う全件取得 | Collection（複数） |
-| `count()` | 件数を取得 | 数値 |
+| メソッド           | 説明                          | 戻り値             |
+| ------------------ | ----------------------------- | ------------------ |
+| `all()`          | 全件取得                      | Collection（複数） |
+| `find(ID)`       | IDで1件取得                   | Model or null      |
+| `findOrFail(ID)` | IDで1件取得（なければエラー） | Model              |
+| `first()`        | 最初の1件取得                 | Model or null      |
+| `get()`          | 条件に合う全件取得            | Collection（複数） |
+| `count()`        | 件数を取得                    | 数値               |
 
 ```php
 <?php
@@ -1684,14 +1728,14 @@ $males = Member::where('gender', 0)->count();  // 男性会員数
 
 #### 条件指定メソッド
 
-| メソッド | 説明 | 例 |
-|---------|------|-----|
-| `where('カラム', '値')` | 等しい | `where('gender', 0)` |
-| `where('カラム', '演算子', '値')` | 比較 | `where('area', '>', 50)` |
-| `orWhere()` | OR条件 | `orWhere('status', 1)` |
-| `whereIn()` | 複数値のいずれか | `whereIn('status', [0, 1])` |
-| `orderBy('カラム', '方向')` | 並び替え | `orderBy('created_at', 'desc')` |
-| `limit(件数)` | 取得件数制限 | `limit(10)` |
+| メソッド                            | 説明             | 例                                |
+| ----------------------------------- | ---------------- | --------------------------------- |
+| `where('カラム', '値')`           | 等しい           | `where('gender', 0)`            |
+| `where('カラム', '演算子', '値')` | 比較             | `where('area', '>', 50)`        |
+| `orWhere()`                       | OR条件           | `orWhere('status', 1)`          |
+| `whereIn()`                       | 複数値のいずれか | `whereIn('status', [0, 1])`     |
+| `orderBy('カラム', '方向')`       | 並び替え         | `orderBy('created_at', 'desc')` |
+| `limit(件数)`                     | 取得件数制限     | `limit(10)`                     |
 
 ```php
 <?php
@@ -2078,6 +2122,7 @@ docker compose exec app php artisan make:model 名前 -m    # モデル+マイ�
 ### 「port is already allocated」（ポートが使用中）
 
 **どういうエラー？**
+
 ```
 Error response from daemon: driver failed programming external connectivity:
 Bind for 0.0.0.0:80: port is already allocated
@@ -2086,6 +2131,7 @@ Bind for 0.0.0.0:80: port is already allocated
 **原因**: 別のソフト（Skype、Apache、他のDockerなど）が同じポートを使っている
 
 **解決方法**:
+
 ```bash
 # Step 1: .envファイルを開く（プロジェクトフォルダ内）
 
@@ -2100,6 +2146,7 @@ docker compose up -d
 ```
 
 **図解**:
+
 ```
 ❌ ポート80が使用中
 ┌────────────┐     ┌────────────┐
@@ -2130,6 +2177,7 @@ docker compose up -d
 **原因**: Laravelがキャッシュ（一時保存データ）を使っている
 
 **解決方法**:
+
 ```bash
 # 全てのキャッシュをクリア
 docker compose exec app php artisan cache:clear
@@ -2143,6 +2191,7 @@ docker compose exec app php artisan route:clear
 ```
 
 **それでもダメなら**:
+
 ```bash
 # Dockerを完全に再起動
 docker compose down
@@ -2154,6 +2203,7 @@ docker compose up -d --build
 ### 「git pushできない」
 
 **どういうエラー？**
+
 ```
 ! [rejected]        main -> main (fetch first)
 error: failed to push some refs to 'github.com:...'
@@ -2162,6 +2212,7 @@ error: failed to push some refs to 'github.com:...'
 **原因**: 他のメンバーが先にpushしていて、あなたのローカルが古い
 
 **解決方法**:
+
 ```bash
 # Step 1: 最新を取得
 git pull
@@ -2171,6 +2222,7 @@ git push
 ```
 
 **図解**:
+
 ```
 あなた                 GitHub                他のメンバー
   │                      │                      │
@@ -2197,6 +2249,7 @@ git push
 **原因**: MySQLコンテナが起動していない、または起動中
 
 **解決方法**:
+
 ```bash
 # Step 1: コンテナの状態を確認
 docker compose ps
@@ -2225,6 +2278,7 @@ docker compose up -d
 **原因**: use文を書き忘れている
 
 **解決方法**:
+
 ```php
 <?php
 // ❌ ダメな例（use文がない）
@@ -2249,6 +2303,7 @@ class LandController extends Controller
 ```
 
 **図解**:
+
 ```
 use文 = 他のファイルのクラスを使う宣言
 
@@ -2273,6 +2328,7 @@ use文 = 他のファイルのクラスを使う宣言
 **原因**: コントローラからビューに変数を渡していない
 
 **解決方法**:
+
 ```php
 <?php
 // ❌ ダメな例（変数を渡していない）
@@ -2288,7 +2344,7 @@ public function index()
     $lands = Land::all();
     return view('lands.index', ['lands' => $lands]);
     //                         ↑ これで渡す！
-    
+  
     // または compact() を使う書き方
     return view('lands.index', compact('lands'));
 }
@@ -2304,6 +2360,7 @@ public function index()
 **原因**: ルーティングが設定されていない
 
 **解決方法**:
+
 ```php
 <?php
 // routes/web.php を確認
@@ -2319,6 +2376,7 @@ Route::get('/lands', [LandController::class, 'index']);
 ```
 
 **ルート確認コマンド**:
+
 ```bash
 # 設定されている全ルートを表示
 docker compose exec app php artisan route:list
@@ -2329,6 +2387,7 @@ docker compose exec app php artisan route:list
 ### 「Add [name] to fillable property」
 
 **どういうエラー？**
+
 ```
 Add [name] to fillable property to allow mass assignment on [App\Models\Land].
 ```
@@ -2336,6 +2395,7 @@ Add [name] to fillable property to allow mass assignment on [App\Models\Land].
 **原因**: モデルの `$fillable` に保存したいカラムが登録されていない
 
 **解決方法**:
+
 ```php
 <?php
 // app/Models/Land.php
@@ -2347,7 +2407,7 @@ class Land extends Model
         'location',
         'area',
     ];
-    
+  
     // ✅ name を追加
     protected $fillable = [
         'name',      // ← 追加！
@@ -2358,6 +2418,7 @@ class Land extends Model
 ```
 
 **なぜfillableが必要？**
+
 ```
 セキュリティのため！
 
@@ -2378,6 +2439,7 @@ $fillableに書いてあるカラムしか保存できない。
 **原因**: コントローラにそのメソッドを作っていない
 
 **解決方法**:
+
 ```php
 <?php
 // app/Http/Controllers/LandController.php
@@ -2400,6 +2462,7 @@ class LandController extends Controller
 ## 🔧 初心者がよくやる間違いTOP10
 
 ### 1. セミコロン（;）の付け忘れ
+
 ```php
 // ❌
 $name = "田中"
@@ -2409,6 +2472,7 @@ $name = "田中";
 ```
 
 ### 2. 変数の$を忘れる
+
 ```php
 // ❌
 name = "田中";
@@ -2418,6 +2482,7 @@ $name = "田中";
 ```
 
 ### 3. ""と''の違いを理解していない
+
 ```php
 $name = "田中";
 
@@ -2429,6 +2494,7 @@ echo "こんにちは、{$name}さん";  // → こんにちは、田中さん
 ```
 
 ### 4. =と==と===の違い
+
 ```php
 $a = 5;     // 代入（$aに5を入れる）
 $a == 5;    // 比較（$aが5と等しいか？）
@@ -2441,6 +2507,7 @@ $a === 5;           // false（型が違う：文字列 vs 数値）
 ```
 
 ### 5. ->と=>の違い
+
 ```php
 // -> はオブジェクトのプロパティ/メソッドにアクセス
 $user->name;
@@ -2451,6 +2518,7 @@ $array = ["key" => "value"];
 ```
 
 ### 6. ファイル名の大文字小文字
+
 ```php
 // ❌ ファイル名が違う
 // ファイル: land.php
@@ -2462,6 +2530,7 @@ use App\Models\Land;  // OK
 ```
 
 ### 7. ルートの順番
+
 ```php
 // ❌ 順番が悪い
 Route::get('/lands/{id}', [LandController::class, 'show']);
@@ -2474,6 +2543,7 @@ Route::get('/lands/{id}', [LandController::class, 'show']);
 ```
 
 ### 8. foreachで変数名の一致
+
 ```php
 // ❌ コントローラとビューで変数名が違う
 // コントローラ
@@ -2488,6 +2558,7 @@ return view('lands.index', ['landList' => $landList]);
 ```
 
 ### 9. マイグレーション後のモデル更新忘れ
+
 ```
 マイグレーションでカラムを追加したら、
 モデルの$fillableにも追加することを忘れずに！
@@ -2497,9 +2568,10 @@ return view('lands.index', ['landList' => $landList]);
 ```
 
 ### 10. Bladeのエスケープ
+
 ```html
 {{-- ❌ HTMLタグがそのまま表示される --}}
-{{ $html }}  <!-- &lt;b&gt;太字&lt;/b&gt; -->
+{{ $html }}  <!-- <b>太字</b> -->
 
 {{-- ✅ HTMLを解釈して表示 --}}
 {!! $html !!}  <!-- <b>太字</b> -->
@@ -2514,12 +2586,14 @@ return view('lands.index', ['landList' => $landList]);
 自分の理解度を確認してみましょう！
 
 ### Q1: この変数の値は？
+
 ```php
 $a = 10;
 $b = $a + 5;
 $a = 20;
 echo $b;
 ```
+
 <details>
 <summary>答えを見る</summary>
 
@@ -2527,9 +2601,11 @@ echo $b;
 
 $bに代入した時点の$aの値（10）が使われる。
 その後$aを20に変えても、$bには影響しない。
+
 </details>
 
 ### Q2: このコードのエラーは？
+
 ```php
 public function index()
 {
@@ -2537,18 +2613,22 @@ public function index()
     return view('lands.index');
 }
 ```
+
 <details>
 <summary>答えを見る</summary>
 
 **答え: セミコロンがない**
 
 正しくは:
+
 ```php
 $lands = Land::all();  // ← セミコロン追加
 ```
+
 </details>
 
 ### Q3: MVCで「M」は何？
+
 <details>
 <summary>答えを見る</summary>
 
@@ -2557,12 +2637,15 @@ $lands = Land::all();  // ← セミコロン追加
 - M = Model（データベース操作）
 - V = View（画面表示）
 - C = Controller（処理の制御）
+
 </details>
 
 ### Q4: このルートはどのURLにマッチする？
+
 ```php
 Route::get('/lands/{id}', [LandController::class, 'show']);
 ```
+
 <details>
 <summary>答えを見る</summary>
 
@@ -2570,20 +2653,25 @@ Route::get('/lands/{id}', [LandController::class, 'show']);
 
 {id} 部分は何でもマッチする。
 その値はshowメソッドの引数$idに入る。
+
 </details>
 
 ### Q5: belongsToとhasManyの違いは？
+
 <details>
 <summary>答えを見る</summary>
 
 **答え:**
+
 - **belongsTo**: 「〜に属する」（多対1）
+
   - 例: 土地は所有者（1人）に属する
   - Land → belongsTo → Member
-  
 - **hasMany**: 「複数持つ」（1対多）
+
   - 例: 所有者は土地（複数）を持つ
   - Member → hasMany → Land
+
 </details>
 
 ---
@@ -2592,12 +2680,12 @@ Route::get('/lands/{id}', [LandController::class, 'show']);
 
 ### おすすめの学習リソース
 
-| リソース | URL | 説明 |
-|---------|-----|------|
-| Laravel公式ドキュメント | https://laravel.com/docs | 公式（英語） |
-| Laravel日本語ドキュメント | https://readouble.com/laravel | 日本語訳 |
-| Laracasts | https://laracasts.com | 動画チュートリアル（英語） |
-| ドットインストール | https://dotinstall.com | 日本語の動画レッスン |
+| リソース                  | URL                           | 説明                       |
+| ------------------------- | ----------------------------- | -------------------------- |
+| Laravel公式ドキュメント   | https://laravel.com/docs      | 公式（英語）               |
+| Laravel日本語ドキュメント | https://readouble.com/laravel | 日本語訳                   |
+| Laracasts                 | https://laracasts.com         | 動画チュートリアル（英語） |
+| ドットインストール        | https://dotinstall.com        | 日本語の動画レッスン       |
 
 ### 困ったときの検索方法
 
@@ -2619,13 +2707,13 @@ Route::get('/lands/{id}', [LandController::class, 'show']);
 
 ### VSCodeおすすめ拡張機能
 
-| 拡張機能 | 説明 |
-|---------|------|
-| PHP Intelephense | PHPの補完・エラー検出 |
-| Laravel Blade Snippets | Bladeテンプレートの補完 |
-| Laravel Artisan | コマンドをVSCodeから実行 |
-| GitLens | Gitの履歴を可視化 |
-| Docker | Dockerの管理 |
+| 拡張機能               | 説明                     |
+| ---------------------- | ------------------------ |
+| PHP Intelephense       | PHPの補完・エラー検出    |
+| Laravel Blade Snippets | Bladeテンプレートの補完  |
+| Laravel Artisan        | コマンドをVSCodeから実行 |
+| GitLens                | Gitの履歴を可視化        |
+| Docker                 | Dockerの管理             |
 
 ### コードを見やすくするコツ
 

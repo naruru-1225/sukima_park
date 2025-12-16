@@ -14,7 +14,17 @@ return new class extends Migration
             $table->string('CITY', 256);
             $table->string('STREET_ADDRESS', 256);
             $table->decimal('AREA', 5, 2);
+            $table->string('IMAGE', 2048)->nullable();
+            $table->string('TITLE_DEED', 2048);
+            $table->string('DESCRIPTION', 4096)->nullable();
+            $table->date('RENTAL_START_DATE')->nullable();
+            $table->date('RENTAL_END_DATE')->nullable();
+            $table->time('RENTAL_START_TIME')->nullable();
+            $table->time('RENTAL_END_TIME')->nullable();
+            $table->integer('PRICE');
+            $table->integer('PRICE_UNIT'); // 0:日 1:時間 2:15分
             $table->integer('USER_ID');
+            $table->boolean('STATUS')->default(false); // 0:非公開 1:公開中
             $table->foreign('USER_ID')->references('USER_ID')->on('MEMBER_TABLE');
         });
     }

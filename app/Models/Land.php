@@ -18,11 +18,24 @@ class Land extends Model
         'CITY',
         'STREET_ADDRESS',
         'AREA',
+        'IMAGE',
+        'TITLE_DEED',
+        'DESCRIPTION',
+        'RENTAL_START_DATE',
+        'RENTAL_END_DATE',
+        'RENTAL_START_TIME',
+        'RENTAL_END_TIME',
+        'PRICE',
+        'PRICE_UNIT',
         'USER_ID',
+        'STATUS',
     ];
 
     protected $casts = [
         'AREA' => 'decimal:2',
+        'RENTAL_START_DATE' => 'date',
+        'RENTAL_END_DATE' => 'date',
+        'STATUS' => 'boolean',
     ];
 
     // この土地の所有者

@@ -23,6 +23,9 @@ class Member extends Authenticatable
         'SHOW_GENDER',
         'IDENTITY',
         'USERNAME',
+        'SELF_INTRODUCTION',
+        'ICON_IMAGE',
+        'ACCOUNT_STATUS',
     ];
 
     protected $hidden = [
@@ -33,6 +36,7 @@ class Member extends Authenticatable
         'BIRTH' => 'date',
         'SHOW_BIRTH' => 'boolean',
         'SHOW_GENDER' => 'boolean',
+        'ACCOUNT_STATUS' => 'integer',
     ];
 
     // この会員が所有する土地

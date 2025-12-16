@@ -19,6 +19,9 @@ return new class extends Migration
             $table->boolean('SHOW_GENDER')->default(false);
             $table->string('IDENTITY', 1024);
             $table->string('USERNAME', 128);
+            $table->string('SELF_INTRODUCTION', 512)->nullable();
+            $table->string('ICON_IMAGE', 1024)->default('default_icon.png');
+            $table->integer('ACCOUNT_STATUS')->default(0); // 0:ユーザ 1:凍結 2:管理者
         });
     }
 
