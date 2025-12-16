@@ -161,10 +161,10 @@ git checkout main
 
 | 機能 | ブランチ名 | 作成ファイル |
 |------|----------|-------------|
-| トップページ | feature/shiga-home | `HomeController`, `views/home.blade.php` |
-| ユーザ画面 | feature/shiga-user | `UserController@show`, `views/user/show.blade.php` |
-| 自己保持土地一覧 | feature/shiga-my-lands | `LandController@myLands`, `views/land/my-lands.blade.php` |
-| 土地貸出承認画面 | feature/shiga-rental-approve | `RentalController@approve`, `views/rental/approve.blade.php` |
+| トップ画面 | feature/shiga-home | `HomeController`, `views/home.blade.php` |
+| ユーザ画面（自/他アカウント） | feature/shiga-user | `UserController@show`, `views/user/show.blade.php` |
+| 自己保持土地一覧画面 | feature/shiga-my-lands | `LandController@myLands`, `views/land/my-lands.blade.php` |
+| 土地貸出画面 | feature/shiga-rental-lend | `RentalController@lend`, `views/rental/lend.blade.php` |
 | 貸出中詳細画面 | feature/shiga-rental-detail | `RentalController@lendingShow`, `views/rental/lending-show.blade.php` |
 
 ---

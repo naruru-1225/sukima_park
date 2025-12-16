@@ -8,18 +8,18 @@
 
 | 機能 | ブランチ名 |
 |------|----------|
-| トップページ | feature/shiga-home |
-| ユーザ画面 | feature/shiga-user |
-| 自己保持土地一覧 | feature/shiga-my-lands |
-| 土地貸出承認画面 | feature/shiga-rental-approve |
+| トップ画面 | feature/shiga-home |
+| ユーザ画面（自/他アカウント） | feature/shiga-user |
+| 自己保持土地一覧画面 | feature/shiga-my-lands |
+| 土地貸出画面 | feature/shiga-rental-lend |
 | 貸出中詳細画面 | feature/shiga-rental-detail |
 
 ---
 
-## 1. トップページ
+## 1. トップ画面
 
 ### 概要
-サイトのトップページ（ランディングページ）
+サイトのトップ画面（ランディングページ）
 
 ### 実装手順
 
@@ -59,10 +59,10 @@
 
 ---
 
-## 2. ユーザ画面
+## 2. ユーザ画面（自/他アカウント）
 
 ### 概要
-他のユーザーのプロフィールを表示
+自分または他のユーザーのプロフィールを表示
 
 ### 実装手順
 
@@ -93,7 +93,7 @@
 
 ---
 
-## 3. 自己保持土地一覧
+## 3. 自己保持土地一覧画面
 
 ### 概要
 ログインユーザーが所有する土地の一覧
@@ -123,7 +123,7 @@
 
 ---
 
-## 4. 土地貸出承認画面
+## 4. 土地貸出画面
 
 ### 概要
 土地オーナーがレンタル申請を承認/拒否する画面
@@ -132,19 +132,19 @@
 
 1. **ブランチ作成**
    ```bash
-   git checkout -b feature/shiga-rental-approve
+   git checkout -b feature/shiga-rental-lend
    ```
 
 2. **メソッド追加（RentalController）**
    ```php
-   public function pendingRequests()
+   public function lend()
    {
        // 自分の土地への申請一覧
        $requests = RentalRecord::whereHas('land', function($q) {
            $q->where('USER_ID', Auth::id());
        })->where('STATUS', 0)->get();
        
-       return view('rental.approve', compact('requests'));
+       return view('rental.lend', compact('requests'));
    }
    
    public function approve($id)
