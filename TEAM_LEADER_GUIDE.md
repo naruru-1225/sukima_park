@@ -188,6 +188,8 @@ git checkout main
 | レンタル中詳細画面 | feature/miwa-rental-detail | `RentalController@show`, `views/rental/show.blade.php` |
 | 取引完了一覧画面 | feature/miwa-completed-list | `RentalController@completed`, `views/rental/completed.blade.php` |
 | 取引完了詳細画面 | feature/miwa-completed-detail | `RentalController@completedShow`, `views/rental/completed-show.blade.php` |
+| レビュー投稿画面 | feature/miwa-review | `ReviewController@create/store`, `views/review/create.blade.php` |
+| レビュー一覧画面 | feature/miwa-review-list | `ReviewController@index`, `views/review/index.blade.php` |
 
 ---
 
