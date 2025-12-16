@@ -1,183 +1,334 @@
 # スキマパーク チームセットアップガイド
 
-このガイドは、チームメンバー全員が**同じ開発環境**を構築するための手順書です。
+このガイドは、**プログラミング初心者**でも迷わず環境構築ができるように詳しく書かれています。
 
 ---
 
 ## 目次
-1. [前提条件](#前提条件)
-2. [セットアップ手順](#セットアップ手順)
-3. [コマンド解説](#コマンド解説)
-4. [トラブルシューティング](#トラブルシューティング)
+1. [はじめに読んでほしいこと](#はじめに読んでほしいこと)
+2. [Git（ギット）とは](#gitギットとは)
+3. [必要なソフトのインストール](#必要なソフトのインストール)
+4. [セットアップ手順](#セットアップ手順)
+5. [Laravelのフォルダ構成](#laravelのフォルダ構成)
+6. [よく使うGitコマンド](#よく使うgitコマンド)
+7. [よく使うDockerコマンド](#よく使うdockerコマンド)
+8. [トラブルシューティング](#トラブルシューティング)
 
 ---
 
-## 前提条件
+## はじめに読んでほしいこと
 
-### 必要なソフトウェア
+### このプロジェクトで使うツール
 
-| ソフトウェア | 目的 | ダウンロード |
-|------------|------|------------|
-| Docker Desktop | アプリ・DBをコンテナで動かす | [公式サイト](https://www.docker.com/products/docker-desktop/) |
-| Git | ソースコード管理 | [公式サイト](https://git-scm.com/) |
+| ツール | 何をするもの？ | 例えると... |
+|-------|--------------|------------|
+| **Git** | コードの変更履歴を管理 | Wordの「変更履歴」機能 |
+| **GitHub** | Gitのデータをネット上に保存 | Google Driveのようなもの |
+| **Docker** | 開発環境を作る | パソコンの中に「仮想サーバー」を作る |
+| **Laravel** | Webアプリを作るためのツール | 「Webアプリの骨組み」を提供 |
 
-### Docker Desktopとは？
+---
+
+## Git（ギット）とは
+
+### Gitが解決する問題
+
 ```
-「自分のPCの中に小さなサーバーを作る」ツールです。
-
-これにより:
-- 全員が同じPHP、MySQLバージョンを使える
-- 「自分の環境では動くのに...」問題が起きない
-- PHP・MySQLをPCに直接インストール不要
+❌ Gitがない場合:
+├── sukimapark_最新.zip
+├── sukimapark_最新_修正.zip
+├── sukimapark_最新_修正2_田中編集.zip
+├── sukimapark_本当に最新.zip
+└── どれが最新か分からない...
 ```
+
+```
+✅ Gitがある場合:
+├── 全ての変更履歴が記録される
+├── 誰がいつ何を変更したか分かる
+├── 間違えても前の状態に戻せる
+└── チーム全員が同じコードで作業できる
+```
+
+### Gitの基本用語
+
+| 用語 | 読み方 | 意味 |
+|-----|-------|------|
+| **リポジトリ** | リポジトリ | プロジェクトのフォルダ（変更履歴込み） |
+| **クローン** | クローン | GitHubからコピーを作ること |
+| **コミット** | コミット | 変更を記録すること（セーブポイント） |
+| **プッシュ** | プッシュ | 自分の変更をGitHubにアップロード |
+| **プル** | プル | 他の人の変更をダウンロード |
+| **ブランチ** | ブランチ | 作業用の「枝」を作って安全に開発 |
+
+### Gitの流れ（図解）
+
+```
+【あなたのPC】          【GitHub】          【チームメンバーのPC】
+     │                    │                      │
+     │  ← git clone ───   │                      │
+     │                    │                      │
+     │  コードを編集       │                      │
+     │  git add           │                      │
+     │  git commit        │                      │
+     │                    │                      │
+     │  ─── git push →   │                      │
+     │                    │                      │
+     │                    │   ← git pull ────   │
+     │                    │                      │
+```
+
+---
+
+## 必要なソフトのインストール
+
+### 1. Git のインストール
+
+1. https://git-scm.com/download/win にアクセス
+2. 「Click here to download」をクリック
+3. ダウンロードしたファイルを実行
+4. **全てデフォルト設定でOK**（Next連打でOK）
+5. インストール完了
+
+**確認方法**:
+```
+コマンドプロンプトを開いて入力:
+git --version
+
+↓ こう表示されればOK:
+git version 2.xx.x
+```
+
+### 2. Docker Desktop のインストール
+
+1. https://www.docker.com/products/docker-desktop/ にアクセス
+2. 「Download for Windows」をクリック
+3. ダウンロードしたファイルを実行
+4. 「Use WSL 2 instead of Hyper-V」にチェック ✓
+5. インストール完了後、**PCを再起動**
+6. Docker Desktopアプリを起動
+
+**確認方法**:
+- Docker Desktopの画面左下が「Engine running」になっていればOK
+
+### 3. VS Code のインストール（推奨）
+
+1. https://code.visualstudio.com/ にアクセス
+2. 「Download for Windows」をクリック
+3. インストール
 
 ---
 
 ## セットアップ手順
 
-### Step 1: リポジトリをクローン
+### Step 1: フォルダを作成
+
+1. デスクトップに「開発」フォルダを作成
+2. そのフォルダを右クリック →「ターミナルで開く」
+
+### Step 2: プロジェクトをクローン
 
 ```bash
 git clone https://github.com/naruru-1225/sukima_park.git
+```
+
+**何が起きる?**
+→ 「sukima_park」フォルダが作成され、プロジェクト全体がダウンロードされる
+
+### Step 3: フォルダに移動
+
+```bash
 cd sukima_park
 ```
 
 **解説**:
-- `git clone` = GitHubからプロジェクトをダウンロード
-- `cd` = フォルダに移動
+- `cd` = Change Directory（フォルダ移動）
 
----
-
-### Step 2: 依存パッケージをインストール
+### Step 4: パッケージをインストール
 
 ```bash
-# Windows (PowerShell)
 docker run --rm -v "${PWD}:/app" -w /app composer install
-
-# Mac/Linux
-docker run --rm -v "$(pwd)":/app -w /app composer install
 ```
 
-**解説**:
-- `docker run` = Dockerコンテナを一時的に起動
-- `--rm` = 処理後にコンテナを自動削除
-- `-v "${PWD}:/app"` = 現在のフォルダをコンテナ内の/appに接続
-- `composer install` = Laravelが必要とするライブラリをダウンロード
+**何が起きる?**
+→ Laravelが必要とするライブラリが「vendor」フォルダにダウンロードされる
 
-**何が起きる？**
-→ `vendor/` フォルダが作成され、Laravel本体や関連ライブラリがダウンロードされる
+（初回は5〜10分かかります）
 
----
-
-### Step 3: 環境設定ファイルをコピー
+### Step 5: 設定ファイルをコピー
 
 ```bash
-# Windows
 copy .env.example .env
-
-# Mac/Linux
-cp .env.example .env
 ```
 
 **解説**:
-- `.env` = データベース情報などの設定ファイル
+- `.env` = 環境設定ファイル（データベースのパスワードなど）
 - `.env.example` = チームで共有するテンプレート
-- `.env`自体はGitにアップロードされない（セキュリティのため）
 
----
-
-### Step 4: コンテナを起動
+### Step 6: サーバーを起動
 
 ```bash
 docker compose up -d
 ```
 
-**解説**:
-- `docker compose up` = docker-compose.ymlに書かれたサービスを起動
-- `-d` = バックグラウンドで起動（ターミナルを占有しない）
+**何が起きる?**
+→ あなたのPC上でWebサーバーとデータベースが起動する
 
-**起動するもの**:
-| サービス | 説明 | ポート |
-|---------|------|-------|
-| app | PHPアプリケーション | 80 |
-| mysql | データベース | 3306 |
-
----
-
-### Step 5: アプリケーションキーを生成
+### Step 7: アプリの初期設定
 
 ```bash
 docker compose exec app php artisan key:generate
-```
-
-**解説**:
-- `docker compose exec app` = appコンテナ内でコマンド実行
-- `php artisan key:generate` = Laravelの暗号化に使うキーを生成
-- このキーは`.env`の`APP_KEY`に自動で設定される
-
----
-
-### Step 6: データベースマイグレーション
-
-```bash
 docker compose exec app php artisan migrate
 ```
 
 **解説**:
+- `key:generate` = セキュリティ用の秘密キーを生成
 - `migrate` = データベースにテーブルを作成
-- `database/migrations/`フォルダのファイルが実行される
-- チームで同じテーブル構造を共有できる
+
+### Step 8: 動作確認
+
+ブラウザで http://localhost にアクセス
+
+**Laravelのロゴが表示されればセットアップ完了！** 🎉
 
 ---
 
-### Step 7: ブラウザで確認
+## Laravelのフォルダ構成
 
-http://localhost にアクセス
+```
+sukima_park/
+│
+├── 📁 app/                    ★ アプリのメインコード
+│   ├── 📁 Http/
+│   │   ├── 📁 Controllers/    ★★★ 処理を書く場所
+│   │   └── 📁 Middleware/     リクエストの前処理
+│   ├── 📁 Models/             ★★★ データベースとの接続
+│   └── 📁 Providers/          アプリの初期設定
+│
+├── 📁 bootstrap/              アプリ起動時の処理（触らない）
+│
+├── 📁 config/                 設定ファイル（触らない）
+│
+├── 📁 database/               ★ データベース関連
+│   ├── 📁 migrations/         ★★★ テーブル定義
+│   ├── 📁 factories/          テストデータ生成
+│   └── 📁 seeders/            初期データ投入
+│
+├── 📁 public/                 公開ファイル
+│   ├── index.php              アプリの入口
+│   ├── 📁 css/                CSSファイル
+│   └── 📁 js/                 JavaScriptファイル
+│
+├── 📁 resources/              ★ 画面関連
+│   ├── 📁 views/              ★★★ HTMLテンプレート
+│   ├── 📁 css/                ソースCSS
+│   └── 📁 js/                 ソースJS
+│
+├── 📁 routes/                 ★ URL設定
+│   └── web.php                ★★★ URLと処理の紐付け
+│
+├── 📁 storage/                ログ・キャッシュ（触らない）
+│
+├── 📁 tests/                  テストコード
+│
+├── 📁 vendor/                 外部ライブラリ（Gitにアップしない）
+│
+├── .env                       環境設定（Gitにアップしない）
+├── .env.example               .envのテンプレート
+├── composer.json              使用ライブラリ一覧
+└── docker-compose.yml         Docker設定
+```
 
-Laravelのウェルカムページが表示されれば成功！
+### 開発で主に触るフォルダ
+
+| フォルダ | 役割 | 何を書く？ |
+|---------|------|-----------|
+| `app/Http/Controllers/` | **コントローラー** | ユーザーのリクエストを処理 |
+| `app/Models/` | **モデル** | データベースの操作 |
+| `resources/views/` | **ビュー** | 画面のHTML |
+| `routes/web.php` | **ルーティング** | URLと処理の対応 |
+| `database/migrations/` | **マイグレーション** | テーブル定義 |
+
+### MVCアーキテクチャ
+
+```
+ユーザー → URL → routes/web.php → Controller → Model → データベース
+                                       ↓
+                                     View → HTML → ユーザー
+```
+
+**例: 土地一覧を表示する流れ**
+```
+1. ユーザーが /lands にアクセス
+2. web.php が LandController@index を呼ぶ
+3. LandController が Land モデルでDBからデータ取得
+4. lands/index.blade.php にデータを渡して表示
+```
 
 ---
 
-## よく使うコマンド
+## よく使うGitコマンド
 
-### 開発中に使うコマンド
+### 毎日使うコマンド
 
 ```bash
-# コンテナ起動
+# 作業開始時: 最新のコードを取得
+git pull
+
+# 作業終了時: 変更をアップロード
+git add .
+git commit -m "変更内容のメッセージ"
+git push
+```
+
+### コミットメッセージの書き方
+
+```
+✅ 良い例:
+git commit -m "土地登録機能を追加"
+git commit -m "ログイン画面のバリデーション修正"
+git commit -m "会員テーブルにphone列を追加"
+
+❌ 悪い例:
+git commit -m "修正"
+git commit -m "aaa"
+git commit -m "作業完了"
+```
+
+### その他のよく使うコマンド
+
+```bash
+# 変更したファイルを確認
+git status
+
+# 変更内容を詳しく見る
+git diff
+
+# 変更を取り消す（コミット前）
+git checkout -- ファイル名
+
+# 直前のコミットを取り消す
+git reset --soft HEAD~1
+```
+
+---
+
+## よく使うDockerコマンド
+
+```bash
+# サーバー起動
 docker compose up -d
 
-# コンテナ停止
+# サーバー停止
 docker compose down
 
-# コンテナの状態確認
-docker compose ps
-
-# ログ確認
+# ログを見る
 docker compose logs -f app
-```
 
-### Laravelのコマンド（artisan）
-
-```bash
-# Laravelコマンドの基本形
+# Laravelコマンド実行
 docker compose exec app php artisan [コマンド]
 
-# マイグレーション実行
-docker compose exec app php artisan migrate
-
-# モデル作成
-docker compose exec app php artisan make:model モデル名
-
-# コントローラ作成
-docker compose exec app php artisan make:controller コントローラ名
-
-# 全てのルート確認
-docker compose exec app php artisan route:list
-```
-
-### MySQLに接続
-
-```bash
+# MySQLに接続
 docker compose exec mysql mysql -u sail -ppassword sukimapark
 ```
 
@@ -185,65 +336,50 @@ docker compose exec mysql mysql -u sail -ppassword sukimapark
 
 ## トラブルシューティング
 
-### ポート80が使用中
+### 「port is already allocated」エラー
 
-**エラー**: `Bind for 0.0.0.0:80 failed: port is already allocated`
+**原因**: ポート80が他のアプリに使われている
 
-**解決策**:
+**解決方法**:
 1. `.env`ファイルを開く
 2. 以下を追加:
    ```
    APP_PORT=8080
    ```
-3. コンテナ再起動:
-   ```bash
-   docker compose down
-   docker compose up -d
-   ```
+3. `docker compose down` → `docker compose up -d`
 4. http://localhost:8080 でアクセス
 
----
-
-### Dockerが起動しない
-
-1. Docker Desktopアプリを開いて実行中か確認
-2. Windowsの場合: WSL2が有効か確認
-   ```
-   設定 → アプリ → オプション機能 → Windows機能 → 
-   「Linux用Windowsサブシステム」にチェック
-   ```
-
----
-
-### 変更が反映されない
+### 「変更が反映されない」
 
 ```bash
-# キャッシュクリア
 docker compose exec app php artisan cache:clear
 docker compose exec app php artisan config:clear
 docker compose exec app php artisan view:clear
 ```
 
+### 「git pushできない」
+
+**原因**: 他の人の変更を取り込んでいない
+
+**解決方法**:
+```bash
+git pull
+# コンフリクトがあれば解決
+git push
+```
+
+### 「Dockerが起動しない」
+
+1. Docker Desktopアプリを再起動
+2. PCを再起動
+3. タスクマネージャーでDockerプロセスを終了してから再起動
+
 ---
 
-## プロジェクト構成（主要ファイル）
+## 質問があるときは
 
-```
-sukima_park/
-├── app/                 # アプリケーションのコード
-│   ├── Http/
-│   │   └── Controllers/ # コントローラー
-│   └── Models/          # モデル（DB操作）
-├── database/
-│   └── migrations/      # マイグレーション（テーブル定義）
-├── resources/
-│   └── views/           # ビュー（画面のHTML）
-├── routes/
-│   └── web.php          # ルーティング（URLの定義）
-├── .env                 # 環境設定（各自のPC用）
-├── .env.example         # 環境設定のテンプレート
-└── docker-compose.yml   # Docker設定
-```
+分からないことがあったら、**まず調べる前にチームに聞いてください**。
+同じ問題で悩んでいる人がいるかもしれません。
 
 ---
 
