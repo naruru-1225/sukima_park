@@ -7,12 +7,13 @@
 ## 目次
 1. [はじめに読んでほしいこと](#はじめに読んでほしいこと)
 2. [Git（ギット）とは](#gitギットとは)
-3. [必要なソフトのインストール](#必要なソフトのインストール)
-4. [セットアップ手順](#セットアップ手順)
-5. [Laravelのフォルダ構成](#laravelのフォルダ構成)
-6. [よく使うGitコマンド](#よく使うgitコマンド)
-7. [よく使うDockerコマンド](#よく使うdockerコマンド)
-8. [トラブルシューティング](#トラブルシューティング)
+3. [Gitブランチの使い方](#gitブランチの使い方)
+4. [必要なソフトのインストール](#必要なソフトのインストール)
+5. [セットアップ手順](#セットアップ手順)
+6. [Laravelのフォルダ構成](#laravelのフォルダ構成)
+7. [Laravelの書き方](#laravelの書き方)
+8. [よく使うコマンド](#よく使うコマンド)
+9. [トラブルシューティング](#トラブルシューティング)
 
 ---
 
@@ -38,11 +39,8 @@
 ├── sukimapark_最新.zip
 ├── sukimapark_最新_修正.zip
 ├── sukimapark_最新_修正2_田中編集.zip
-├── sukimapark_本当に最新.zip
 └── どれが最新か分からない...
-```
 
-```
 ✅ Gitがある場合:
 ├── 全ての変更履歴が記録される
 ├── 誰がいつ何を変更したか分かる
@@ -52,30 +50,123 @@
 
 ### Gitの基本用語
 
-| 用語 | 読み方 | 意味 |
-|-----|-------|------|
-| **リポジトリ** | リポジトリ | プロジェクトのフォルダ（変更履歴込み） |
-| **クローン** | クローン | GitHubからコピーを作ること |
-| **コミット** | コミット | 変更を記録すること（セーブポイント） |
-| **プッシュ** | プッシュ | 自分の変更をGitHubにアップロード |
-| **プル** | プル | 他の人の変更をダウンロード |
-| **ブランチ** | ブランチ | 作業用の「枝」を作って安全に開発 |
+| 用語 | 意味 |
+|-----|------|
+| **リポジトリ** | プロジェクトのフォルダ（変更履歴込み） |
+| **クローン** | GitHubからコピーを作ること |
+| **コミット** | 変更を記録すること（セーブポイント） |
+| **プッシュ** | 自分の変更をGitHubにアップロード |
+| **プル** | 他の人の変更をダウンロード |
+| **ブランチ** | 作業用の「枝」を作って安全に開発 |
+| **マージ** | ブランチの変更を統合する |
+| **プルリクエスト** | 変更をレビューしてもらう依頼 |
 
-### Gitの流れ（図解）
+---
+
+## Gitブランチの使い方
+
+### ブランチとは？
 
 ```
-【あなたのPC】          【GitHub】          【チームメンバーのPC】
-     │                    │                      │
-     │  ← git clone ───   │                      │
-     │                    │                      │
-     │  コードを編集       │                      │
-     │  git add           │                      │
-     │  git commit        │                      │
-     │                    │                      │
-     │  ─── git push →   │                      │
-     │                    │                      │
-     │                    │   ← git pull ────   │
-     │                    │                      │
+ブランチ = 「作業用の枝」
+
+main（本番）から枝分かれして作業し、完成したら戻す
+```
+
+### なぜブランチを使う？
+
+```
+❌ ブランチを使わない場合:
+- 開発中のコードがmainに入り、他のメンバーに影響
+- バグを入れてしまうとチーム全員が止まる
+
+✅ ブランチを使う場合:
+- 自分専用の作業スペースで開発
+- 完成してからmainに統合
+- 他のメンバーに影響しない
+```
+
+### ブランチの流れ（図解）
+
+```
+main ─────●─────────────────●─────────────── 本番
+           \               /
+            \─────●─────●─/ feature/login   機能開発用ブランチ
+              作業   作業  マージ
+```
+
+### ブランチ名のルール
+
+```
+feature/機能名    → 新機能開発
+  例: feature/login
+  例: feature/land-register
+
+fix/修正内容      → バグ修正
+  例: fix/login-error
+
+hotfix/緊急修正   → 本番の緊急修正
+  例: hotfix/security-fix
+```
+
+### ブランチを使った開発の流れ
+
+#### Step 1: 新しいブランチを作成
+
+```bash
+# mainブランチを最新に
+git checkout main
+git pull
+
+# 新しいブランチを作成して移動
+git checkout -b feature/login
+```
+
+#### Step 2: 開発作業
+
+```bash
+# ファイルを編集...
+
+# 変更を確認
+git status
+
+# 変更をコミット
+git add .
+git commit -m "ログイン機能を実装"
+```
+
+#### Step 3: GitHubにプッシュ
+
+```bash
+git push -u origin feature/login
+```
+
+#### Step 4: プルリクエスト作成
+
+1. GitHubでリポジトリを開く
+2. 「Pull requests」タブをクリック
+3. 「New pull request」をクリック
+4. base: main ← compare: feature/login を選択
+5. 「Create pull request」をクリック
+6. 変更内容を説明して送信
+
+#### Step 5: レビュー・マージ
+
+1. チームメンバーがコードを確認
+2. 問題なければ「Merge pull request」
+3. mainにマージされる
+
+#### Step 6: ブランチ削除・更新
+
+```bash
+# mainに戻る
+git checkout main
+
+# 最新を取得
+git pull
+
+# 使い終わったブランチを削除
+git branch -d feature/login
 ```
 
 ---
@@ -83,113 +174,38 @@
 ## 必要なソフトのインストール
 
 ### 1. Git のインストール
-
-1. https://git-scm.com/download/win にアクセス
-2. 「Click here to download」をクリック
-3. ダウンロードしたファイルを実行
-4. **全てデフォルト設定でOK**（Next連打でOK）
-5. インストール完了
-
-**確認方法**:
-```
-コマンドプロンプトを開いて入力:
-git --version
-
-↓ こう表示されればOK:
-git version 2.xx.x
-```
+https://git-scm.com/download/win からダウンロード、全てデフォルトでOK
 
 ### 2. Docker Desktop のインストール
-
-1. https://www.docker.com/products/docker-desktop/ にアクセス
-2. 「Download for Windows」をクリック
-3. ダウンロードしたファイルを実行
-4. 「Use WSL 2 instead of Hyper-V」にチェック ✓
-5. インストール完了後、**PCを再起動**
-6. Docker Desktopアプリを起動
-
-**確認方法**:
-- Docker Desktopの画面左下が「Engine running」になっていればOK
+https://www.docker.com/products/docker-desktop/ からダウンロード、インストール後PC再起動
 
 ### 3. VS Code のインストール（推奨）
-
-1. https://code.visualstudio.com/ にアクセス
-2. 「Download for Windows」をクリック
-3. インストール
+https://code.visualstudio.com/ からダウンロード
 
 ---
 
 ## セットアップ手順
 
-### Step 1: フォルダを作成
-
-1. デスクトップに「開発」フォルダを作成
-2. そのフォルダを右クリック →「ターミナルで開く」
-
-### Step 2: プロジェクトをクローン
-
 ```bash
+# 1. クローン
 git clone https://github.com/naruru-1225/sukima_park.git
-```
-
-**何が起きる?**
-→ 「sukima_park」フォルダが作成され、プロジェクト全体がダウンロードされる
-
-### Step 3: フォルダに移動
-
-```bash
 cd sukima_park
-```
 
-**解説**:
-- `cd` = Change Directory（フォルダ移動）
-
-### Step 4: パッケージをインストール
-
-```bash
+# 2. パッケージインストール（5〜10分）
 docker run --rm -v "${PWD}:/app" -w /app composer install
-```
 
-**何が起きる?**
-→ Laravelが必要とするライブラリが「vendor」フォルダにダウンロードされる
-
-（初回は5〜10分かかります）
-
-### Step 5: 設定ファイルをコピー
-
-```bash
+# 3. 設定ファイル作成
 copy .env.example .env
-```
 
-**解説**:
-- `.env` = 環境設定ファイル（データベースのパスワードなど）
-- `.env.example` = チームで共有するテンプレート
-
-### Step 6: サーバーを起動
-
-```bash
+# 4. サーバー起動
 docker compose up -d
-```
 
-**何が起きる?**
-→ あなたのPC上でWebサーバーとデータベースが起動する
-
-### Step 7: アプリの初期設定
-
-```bash
+# 5. 初期設定
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate
 ```
 
-**解説**:
-- `key:generate` = セキュリティ用の秘密キーを生成
-- `migrate` = データベースにテーブルを作成
-
-### Step 8: 動作確認
-
-ブラウザで http://localhost にアクセス
-
-**Laravelのロゴが表示されればセットアップ完了！** 🎉
+http://localhost でLaravelのロゴが表示されれば完了！
 
 ---
 
@@ -197,189 +213,290 @@ docker compose exec app php artisan migrate
 
 ```
 sukima_park/
-│
-├── 📁 app/                    ★ アプリのメインコード
-│   ├── 📁 Http/
-│   │   ├── 📁 Controllers/    ★★★ 処理を書く場所
-│   │   └── 📁 Middleware/     リクエストの前処理
-│   ├── 📁 Models/             ★★★ データベースとの接続
-│   └── 📁 Providers/          アプリの初期設定
-│
-├── 📁 bootstrap/              アプリ起動時の処理（触らない）
-│
-├── 📁 config/                 設定ファイル（触らない）
-│
-├── 📁 database/               ★ データベース関連
-│   ├── 📁 migrations/         ★★★ テーブル定義
-│   ├── 📁 factories/          テストデータ生成
-│   └── 📁 seeders/            初期データ投入
-│
-├── 📁 public/                 公開ファイル
-│   ├── index.php              アプリの入口
-│   ├── 📁 css/                CSSファイル
-│   └── 📁 js/                 JavaScriptファイル
-│
-├── 📁 resources/              ★ 画面関連
-│   ├── 📁 views/              ★★★ HTMLテンプレート
-│   ├── 📁 css/                ソースCSS
-│   └── 📁 js/                 ソースJS
-│
-├── 📁 routes/                 ★ URL設定
-│   └── web.php                ★★★ URLと処理の紐付け
-│
-├── 📁 storage/                ログ・キャッシュ（触らない）
-│
-├── 📁 tests/                  テストコード
-│
-├── 📁 vendor/                 外部ライブラリ（Gitにアップしない）
-│
-├── .env                       環境設定（Gitにアップしない）
-├── .env.example               .envのテンプレート
-├── composer.json              使用ライブラリ一覧
-└── docker-compose.yml         Docker設定
-```
-
-### 開発で主に触るフォルダ
-
-| フォルダ | 役割 | 何を書く？ |
-|---------|------|-----------|
-| `app/Http/Controllers/` | **コントローラー** | ユーザーのリクエストを処理 |
-| `app/Models/` | **モデル** | データベースの操作 |
-| `resources/views/` | **ビュー** | 画面のHTML |
-| `routes/web.php` | **ルーティング** | URLと処理の対応 |
-| `database/migrations/` | **マイグレーション** | テーブル定義 |
-
-### MVCアーキテクチャ
-
-```
-ユーザー → URL → routes/web.php → Controller → Model → データベース
-                                       ↓
-                                     View → HTML → ユーザー
-```
-
-**例: 土地一覧を表示する流れ**
-```
-1. ユーザーが /lands にアクセス
-2. web.php が LandController@index を呼ぶ
-3. LandController が Land モデルでDBからデータ取得
-4. lands/index.blade.php にデータを渡して表示
+├── 📁 app/Http/Controllers/    ★ 処理を書く場所
+├── 📁 app/Models/              ★ データベース操作
+├── 📁 database/migrations/     ★ テーブル定義
+├── 📁 resources/views/         ★ 画面のHTML
+├── 📁 routes/web.php           ★ URLと処理の紐付け
+└── 📁 public/                  公開ファイル（CSS/JS/画像）
 ```
 
 ---
 
-## よく使うGitコマンド
+## Laravelの書き方
 
-### 毎日使うコマンド
+### 1. ルーティング（routes/web.php）
+
+**URLと処理を紐付ける設定ファイル**
+
+```php
+<?php
+use App\Http\Controllers\LandController;
+
+// 基本形: URLにアクセス → コントローラのメソッドを実行
+Route::get('/lands', [LandController::class, 'index']);
+
+// パラメータ付き: /lands/1 のようなURL
+Route::get('/lands/{id}', [LandController::class, 'show']);
+
+// フォーム送信（POST）
+Route::post('/lands', [LandController::class, 'store']);
+
+// リソースルート: 一括定義（便利）
+Route::resource('lands', LandController::class);
+// ↑ これだけで index, create, store, show, edit, update, destroy を定義
+```
+
+### 2. コントローラ（app/Http/Controllers/）
+
+**処理を書く場所**
 
 ```bash
-# 作業開始時: 最新のコードを取得
-git pull
-
-# 作業終了時: 変更をアップロード
-git add .
-git commit -m "変更内容のメッセージ"
-git push
+# コントローラ作成コマンド
+docker compose exec app php artisan make:controller LandController
 ```
 
-### コミットメッセージの書き方
+```php
+<?php
+namespace App\Http\Controllers;
 
+use App\Models\Land;
+use Illuminate\Http\Request;
+
+class LandController extends Controller
+{
+    // 一覧表示: GET /lands
+    public function index()
+    {
+        // 全ての土地を取得
+        $lands = Land::all();
+        
+        // ビューにデータを渡す
+        return view('lands.index', ['lands' => $lands]);
+    }
+
+    // 詳細表示: GET /lands/1
+    public function show($id)
+    {
+        // IDで1件取得
+        $land = Land::find($id);
+        
+        return view('lands.show', ['land' => $land]);
+    }
+
+    // 新規登録フォーム: GET /lands/create
+    public function create()
+    {
+        return view('lands.create');
+    }
+
+    // 保存処理: POST /lands
+    public function store(Request $request)
+    {
+        // バリデーション
+        $validated = $request->validate([
+            'name' => 'required|max:50',
+            'location' => 'required',
+            'area' => 'required|numeric',
+        ]);
+
+        // 保存
+        Land::create($validated);
+
+        // リダイレクト
+        return redirect('/lands')->with('success', '登録しました');
+    }
+}
 ```
-✅ 良い例:
-git commit -m "土地登録機能を追加"
-git commit -m "ログイン画面のバリデーション修正"
-git commit -m "会員テーブルにphone列を追加"
 
-❌ 悪い例:
-git commit -m "修正"
-git commit -m "aaa"
-git commit -m "作業完了"
-```
+### 3. モデル（app/Models/）
 
-### その他のよく使うコマンド
+**データベースとの接続**
 
 ```bash
-# 変更したファイルを確認
-git status
+# モデル作成コマンド（マイグレーションも一緒に作成）
+docker compose exec app php artisan make:model Land -m
+```
 
-# 変更内容を詳しく見る
-git diff
+```php
+<?php
+namespace App\Models;
 
-# 変更を取り消す（コミット前）
-git checkout -- ファイル名
+use Illuminate\Database\Eloquent\Model;
 
-# 直前のコミットを取り消す
-git reset --soft HEAD~1
+class Land extends Model
+{
+    // 一括代入を許可するカラム
+    protected $fillable = [
+        'name',
+        'location',
+        'area',
+        'description',
+        'owner_id',
+    ];
+
+    // リレーション: この土地の所有者
+    public function owner()
+    {
+        return $this->belongsTo(Member::class, 'owner_id');
+    }
+}
+```
+
+**よく使うクエリ**:
+```php
+// 全件取得
+$lands = Land::all();
+
+// 条件付き取得
+$lands = Land::where('area', '>', 100)->get();
+
+// 1件取得
+$land = Land::find(1);
+$land = Land::where('name', '駅前スペース')->first();
+
+// 作成
+Land::create(['name' => '新しい土地', 'location' => '東京都']);
+
+// 更新
+$land->update(['name' => '更新後の名前']);
+
+// 削除
+$land->delete();
+```
+
+### 4. マイグレーション（database/migrations/）
+
+**テーブル定義**
+
+```bash
+# マイグレーション作成
+docker compose exec app php artisan make:migration create_lands_table
+```
+
+```php
+<?php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('lands', function (Blueprint $table) {
+            $table->id();                              // ID（自動連番）
+            $table->foreignId('owner_id')              // 外部キー
+                  ->constrained('members')
+                  ->onDelete('cascade');
+            $table->string('name', 50);                // 文字列
+            $table->string('location');                // 所在地
+            $table->decimal('area', 10, 2);            // 面積（小数）
+            $table->text('description')->nullable();   // 説明（NULL可）
+            $table->enum('status', ['available', 'rented', 'inactive'])
+                  ->default('available');              // 状態
+            $table->timestamps();                      // created_at, updated_at
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('lands');
+    }
+};
+```
+
+```bash
+# マイグレーション実行
+docker compose exec app php artisan migrate
+```
+
+### 5. ビュー（resources/views/）
+
+**画面のHTML（Bladeテンプレート）**
+
+**resources/views/lands/index.blade.php**:
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>土地一覧</title>
+</head>
+<body>
+    <h1>土地一覧</h1>
+
+    {{-- 成功メッセージ --}}
+    @if(session('success'))
+        <p style="color: green">{{ session('success') }}</p>
+    @endif
+
+    {{-- ループ --}}
+    @foreach($lands as $land)
+        <div>
+            <h2>{{ $land->name }}</h2>
+            <p>場所: {{ $land->location }}</p>
+            <p>面積: {{ $land->area }}㎡</p>
+            <a href="/lands/{{ $land->id }}">詳細を見る</a>
+        </div>
+    @endforeach
+
+    {{-- データがない場合 --}}
+    @if($lands->isEmpty())
+        <p>土地が登録されていません</p>
+    @endif
+</body>
+</html>
+```
+
+**Bladeの書き方**:
+```html
+{{ $variable }}        → 変数を表示（HTMLエスケープ済み）
+{!! $html !!}          → HTMLをそのまま表示
+@if / @else / @endif   → 条件分岐
+@foreach / @endforeach → ループ
+@include('部品名')      → 共通部品を読み込み
 ```
 
 ---
 
-## よく使うDockerコマンド
+## よく使うコマンド
+
+### Git
 
 ```bash
-# サーバー起動
-docker compose up -d
+git pull                    # 最新を取得
+git checkout -b ブランチ名   # 新しいブランチ作成
+git add .                   # 変更をステージング
+git commit -m "メッセージ"   # コミット
+git push                    # プッシュ
+git checkout main           # mainに戻る
+```
 
-# サーバー停止
-docker compose down
+### Docker/Laravel
 
-# ログを見る
-docker compose logs -f app
-
-# Laravelコマンド実行
-docker compose exec app php artisan [コマンド]
-
-# MySQLに接続
-docker compose exec mysql mysql -u sail -ppassword sukimapark
+```bash
+docker compose up -d        # サーバー起動
+docker compose down         # サーバー停止
+docker compose exec app php artisan migrate              # マイグレーション
+docker compose exec app php artisan make:controller 名前  # コントローラ作成
+docker compose exec app php artisan make:model 名前 -m    # モデル+マイグレーション作成
 ```
 
 ---
 
 ## トラブルシューティング
 
-### 「port is already allocated」エラー
-
-**原因**: ポート80が他のアプリに使われている
-
-**解決方法**:
-1. `.env`ファイルを開く
-2. 以下を追加:
-   ```
-   APP_PORT=8080
-   ```
-3. `docker compose down` → `docker compose up -d`
-4. http://localhost:8080 でアクセス
+### 「port is already allocated」
+`.env`に`APP_PORT=8080`を追加、再起動
 
 ### 「変更が反映されない」
-
 ```bash
 docker compose exec app php artisan cache:clear
 docker compose exec app php artisan config:clear
-docker compose exec app php artisan view:clear
 ```
 
 ### 「git pushできない」
-
-**原因**: 他の人の変更を取り込んでいない
-
-**解決方法**:
-```bash
-git pull
-# コンフリクトがあれば解決
-git push
-```
-
-### 「Dockerが起動しない」
-
-1. Docker Desktopアプリを再起動
-2. PCを再起動
-3. タスクマネージャーでDockerプロセスを終了してから再起動
-
----
-
-## 質問があるときは
-
-分からないことがあったら、**まず調べる前にチームに聞いてください**。
-同じ問題で悩んでいる人がいるかもしれません。
+`git pull`してから再度push
 
 ---
 
