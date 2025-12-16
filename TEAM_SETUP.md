@@ -428,9 +428,12 @@ App\Models\User       // Appフォルダ内のModelsフォルダ内のUser
 
 ---
 
-## Laravelの書き方
+## Laravelの書き方（開発順序）
 
-### 1. ルーティング（routes/web.php）
+> 機能を作る時は以下の順番で進めます：
+> **1. マイグレーション → 2. モデル → 3. コントローラ → 4. ルーティング → 5. ビュー**
+
+### 4. ルーティング（routes/web.php）
 
 **URLと処理を紐付ける設定ファイル**
 
@@ -478,7 +481,7 @@ Route::resource('lands', LandController::class);
 // DELETE /lands/{id}      → destroy() 削除処理
 ```
 
-### 2. コントローラ（app/Http/Controllers/）
+### 3. コントローラ（app/Http/Controllers/）
 
 **処理を書く場所**
 
@@ -587,7 +590,7 @@ class LandController extends Controller
 }
 ```
 
-### 3. モデル（app/Models/）
+### 2. モデル（app/Models/）
 
 **データベースとの接続**
 
@@ -699,7 +702,7 @@ $land = Land::find(1);
 $land->delete();
 ```
 
-### 4. マイグレーション（database/migrations/）
+### 1. マイグレーション（database/migrations/）★最初に作成
 
 **テーブル定義**
 
