@@ -13,156 +13,161 @@
 
 ## 毎日の作業の流れ
 
-### 作業開始時（必ず実行）
+### 作業を始める前に
 
-```bash
-# 1. プロジェクトフォルダに移動
-cd sukimapark
+1. **プロジェクトフォルダに移動する**
+   - VSCodeでsukimaparkフォルダを開きます
 
-# 2. 最新のコードを取得（他のメンバーの変更を反映）
-git pull
+2. **最新のコードを取得する**
+   - ターミナルで `git pull` を実行します
+   - 他のメンバーの変更を自分のPCに反映させます
 
-# 3. Dockerコンテナを起動
-docker compose up -d
+3. **Dockerを起動する**
+   - ターミナルで `docker compose up -d` を実行します
+   - これでLaravelが動くようになります
 
-# 4. 動作確認
-#    ブラウザで http://localhost を開く
-```
+4. **ブラウザで確認する**
+   - `http://localhost` を開いて、サイトが表示されればOKです
 
-### 作業中（こまめにコミット）
+### 作業中
 
-```bash
-# 変更を保存（こまめに行う）
-git add .
-git commit -m "変更内容を書く"
-```
+- こまめにコミットしましょう
+- `git add .` で変更をステージング
+- `git commit -m "何を変更したか"` で保存
 
-### 作業終了時（必ず実行）
+### 作業を終わるとき
 
-```bash
-# 1. 変更をコミット（まだしていなければ）
-git add .
-git commit -m "作業内容"
-
-# 2. GitHubにプッシュ
-git push
-
-# 3. Dockerコンテナを停止
-docker compose down
-
-# 4. WSLをシャットダウン（重要！）
-wsl --shutdown
-```
+1. コミットする（まだしていなければ）
+2. `git push` でGitHubにアップロード
+3. `docker compose down` でDockerを停止
+4. `wsl --shutdown` でWSLをシャットダウン（重要！）
 
 ---
 
 ## 管理者機能について
 
-管理者機能は`App\Http\Controllers\Admin`名前空間に作成します。
+管理者機能は一般ユーザーからは見えない、運営用の画面です。
 
-コントローラ作成コマンド:
-```bash
-docker compose exec app php artisan make:controller Admin/UserController
-docker compose exec app php artisan make:controller Admin/ContactController
-```
-
-ルートは`/admin`プレフィックスを使用:
-```php
-Route::prefix('admin')->middleware('auth')->group(function () {
-    // 管理者ルート
-});
-```
+**特徴**
+- URLは `/admin/〜` で始まります
+- コントローラは `Admin` フォルダの中に作ります
+- ビューも `admin` フォルダの中に作ります
+- ログイン必須の画面です
 
 ---
 
-## 各画面の実装方法
+## 各画面の作り方
 
-### 1. ユーザ一覧画面
+### ユーザ一覧画面
 
-**概要**: 登録ユーザーの一覧を表示します。
+**何をする画面？**
+登録されている全ユーザーの一覧を表示します。
 
-**参照モック**: `context/画面レイアウト/admin_user_list_screen.html`
+**参考にするモック**
+`context/画面レイアウト/admin_user_list_screen.html` を開いて、デザインを確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/nomura-user-list`
-2. `Admin/UserController.php`に`index`メソッドを追加
-3. 全ユーザーを取得し、ページネーション:
-   ```php
-   Member::paginate(20);
-   ```
-4. 表示項目: ユーザーID、名前、メール、ステータス
-5. 検索・フィルター機能（任意）
-6. ビューを作成: `resources/views/admin/user/index.blade.php`
-
----
-
-### 2. ユーザ詳細画面
-
-**概要**: ユーザーの詳細情報と管理操作を表示します。
-
-**参照モック**: `context/画面レイアウト/admin_user_detail_screen.html`
-
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/nomura-user-detail`
-2. `Admin/UserController.php`に`show`、`suspend`、`unsuspend`メソッドを追加
-3. 表示内容: ユーザー情報、所有土地一覧、取引履歴
-4. 管理操作:
-   - アカウント凍結ボタン（ACCOUNT_STATUS=1に更新）
-   - 凍結解除ボタン（ACCOUNT_STATUS=0に更新）
-5. ビューを作成: `resources/views/admin/user/show.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/nomura-user-list`）
+2. Adminフォルダ内にUserControllerを作成する
+3. ユーザー一覧表示用のメソッドを作る
+4. MEMBER_TABLEから全ユーザーを取得
+5. テーブル形式で表示（ID、名前、メール、ステータス）
+6. ページネーション（20件ずつなど）
+7. 検索機能があると便利（任意）
+8. 各ユーザーをクリックで詳細画面へ
 
 ---
 
-### 3. 問い合わせ一覧画面
+### ユーザ詳細画面
 
-**概要**: ユーザーからの問い合わせ一覧を表示します。
+**何をする画面？**
+ユーザーの詳細情報と管理操作（アカウント凍結など）を行います。
 
-**参照モック**: `context/画面レイアウト/admin_contact_list_screen.html`
+**参考にするモック**
+`context/画面レイアウト/admin_user_detail_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/nomura-contact-list`
-2. `Admin/ContactController.php`に`index`メソッドを追加
-3. 全問い合わせを取得:
-   ```php
-   Contact::with('member')
-       ->orderBy('created_at', 'desc')
-       ->paginate(20);
-   ```
-4. 未対応/対応済みのフィルター機能
-5. ビューを作成: `resources/views/admin/contact/index.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/nomura-user-detail`）
+2. UserControllerにユーザー詳細用のメソッドを追加
+3. 表示内容：
+   - ユーザー情報（名前、メール、登録日など）
+   - このユーザーが所有している土地一覧
+   - このユーザーの取引履歴
+4. 管理操作：
+   - 「アカウント凍結」ボタン（ACCOUNT_STATUS=1に更新）
+   - 「凍結解除」ボタン（ACCOUNT_STATUS=0に更新）
 
 ---
 
-### 4. 問い合わせ詳細画面
+### 問い合わせ一覧画面
 
-**概要**: 問い合わせの詳細と返信機能を表示します。
+**何をする画面？**
+ユーザーからの問い合わせ一覧を表示します。
 
-**参照モック**: `context/画面レイアウト/admin_contact_detail_screen.html`
+**参考にするモック**
+`context/画面レイアウト/admin_contact_list_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/nomura-contact-detail`
-2. `Admin/ContactController.php`に`show`と`reply`メソッドを追加
-3. 表示内容: 問い合わせ内容、返信履歴
-4. 返信フォームを設置し、`REPLY_TABLE`に保存
-5. ビューを作成: `resources/views/admin/contact/show.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/nomura-contact-list`）
+2. Adminフォルダ内にContactControllerを作成する
+3. 問い合わせ一覧表示用のメソッドを作る
+4. CONTACT_TABLEから全問い合わせを取得
+5. 新しい順に表示
+6. 未対応/対応済みのフィルター機能
+7. 各問い合わせをクリックで詳細画面へ
+
+---
+
+### 問い合わせ詳細画面
+
+**何をする画面？**
+問い合わせの詳細を表示し、返信します。
+
+**参考にするモック**
+`context/画面レイアウト/admin_contact_detail_screen.html` を確認してください。
+
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/nomura-contact-detail`）
+2. ContactControllerに詳細表示と返信用のメソッドを追加
+3. 表示内容：
+   - 問い合わせ内容（タイトル、本文、送信日時）
+   - 送信者情報
+   - 過去の返信履歴
+4. 返信フォームを設置
+5. 送信するとREPLY_TABLEに保存
 
 ---
 
 ## フォルダ構成
 
+管理者機能のファイルは以下の場所に作ります：
+
+**コントローラ**
 ```
 app/Http/Controllers/Admin/
 ├── UserController.php
 └── ContactController.php
+```
 
+**ビュー**
+```
 resources/views/admin/
 ├── user/
-│   ├── index.blade.php
-│   └── show.blade.php
+│   ├── index.blade.php （一覧）
+│   └── show.blade.php  （詳細）
 └── contact/
-    ├── index.blade.php
-    └── show.blade.php
+    ├── index.blade.php （一覧）
+    └── show.blade.php  （詳細）
 ```
+
+---
+
+## 困ったときは
+
+- **TEAM_SETUP.md** を読み返す
+- **トップ画面の作成フロー.md** を参考にする
+- リーダーに聞く
+- GitHubのコードを参考にする
 
 ---
 

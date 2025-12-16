@@ -13,145 +13,126 @@
 
 ## 毎日の作業の流れ
 
-### 作業開始時（必ず実行）
+### 作業を始める前に
 
-```bash
-# 1. プロジェクトフォルダに移動
-cd sukimapark
+1. **プロジェクトフォルダに移動する**
+   - VSCodeでsukimaparkフォルダを開きます
 
-# 2. 最新のコードを取得（他のメンバーの変更を反映）
-git pull
+2. **最新のコードを取得する**
+   - ターミナルで `git pull` を実行します
+   - 他のメンバーの変更を自分のPCに反映させます
 
-# 3. Dockerコンテナを起動
-docker compose up -d
+3. **Dockerを起動する**
+   - ターミナルで `docker compose up -d` を実行します
+   - これでLaravelが動くようになります
 
-# 4. 動作確認
-#    ブラウザで http://localhost を開く
-```
+4. **ブラウザで確認する**
+   - `http://localhost` を開いて、サイトが表示されればOKです
 
-### 作業中（こまめにコミット）
+### 作業中
 
-```bash
-# 変更を保存（こまめに行う）
-git add .
-git commit -m "変更内容を書く"
-```
+- こまめにコミットしましょう
+- `git add .` で変更をステージング
+- `git commit -m "何を変更したか"` で保存
 
-### 作業終了時（必ず実行）
+### 作業を終わるとき
 
-```bash
-# 1. 変更をコミット（まだしていなければ）
-git add .
-git commit -m "作業内容"
-
-# 2. GitHubにプッシュ
-git push
-
-# 3. Dockerコンテナを停止
-docker compose down
-
-# 4. WSLをシャットダウン（重要！）
-wsl --shutdown
-```
+1. コミットする（まだしていなければ）
+2. `git push` でGitHubにアップロード
+3. `docker compose down` でDockerを停止
+4. `wsl --shutdown` でWSLをシャットダウン（重要！）
 
 ---
 
-## 各画面の実装方法
+## 各画面の作り方
 
-### 1. プロフィール編集画面
+### プロフィール編集画面
 
-**概要**: ログインユーザーが自分のプロフィールを編集するフォームです。
+**何をする画面？**
+ログインユーザーが自分のプロフィールを編集するフォームです。
 
-**参照モック**: `context/画面レイアウト/profile_edit_screen.html`
+**参考にするモック**
+`context/画面レイアウト/profile_edit_screen.html` を開いて、デザインを確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/azuma-profile-edit`
-2. コントローラを作成:
-   ```bash
-   docker compose exec app php artisan make:controller ProfileController
-   ```
-3. `ProfileController.php`に`edit`と`update`メソッドを追加
-4. ルートを追加（ログイン必須）:
-   ```php
-   Route::middleware('auth')->group(function () {
-       Route::get('/profile/edit', [ProfileController::class, 'edit']);
-       Route::put('/profile', [ProfileController::class, 'update']);
-   });
-   ```
-5. 編集項目:
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/azuma-profile-edit`）
+2. ProfileControllerを作成する
+3. 編集フォーム表示用と更新処理用のメソッドを作る
+4. この画面はログイン必須
+5. ルートを設定する
+6. ビューを作成する
+7. 編集できる項目：
    - ユーザー名
    - 自己紹介
    - 電話番号
    - アイコン画像
-   - 生年月日公開設定（チェックボックス）
-   - 性別公開設定（チェックボックス）
-6. ビューを作成: `resources/views/profile/edit.blade.php`
+   - 生年月日を公開するかどうか（チェックボックス）
+   - 性別を公開するかどうか（チェックボックス）
 
 ---
 
-### 2. プロフィール確認画面
+### プロフィール確認画面
 
-**概要**: プロフィール編集前の確認画面です。
+**何をする画面？**
+プロフィール編集する前の最終確認画面です。
 
-**参照モック**: `context/画面レイアウト/profile_edit_confirmation_screen.html`
+**参考にするモック**
+`context/画面レイアウト/profile_edit_confirmation_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/azuma-profile-confirm`
-2. `ProfileController.php`に`confirm`メソッドを追加
-3. セッションに入力内容を一時保存
-4. 確定ボタンで`MEMBER_TABLE`を更新
-5. ビューを作成: `resources/views/profile/confirm.blade.php`
-
----
-
-### 3. DM一覧画面
-
-**概要**: ダイレクトメッセージの相手一覧を表示します。
-
-**参照モック**: `context/画面レイアウト/message_list_screen.html`
-
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/azuma-dm-list`
-2. コントローラを作成:
-   ```bash
-   docker compose exec app php artisan make:controller ChatController
-   ```
-3. `ChatController.php`に`index`メソッドを追加
-4. 自分が送信または受信したメッセージの相手をグループ化:
-   ```php
-   Chat::where('USER_ID_FROM', Auth::id())
-       ->orWhere('USER_ID_TO', Auth::id())
-       ->orderBy('SEND_DATE', 'desc')
-       ->get()
-       ->groupBy(function($chat) use ($userId) {
-           return $chat->USER_ID_FROM == $userId 
-               ? $chat->USER_ID_TO 
-               : $chat->USER_ID_FROM;
-       });
-   ```
-5. ビューを作成: `resources/views/chat/index.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/azuma-profile-confirm`）
+2. ProfileControllerに確認画面用のメソッドを追加
+3. 入力内容をセッションに一時保存
+4. 確認画面で変更内容を表示
+5. 「更新する」ボタンでMEMBER_TABLEを更新
+6. 「戻る」ボタンで編集画面に戻れるようにする
 
 ---
 
-### 4. DM画面
+### DM一覧画面
 
-**概要**: 特定ユーザーとのメッセージ履歴を表示し、メッセージを送信します。
+**何をする画面？**
+ダイレクトメッセージの相手一覧を表示します。
 
-**参照モック**: `context/画面レイアウト/message_detail_screen.html`
+**参考にするモック**
+`context/画面レイアウト/message_list_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/azuma-dm-chat`
-2. `ChatController.php`に`show`と`store`メソッドを追加
-3. ルートを追加:
-   ```php
-   Route::middleware('auth')->group(function () {
-       Route::get('/chats/{user}', [ChatController::class, 'show']);
-       Route::post('/chats/{user}', [ChatController::class, 'store']);
-   });
-   ```
-4. メッセージ送信時に`CHAT_TABLE`に保存
-5. LINEのようなチャット形式で表示
-6. ビューを作成: `resources/views/chat/show.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/azuma-dm-list`）
+2. ChatControllerを作成する
+3. メッセージ相手一覧を表示するメソッドを作る
+4. この画面はログイン必須
+5. CHAT_TABLEから自分が送信または受信したメッセージを取得
+6. 相手ごとにグループ化して表示
+7. 最新のメッセージを抜粋表示
+8. 各相手をクリックするとDM画面へ
+
+---
+
+### DM画面
+
+**何をする画面？**
+特定ユーザーとのメッセージ履歴を表示し、メッセージを送信します。
+
+**参考にするモック**
+`context/画面レイアウト/message_detail_screen.html` を確認してください。
+
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/azuma-dm-chat`）
+2. ChatControllerにメッセージ詳細とメッセージ送信用のメソッドを追加
+3. URLにある相手ユーザーIDでメッセージを取得
+4. 自分と相手のメッセージを時系列で表示（LINEのような見た目）
+5. メッセージ入力欄と送信ボタンを設置
+6. 送信するとCHAT_TABLEに保存してページを更新
+
+---
+
+## 困ったときは
+
+- **TEAM_SETUP.md** を読み返す
+- **トップ画面の作成フロー.md** を参考にする
+- リーダーに聞く
+- GitHubのコードを参考にする
 
 ---
 

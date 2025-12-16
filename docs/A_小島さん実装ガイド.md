@@ -13,127 +13,119 @@
 
 ## 毎日の作業の流れ
 
-### 作業開始時（必ず実行）
+### 作業を始める前に
 
-```bash
-# 1. プロジェクトフォルダに移動
-cd sukimapark
+1. **プロジェクトフォルダに移動する**
+   - VSCodeでsukimaparkフォルダを開きます
 
-# 2. 最新のコードを取得（他のメンバーの変更を反映）
-git pull
+2. **最新のコードを取得する**
+   - ターミナルで `git pull` を実行します
+   - 他のメンバーの変更を自分のPCに反映させます
 
-# 3. Dockerコンテナを起動
-docker compose up -d
+3. **Dockerを起動する**
+   - ターミナルで `docker compose up -d` を実行します
+   - これでLaravelが動くようになります
 
-# 4. 動作確認
-#    ブラウザで http://localhost を開く
-```
+4. **ブラウザで確認する**
+   - `http://localhost` を開いて、サイトが表示されればOKです
 
-### 作業中（こまめにコミット）
+### 作業中
 
-```bash
-# 変更を保存（こまめに行う）
-git add .
-git commit -m "変更内容を書く"
-```
+- こまめにコミットしましょう
+- `git add .` で変更をステージング
+- `git commit -m "何を変更したか"` で保存
 
-### 作業終了時（必ず実行）
+### 作業を終わるとき
 
-```bash
-# 1. 変更をコミット（まだしていなければ）
-git add .
-git commit -m "作業内容"
-
-# 2. GitHubにプッシュ
-git push
-
-# 3. Dockerコンテナを停止
-docker compose down
-
-# 4. WSLをシャットダウン（重要！）
-wsl --shutdown
-```
+1. コミットする（まだしていなければ）
+2. `git push` でGitHubにアップロード
+3. `docker compose down` でDockerを停止
+4. `wsl --shutdown` でWSLをシャットダウン（重要！）
 
 ---
 
-## 各画面の実装方法
+## 各画面の作り方
 
-### 1. 問い合わせ画面
+### 問い合わせ画面
 
-**概要**: サイトへの問い合わせフォームを作成します。
+**何をする画面？**
+ユーザーがサイトへの問い合わせを送信するフォームです。
 
-**参照モック**: `context/画面レイアウト/contact_form_screen.html`
+**参考にするモック**
+`context/画面レイアウト/contact_form_screen.html` を開いて、デザインを確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kojima-contact`
-2. コントローラを作成:
-   ```bash
-   docker compose exec app php artisan make:controller ContactController
-   ```
-3. `ContactController.php`に`create`と`store`メソッドを追加
-4. ルートを追加（`routes/web.php`）:
-   ```php
-   Route::get('/contact', [ContactController::class, 'create']);
-   Route::post('/contact', [ContactController::class, 'store']);
-   ```
-5. ビューを作成: `resources/views/contact/create.blade.php`
-6. フォーム入力項目: タイトル、内容
-7. 送信時に`CONTACT_TABLE`に保存
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kojima-contact`）
+2. ContactControllerを作成する（artisanコマンドを使う）
+3. フォーム表示用のメソッドと、送信処理用のメソッドを作る
+4. ルートを設定する（URLとコントローラを紐付ける）
+5. ビューを作成する（HTMLを書く）
+6. フォームにはタイトルと内容の入力欄を設置
+7. 送信ボタンを押すとCONTACT_TABLEに保存される
 
 ---
 
-### 2. 検索結果一覧画面
+### 検索結果一覧画面
 
-**概要**: トップ画面の検索フォームから渡されたパラメータで土地を検索し、結果を一覧表示します。
+**何をする画面？**
+トップ画面の検索フォームから送られた条件で土地を検索し、結果を一覧表示します。
 
-**参照モック**: `context/画面レイアウト/search_results_screen.html`
+**参考にするモック**
+`context/画面レイアウト/search_results_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kojima-search-result`
-2. コントローラを作成:
-   ```bash
-   docker compose exec app php artisan make:controller LandController
-   ```
-3. `LandController.php`に`index`メソッドを追加
-4. 検索条件: 都道府県、市区町村、料金上限、面積下限
-5. クエリビルダで絞り込み（`where`, `when`を使用）
-6. ページネーション機能を実装（`paginate(12)`）
-7. ビューを作成: `resources/views/land/index.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kojima-search-result`）
+2. LandControllerを作成する
+3. 検索処理用のメソッドを作る
+4. 検索条件（都道府県、市区町村、料金、面積）でLAND_TABLEを絞り込む
+5. 結果をページネーション（12件ずつなど）で表示
+6. 各土地をカード形式で表示し、クリックで詳細画面へ
 
 ---
 
-### 3. 土地詳細画面
+### 土地詳細画面
 
-**概要**: 土地の詳細情報を表示します。
+**何をする画面？**
+選んだ土地の詳細情報を表示します。
 
-**参照モック**: `context/画面レイアウト/land_detail_screen.html`
+**参考にするモック**
+`context/画面レイアウト/land_detail_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kojima-land-detail`
-2. `LandController.php`に`show`メソッドを追加
-3. ルートを追加: `Route::get('/lands/{id}', [LandController::class, 'show'])`
-4. 表示内容: 土地情報、所有者情報、レビュー一覧
-5. ログインユーザーにはレンタル申請ボタンを表示（`@auth`を使用）
-6. ビューを作成: `resources/views/land/show.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kojima-land-detail`）
+2. LandControllerに詳細表示用のメソッドを追加
+3. URLにある土地IDを使ってLAND_TABLEから情報を取得
+4. 土地の住所、面積、料金、説明を表示
+5. 所有者情報を表示
+6. 過去のレビュー一覧を表示
+7. ログインユーザーには「レンタル申請」ボタンを表示
 
 ---
 
-### 4. レンタル確認画面
+### レンタル確認画面
 
-**概要**: レンタル申請前の確認画面です。
+**何をする画面？**
+レンタル申請する前の最終確認画面です。
 
-**参照モック**: `context/画面レイアウト/booking_confirmation_screen.html`
+**参考にするモック**
+`context/画面レイアウト/booking_confirmation_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kojima-rental-confirm`
-2. コントローラを作成:
-   ```bash
-   docker compose exec app php artisan make:controller RentalController
-   ```
-3. `RentalController.php`に`confirm`と`store`メソッドを追加
-4. ログイン必須: ルートに`middleware('auth')`を設定
-5. 確定ボタンで`RENTAL_RECORD_TABLE`に保存
-6. ビューを作成: `resources/views/rental/confirm.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kojima-rental-confirm`）
+2. RentalControllerを作成する
+3. 確認画面表示用と申請処理用のメソッドを作る
+4. この画面はログイン必須（ミドルウェアで制限）
+5. 申請内容（土地情報、期間など）を表示
+6. 「申請する」ボタンでRENTAL_RECORD_TABLEに保存
+
+---
+
+## 困ったときは
+
+- **TEAM_SETUP.md** を読み返す
+- **トップ画面の作成フロー.md** を参考にする
+- リーダーに聞く
+- GitHubのコードを参考にする
 
 ---
 

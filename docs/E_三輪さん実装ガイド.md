@@ -14,143 +14,136 @@
 
 ## 毎日の作業の流れ
 
-### 作業開始時（必ず実行）
+### 作業を始める前に
 
-```bash
-# 1. プロジェクトフォルダに移動
-cd sukimapark
+1. **プロジェクトフォルダに移動する**
+   - VSCodeでsukimaparkフォルダを開きます
 
-# 2. 最新のコードを取得（他のメンバーの変更を反映）
-git pull
+2. **最新のコードを取得する**
+   - ターミナルで `git pull` を実行します
+   - 他のメンバーの変更を自分のPCに反映させます
 
-# 3. Dockerコンテナを起動
-docker compose up -d
+3. **Dockerを起動する**
+   - ターミナルで `docker compose up -d` を実行します
+   - これでLaravelが動くようになります
 
-# 4. 動作確認
-#    ブラウザで http://localhost を開く
-```
+4. **ブラウザで確認する**
+   - `http://localhost` を開いて、サイトが表示されればOKです
 
-### 作業中（こまめにコミット）
+### 作業中
 
-```bash
-# 変更を保存（こまめに行う）
-git add .
-git commit -m "変更内容を書く"
-```
+- こまめにコミットしましょう
+- `git add .` で変更をステージング
+- `git commit -m "何を変更したか"` で保存
 
-### 作業終了時（必ず実行）
+### 作業を終わるとき
 
-```bash
-# 1. 変更をコミット（まだしていなければ）
-git add .
-git commit -m "作業内容"
-
-# 2. GitHubにプッシュ
-git push
-
-# 3. Dockerコンテナを停止
-docker compose down
-
-# 4. WSLをシャットダウン（重要！）
-wsl --shutdown
-```
+1. コミットする（まだしていなければ）
+2. `git push` でGitHubにアップロード
+3. `docker compose down` でDockerを停止
+4. `wsl --shutdown` でWSLをシャットダウン（重要！）
 
 ---
 
-## 各画面の実装方法
+## 各画面の作り方
 
-### 1. レンタル中一覧画面
+### レンタル中一覧画面
 
-**概要**: 自分がレンタル中の土地一覧を表示します。
+**何をする画面？**
+自分がレンタル中の土地一覧を表示します。
 
-**参照モック**: `context/画面レイアウト/active_rental_list_screen.html`
+**参考にするモック**
+`context/画面レイアウト/active_rental_list_screen.html` を開いて、デザインを確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/miwa-rental-list`
-2. `RentalController.php`に`index`メソッドを追加
-3. ルートを追加（ログイン必須）:
-   ```php
-   Route::get('/my-rentals', [RentalController::class, 'index'])->middleware('auth');
-   ```
-4. 自分のレンタル記録（STATUS=1:承認済み）を取得:
-   ```php
-   RentalRecord::where('USER_ID', Auth::id())
-       ->where('STATUS', 1)
-       ->with('land')
-       ->get();
-   ```
-5. ビューを作成: `resources/views/rental/index.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/miwa-rental-list`）
+2. RentalControllerを作成する（または既存のものに追加）
+3. レンタル一覧表示用のメソッドを作る
+4. この画面はログイン必須
+5. RENTAL_RECORD_TABLEから自分のレンタル記録（承認済み）を取得
+6. 各土地の情報（名前、場所、期間）をカード形式で表示
+7. クリックで詳細画面へ
 
 ---
 
-### 2. レンタル中詳細画面
+### レンタル中詳細画面
 
-**概要**: レンタル中の土地の詳細情報を表示します。
+**何をする画面？**
+レンタル中の土地の詳細情報を表示します。
 
-**参照モック**: `context/画面レイアウト/active_rental_detail_screen.html`
+**参考にするモック**
+`context/画面レイアウト/active_rental_detail_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/miwa-rental-detail`
-2. `RentalController.php`に`show`メソッドを追加
-3. 表示内容: 土地情報、オーナー情報、レンタル期間
-4. 返却ボタン（取引完了処理）を設置
-5. ビューを作成: `resources/views/rental/show.blade.php`
-
----
-
-### 3. レビュー画面
-
-**概要**: 取引完了後にレビューを投稿する画面です。
-
-**参照モック**: `context/画面レイアウト/submit_review_screen.html`
-
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/miwa-review`
-2. コントローラを作成:
-   ```bash
-   docker compose exec app php artisan make:controller ReviewController
-   ```
-3. `ReviewController.php`に`create`と`store`メソッドを追加
-4. フォーム入力項目:
-   - 評価（1-5の星）
-   - コメント
-5. 送信時に`REVIEW_COMMENT_TABLE`に保存
-6. ビューを作成: `resources/views/review/create.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/miwa-rental-detail`）
+2. RentalControllerにレンタル詳細用のメソッドを追加
+3. URLにあるレンタルIDでRENTAL_RECORD_TABLEから情報を取得
+4. 表示内容：土地情報、オーナー情報、レンタル期間
+5. 「返却する（取引完了）」ボタンを設置
+6. オーナーへのDMボタンを設置
 
 ---
 
-### 4. 取引完了一覧画面
+### レビュー画面
 
-**概要**: 完了した取引（レンタル終了）の一覧を表示します。
+**何をする画面？**
+取引完了後にレビューを投稿する画面です。
 
-**参照モック**: `context/画面レイアウト/rental_history_list_screen.html`
+**参考にするモック**
+`context/画面レイアウト/submit_review_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/miwa-completed-list`
-2. `RentalController.php`に`completed`メソッドを追加
-3. 完了した取引（STATUS=3:完了）を取得:
-   ```php
-   RentalRecord::where('USER_ID', Auth::id())
-       ->where('STATUS', 3)
-       ->with('land')
-       ->get();
-   ```
-4. ビューを作成: `resources/views/rental/completed.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/miwa-review`）
+2. ReviewControllerを作成する
+3. レビューフォーム表示用と投稿処理用のメソッドを作る
+4. この画面はログイン必須
+5. フォームの入力項目：
+   - 評価（1〜5の星）
+   - コメント（テキストエリア）
+6. 送信するとREVIEW_COMMENT_TABLEに保存
 
 ---
 
-### 5. 取引完了詳細画面
+### 取引完了一覧画面
 
-**概要**: 完了した取引の詳細情報を表示します。
+**何をする画面？**
+完了した取引（レンタル終了）の一覧を表示します。
 
-**参照モック**: `context/画面レイアウト/rental_history_detail_screen.html`
+**参考にするモック**
+`context/画面レイアウト/rental_history_list_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/miwa-completed-detail`
-2. `RentalController.php`に`completedShow`メソッドを追加
-3. レビュー投稿済みの場合: レビュー内容を表示
-4. レビュー未投稿の場合: レビュー投稿ボタンを表示
-5. ビューを作成: `resources/views/rental/completed-show.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/miwa-completed-list`）
+2. RentalControllerに取引完了一覧用のメソッドを追加
+3. RENTAL_RECORD_TABLEから自分の完了記録（STATUS=完了）を取得
+4. 各取引の情報（土地名、期間、金額）を一覧表示
+5. クリックで詳細画面へ
+
+---
+
+### 取引完了詳細画面
+
+**何をする画面？**
+完了した取引の詳細情報を表示します。
+
+**参考にするモック**
+`context/画面レイアウト/rental_history_detail_screen.html` を確認してください。
+
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/miwa-completed-detail`）
+2. RentalControllerに取引完了詳細用のメソッドを追加
+3. 表示内容：土地情報、取引期間、支払い金額
+4. レビュー投稿済みの場合：レビュー内容を表示
+5. レビュー未投稿の場合：「レビューを書く」ボタンを表示
+
+---
+
+## 困ったときは
+
+- **TEAM_SETUP.md** を読み返す
+- **トップ画面の作成フロー.md** を参考にする
+- リーダーに聞く
+- GitHubのコードを参考にする
 
 ---
 

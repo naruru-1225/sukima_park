@@ -13,62 +13,53 @@
 
 ## 毎日の作業の流れ
 
-### 作業開始時（必ず実行）
+### 作業を始める前に
 
-```bash
-# 1. プロジェクトフォルダに移動
-cd sukimapark
+1. **プロジェクトフォルダに移動する**
+   - VSCodeでsukimaparkフォルダを開きます
 
-# 2. 最新のコードを取得（他のメンバーの変更を反映）
-git pull
+2. **最新のコードを取得する**
+   - ターミナルで `git pull` を実行します
+   - 他のメンバーの変更を自分のPCに反映させます
 
-# 3. Dockerコンテナを起動
-docker compose up -d
+3. **Dockerを起動する**
+   - ターミナルで `docker compose up -d` を実行します
+   - これでLaravelが動くようになります
 
-# 4. 動作確認
-#    ブラウザで http://localhost を開く
-```
+4. **ブラウザで確認する**
+   - `http://localhost` を開いて、サイトが表示されればOKです
 
-### 作業中（こまめにコミット）
+### 作業中
 
-```bash
-# 変更を保存（こまめに行う）
-git add .
-git commit -m "変更内容を書く"
-```
+- こまめにコミットしましょう
+- `git add .` で変更をステージング
+- `git commit -m "何を変更したか"` で保存
 
-### 作業終了時（必ず実行）
+### 作業を終わるとき
 
-```bash
-# 1. 変更をコミット（まだしていなければ）
-git add .
-git commit -m "作業内容"
-
-# 2. GitHubにプッシュ
-git push
-
-# 3. Dockerコンテナを停止
-docker compose down
-
-# 4. WSLをシャットダウン（重要！）
-wsl --shutdown
-```
+1. コミットする（まだしていなければ）
+2. `git push` でGitHubにアップロード
+3. `docker compose down` でDockerを停止
+4. `wsl --shutdown` でWSLをシャットダウン（重要！）
 
 ---
 
-## 各画面の実装方法
+## 各画面の作り方
 
-### 1. 会員登録画面
+### 会員登録画面
 
-**概要**: 新規ユーザーの登録フォームを作成します。
+**何をする画面？**
+新しいユーザーが会員登録するためのフォームです。
 
-**参照モック**: `context/画面レイアウト/register_screen.html`
+**参考にするモック**
+`context/画面レイアウト/register_screen.html` を開いて、デザインを確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kusuyama-register`
-2. 既存の`AuthController.php`を使用（リーダーが作成済み）
-3. ビューを作成: `resources/views/auth/register.blade.php`
-4. フォーム入力項目:
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kusuyama-register`）
+2. AuthControllerはリーダーが作成済みなので、ビューを作成します
+3. `resources/views/auth/register.blade.php` を新規作成
+4. 共通レイアウト `@extends('layouts.app')` を使う
+5. フォームの入力項目：
    - ユーザー名（必須）
    - メールアドレス（必須）
    - パスワード（必須、8文字以上）
@@ -76,46 +67,48 @@ wsl --shutdown
    - 電話番号（任意）
    - 生年月日（任意）
    - 性別（任意）
-5. 共通レイアウト`@extends('layouts.app')`を使用
-6. フォームクラス`.form-group`, `.form-input`を使用
+6. 用意されたCSSクラス（`.form-group`, `.form-input`）を使う
+7. エラーメッセージの表示も忘れずに
 
 ---
 
-### 2. ログイン画面
+### ログイン画面
 
-**概要**: 既存ユーザーのログインフォームを作成します。
+**何をする画面？**
+登録済みユーザーがログインするためのフォームです。
 
-**参照モック**: `context/画面レイアウト/login_screen.html`
+**参考にするモック**
+`context/画面レイアウト/login_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kusuyama-login`
-2. 既存の`AuthController.php`を使用
-3. ビューを作成: `resources/views/auth/login.blade.php`
-4. フォーム入力項目:
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kusuyama-login`）
+2. `resources/views/auth/login.blade.php` を新規作成
+3. フォームの入力項目：
    - メールアドレス（必須）
    - パスワード（必須）
-   - ログイン状態保持チェックボックス
-5. エラーメッセージの表示（`@error`ディレクティブ使用）
+   - ログイン状態を保持するチェックボックス
+4. ログインボタン
+5. 「新規登録はこちら」リンク
+6. エラー時のメッセージ表示
 
 ---
 
-### 3. 土地登録画面
+### 土地登録画面
 
-**概要**: ログインユーザーが土地を登録するフォームです。
+**何をする画面？**
+ログインユーザーが自分の土地を登録するフォームです。
 
-**参照モック**: `context/画面レイアウト/land_register_form_screen.html`
+**参考にするモック**
+`context/画面レイアウト/land_register_form_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kusuyama-land-register`
-2. `LandController.php`に`create`と`store`メソッドを追加
-3. ルートを追加（ログイン必須）:
-   ```php
-   Route::middleware('auth')->group(function () {
-       Route::get('/lands/create', [LandController::class, 'create']);
-       Route::post('/lands', [LandController::class, 'store']);
-   });
-   ```
-4. フォーム入力項目:
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kusuyama-land-register`）
+2. LandControllerを作成する（artisanコマンドを使う）
+3. フォーム表示用と保存処理用のメソッドを作る
+4. この画面はログイン必須（ミドルウェアで制限）
+5. ルートを設定する
+6. ビューを作成する
+7. フォームの入力項目：
    - 都道府県（必須、セレクトボックス）
    - 市区町村（必須）
    - 住所（必須）
@@ -123,22 +116,33 @@ wsl --shutdown
    - 料金（任意）
    - 説明（任意）
    - 画像（任意）
-5. ビューを作成: `resources/views/land/create.blade.php`
 
 ---
 
-### 4. 土地登録確認画面
+### 土地登録確認画面
 
-**概要**: 土地登録前の確認画面です。
+**何をする画面？**
+土地登録する前の最終確認画面です。
 
-**参照モック**: `context/画面レイアウト/land_register_confirmation_screen.html`
+**参考にするモック**
+`context/画面レイアウト/land_register_confirmation_screen.html` を確認してください。
 
-**実装手順**:
-1. ブランチを作成: `git checkout -b feature/kusuyama-land-confirm`
-2. `LandController.php`に`confirm`メソッドを追加
-3. セッションに入力内容を一時保存して確認画面に渡す
-4. 確定ボタンで`LAND_TABLE`に保存
-5. ビューを作成: `resources/views/land/confirm.blade.php`
+**作成の流れ**
+1. ブランチを作成する（`git checkout -b feature/kusuyama-land-confirm`）
+2. LandControllerに確認画面用のメソッドを追加
+3. 入力内容をセッションに一時保存して確認画面に渡す
+4. 確認画面で入力内容を表示
+5. 「登録する」ボタンで LAND_TABLEに保存
+6. 「戻る」ボタンで入力画面に戻れるようにする
+
+---
+
+## 困ったときは
+
+- **TEAM_SETUP.md** を読み返す
+- **トップ画面の作成フロー.md** を参考にする
+- リーダーに聞く
+- GitHubのコードを参考にする
 
 ---
 
