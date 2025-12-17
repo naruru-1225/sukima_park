@@ -43,12 +43,12 @@
 
 このドキュメントには以下の種類の情報があります：
 
-| マーク | 意味 | 説明 |
-|-------|------|------|
-| 🔴 **作業必要** | やること | 手順に従って実際に作業する必要がある |
-| 📖 **読むだけ** | 参照用 | 理解のために読むだけでOK |
-| 🔷 **Laravel** | Laravel標準機能 | どのLaravelプロジェクトでも使える知識 |
-| 🟠 **プロジェクト固有** | スキマパーク専用 | このプロジェクトだけの設定 |
+| マーク                       | 意味             | 説明                                  |
+| ---------------------------- | ---------------- | ------------------------------------- |
+| 🔴**作業必要**         | やること         | 手順に従って実際に作業する必要がある  |
+| 📖**読むだけ**         | 参照用           | 理解のために読むだけでOK              |
+| 🔷**Laravel**          | Laravel標準機能  | どのLaravelプロジェクトでも使える知識 |
+| 🟠**プロジェクト固有** | スキマパーク専用 | このプロジェクトだけの設定            |
 
 ---
 
@@ -395,70 +395,70 @@ docker compose logs mysql      # MySQLコンテナのログ
 
 ### 担当者サマリー
 
-| 担当 | 画面数 | 主な担当領域 |
-|-----|-------|-------------|
-| A 小島 | 4画面 | 問い合わせ、検索結果、土地詳細、レンタル確認 |
-| B 楠山 | 4画面 | 会員登録、ログイン、土地登録 |
-| C 志賀 | 6画面 | トップ画面、ユーザ画面、土地貸出 |
-| D 我妻 | 4画面 | プロフィール、DM |
-| E 三輪 | 5画面 | レンタル管理、レビュー、取引完了 |
-| F 野村 | 4画面 | 管理者機能 |
+| 担当   | 画面数 | 主な担当領域                                 |
+| ------ | ------ | -------------------------------------------- |
+| A 小島 | 4画面  | 問い合わせ、検索結果、土地詳細、レンタル確認 |
+| B 楠山 | 4画面  | 会員登録、ログイン、土地登録                 |
+| C 志賀 | 6画面  | トップ画面、ユーザ画面、土地貸出             |
+| D 我妻 | 4画面  | プロフィール、DM                             |
+| E 三輪 | 5画面  | レンタル管理、レビュー、取引完了             |
+| F 野村 | 4画面  | 管理者機能                                   |
 
 ### A 小島さん担当
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| 問い合わせ画面 | feature/kojima-contact |
-| 検索結果一覧画面 | feature/kojima-search-result |
-| 土地詳細画面 | feature/kojima-land-detail |
+| 画面名           | ブランチ名                    |
+| ---------------- | ----------------------------- |
+| 問い合わせ画面   | feature/kojima-contact        |
+| 検索結果一覧画面 | feature/kojima-search-result  |
+| 土地詳細画面     | feature/kojima-land-detail    |
 | レンタル確認画面 | feature/kojima-rental-confirm |
 
 ### B 楠山さん担当
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| 会員登録画面 | feature/kusuyama-register |
-| ログイン画面 | feature/kusuyama-login |
-| 土地登録画面 | feature/kusuyama-land-register |
-| 土地登録確認画面 | feature/kusuyama-land-confirm |
+| 画面名           | ブランチ名                     |
+| ---------------- | ------------------------------ |
+| 会員登録画面     | feature/kusuyama-register      |
+| ログイン画面     | feature/kusuyama-login         |
+| 土地登録画面     | feature/kusuyama-land-register |
+| 土地登録確認画面 | feature/kusuyama-land-confirm  |
 
 ### C 志賀さん担当
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| ユーザ画面(自アカウント) | feature/shiga-user-self |
-| ユーザ画面(他アカウント) | feature/shiga-user-other |
-| トップ画面 | ✅ リーダー実装済み |
-| 自己保持土地一覧画面 | feature/shiga-my-lands |
-| 土地貸出画面 | feature/shiga-rental-lend |
-| 貸出中詳細画面 | feature/shiga-lending-detail |
+| 画面名                   | ブランチ名                   |
+| ------------------------ | ---------------------------- |
+| ユーザ画面(自アカウント) | feature/shiga-user-self      |
+| ユーザ画面(他アカウント) | feature/shiga-user-other     |
+| トップ画面               | ✅ リーダー実装済み          |
+| 自己保持土地一覧画面     | feature/shiga-my-lands       |
+| 土地貸出画面             | feature/shiga-rental-lend    |
+| 貸出中詳細画面           | feature/shiga-lending-detail |
 
 ### D 我妻さん担当
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| プロフィール編集画面 | feature/azuma-profile-edit |
+| 画面名               | ブランチ名                    |
+| -------------------- | ----------------------------- |
+| プロフィール編集画面 | feature/azuma-profile-edit    |
 | プロフィール確認画面 | feature/azuma-profile-confirm |
-| DM一覧画面 | feature/azuma-dm-list |
-| DM画面 | feature/azuma-dm-chat |
+| DM一覧画面           | feature/azuma-dm-list         |
+| DM画面               | feature/azuma-dm-chat         |
 
 ### E 三輪さん担当
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| レンタル中一覧画面 | feature/miwa-rental-list |
-| レンタル中詳細画面 | feature/miwa-rental-detail |
-| レビュー画面 | feature/miwa-review |
-| 取引完了一覧画面 | feature/miwa-completed-list |
-| 取引完了詳細画面 | feature/miwa-completed-detail |
+| 画面名             | ブランチ名                    |
+| ------------------ | ----------------------------- |
+| レンタル中一覧画面 | feature/miwa-rental-list      |
+| レンタル中詳細画面 | feature/miwa-rental-detail    |
+| レビュー画面       | feature/miwa-review           |
+| 取引完了一覧画面   | feature/miwa-completed-list   |
+| 取引完了詳細画面   | feature/miwa-completed-detail |
 
 ### F 野村さん担当（管理者機能）
 
-| 画面名 | ブランチ名 |
-|------|----------|
-| ユーザ一覧画面 | feature/nomura-user-list |
-| ユーザ詳細画面 | feature/nomura-user-detail |
-| 問い合わせ一覧画面 | feature/nomura-contact-list |
+| 画面名             | ブランチ名                    |
+| ------------------ | ----------------------------- |
+| ユーザ一覧画面     | feature/nomura-user-list      |
+| ユーザ詳細画面     | feature/nomura-user-detail    |
+| 問い合わせ一覧画面 | feature/nomura-contact-list   |
 | 問い合わせ詳細画面 | feature/nomura-contact-detail |
 
 ---
@@ -1386,7 +1386,7 @@ Bladeはlaravelの**テンプレートエンジン**です。HTMLの中にPHPを
     {{-- ─── 変数の表示 ─── --}}
     {{ $変数名 }}
     {{-- ↑ HTMLエスケープ済み（XSS攻撃対策） --}}
-    {{-- ↑ < は &lt; に変換される --}}
+    {{-- ↑ < は < に変換される --}}
 
     {!! $html変数 !!}
     {{-- ↑ HTMLをそのまま出力（注意して使う） --}}
@@ -1565,7 +1565,7 @@ public/css/
 {{-- メインコンテンツ --}}
 @section('content')
     <h1>土地一覧</h1>
-    
+  
     {{-- ここに画面の内容を書く --}}
     <p>ようこそ！</p>
 @endsection
@@ -1582,7 +1582,7 @@ public/css/
 
 @section('content')
     <h1>土地を探す</h1>
-    
+  
     {{-- 検索フォーム --}}
     <form action="{{ url('/lands') }}" method="GET" class="card">
         <div class="card-body">
@@ -1597,7 +1597,7 @@ public/css/
             <button type="submit" class="btn btn-primary">検索</button>
         </div>
     </form>
-    
+  
     {{-- 土地一覧 --}}
     @foreach ($lands as $land)
         <div class="card">
@@ -1635,11 +1635,11 @@ public/css/
 <a href="/lands/1" class="btn btn-outline">詳細を見る</a>
 ```
 
-| クラス | 見た目 | 使いどころ |
-|-------|-------|----------|
-| `.btn .btn-primary` | 緑背景・白文字 | 送信、登録、確定 |
-| `.btn .btn-secondary` | グレー背景 | キャンセル、戻る |
-| `.btn .btn-outline` | 緑枠線・透明背景 | 詳細を見る、お気に入り |
+| クラス                  | 見た目           | 使いどころ             |
+| ----------------------- | ---------------- | ---------------------- |
+| `.btn .btn-primary`   | 緑背景・白文字   | 送信、登録、確定       |
+| `.btn .btn-secondary` | グレー背景       | キャンセル、戻る       |
+| `.btn .btn-outline`   | 緑枠線・透明背景 | 詳細を見る、お気に入り |
 
 ---
 
@@ -1653,13 +1653,13 @@ public/css/
     <div class="card-header">
         <h3>土地情報</h3>
     </div>
-    
+  
     {{-- カードの本体（メインコンテンツ） --}}
     <div class="card-body">
         <p>新宿区の土地です。</p>
         <p>面積: 100㎡</p>
     </div>
-    
+  
     {{-- カードのフッター（ボタンなど） --}}
     <div class="card-footer">
         <a href="/lands/1" class="btn btn-primary">詳細を見る</a>
@@ -1667,11 +1667,11 @@ public/css/
 </div>
 ```
 
-| クラス | 説明 |
-|-------|------|
-| `.card` | カード全体を囲む |
-| `.card-header` | タイトル部分（任意） |
-| `.card-body` | メインコンテンツ |
+| クラス           | 説明                     |
+| ---------------- | ------------------------ |
+| `.card`        | カード全体を囲む         |
+| `.card-header` | タイトル部分（任意）     |
+| `.card-body`   | メインコンテンツ         |
 | `.card-footer` | 下部のボタン配置（任意） |
 
 ---
@@ -1683,13 +1683,13 @@ public/css/
 ```html
 <form action="{{ url('/lands') }}" method="POST">
     @csrf  {{-- セキュリティ用。必ず入れる！ --}}
-    
+  
     {{-- テキスト入力 --}}
     <div class="form-group">
         <label class="form-label required">市区町村</label>
         <input type="text" name="city" class="form-input" required>
     </div>
-    
+  
     {{-- セレクトボックス --}}
     <div class="form-group">
         <label class="form-label">都道府県</label>
@@ -1699,25 +1699,25 @@ public/css/
             <option value="27">大阪府</option>
         </select>
     </div>
-    
+  
     {{-- テキストエリア --}}
     <div class="form-group">
         <label class="form-label">説明（任意）</label>
         <textarea name="description" class="form-textarea" placeholder="土地の説明"></textarea>
     </div>
-    
+  
     <button type="submit" class="btn btn-primary">登録する</button>
 </form>
 ```
 
-| クラス | 用途 |
-|-------|------|
-| `.form-group` | 入力項目をグループ化 |
-| `.form-label` | ラベル |
+| クラス                   | 用途                      |
+| ------------------------ | ------------------------- |
+| `.form-group`          | 入力項目をグループ化      |
+| `.form-label`          | ラベル                    |
 | `.form-label.required` | 必須マーク（*）付きラベル |
-| `.form-input` | テキスト入力欄 |
-| `.form-select` | セレクトボックス |
-| `.form-textarea` | 複数行テキスト入力 |
+| `.form-input`          | テキスト入力欄            |
+| `.form-select`         | セレクトボックス          |
+| `.form-textarea`       | 複数行テキスト入力        |
 
 ---
 
@@ -1760,17 +1760,17 @@ public/css/
 
 CSSで使える色の変数です。統一感のあるデザインのために活用してください。
 
-| 変数名 | 色 | 用途 |
-|-------|-----|------|
-| `var(--primary)` | 緑 #2E7D32 | メインカラー |
-| `var(--primary-dark)` | 濃緑 #1B5E20 | ホバー時など |
-| `var(--text-dark)` | 黒 #212121 | 本文テキスト |
-| `var(--text-gray)` | グレー #616161 | サブテキスト |
-| `var(--bg-white)` | 白 #FFFFFF | 背景 |
-| `var(--bg-light)` | 薄グレー #F5F5F5 | 背景（グレー） |
-| `var(--border)` | グレー #E0E0E0 | 枠線 |
-| `var(--error)` | 赤 #F44336 | エラー |
-| `var(--success)` | 緑 #4CAF50 | 成功 |
+| 変数名                  | 色               | 用途           |
+| ----------------------- | ---------------- | -------------- |
+| `var(--primary)`      | 緑 #2E7D32       | メインカラー   |
+| `var(--primary-dark)` | 濃緑 #1B5E20     | ホバー時など   |
+| `var(--text-dark)`    | 黒 #212121       | 本文テキスト   |
+| `var(--text-gray)`    | グレー #616161   | サブテキスト   |
+| `var(--bg-white)`     | 白 #FFFFFF       | 背景           |
+| `var(--bg-light)`     | 薄グレー #F5F5F5 | 背景（グレー） |
+| `var(--border)`       | グレー #E0E0E0   | 枠線           |
+| `var(--error)`        | 赤 #F44336       | エラー         |
+| `var(--success)`      | 緑 #4CAF50       | 成功           |
 
 > 💡 **ポイント**
 >
@@ -1829,16 +1829,16 @@ class LandController extends Controller
     {
         // ログインユーザーのIDを取得
         $userId = Auth::id();
-        
+      
         // ログインユーザーの情報を取得
         $user = Auth::user();
         $username = $user->USERNAME;
-        
+      
         // ログインしているかチェック
         if (Auth::check()) {
             // ログイン済みの処理
         }
-        
+      
         // 土地を登録（ログインユーザーのIDを設定）
         Land::create([
             'USER_ID' => Auth::id(),
@@ -1868,14 +1868,14 @@ Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth');
 
 ### よく使うパターン
 
-| やりたいこと | コード |
-|-------------|-------|
-| ログイン中か確認 | `Auth::check()` または `@auth` |
-| ユーザーID取得 | `Auth::id()` |
-| ユーザー名取得 | `Auth::user()->USERNAME` |
-| ログイン必須ページ | `->middleware('auth')` |
-| ログイン時のみ表示 | `@auth ... @endauth` |
-| 未ログイン時のみ表示 | `@guest ... @endguest` |
+| やりたいこと         | コード                             |
+| -------------------- | ---------------------------------- |
+| ログイン中か確認     | `Auth::check()` または `@auth` |
+| ユーザーID取得       | `Auth::id()`                     |
+| ユーザー名取得       | `Auth::user()->USERNAME`         |
+| ログイン必須ページ   | `->middleware('auth')`           |
+| ログイン時のみ表示   | `@auth ... @endauth`             |
+| 未ログイン時のみ表示 | `@guest ... @endguest`           |
 
 > ⚠️ **注意**
 >
@@ -1925,42 +1925,42 @@ Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth');
 
 ### 1. 会員テーブル（MEMBER_TABLE）
 
-| カラム名          | 型                   | 説明                                   |
-| ----------------- | -------------------- | -------------------------------------- |
-| USER_ID           | INT (AUTO_INCREMENT) | 会員ID（主キー）                       |
-| EMAIL             | VARCHAR(1024)        | メールアドレス                         |
-| PASSWORD          | VARCHAR(64)          | パスワード（英数混合8〜20文字）        |
-| TEL               | VARCHAR(64)          | 電話番号（XXX-XXXX-XXXX）              |
-| BIRTH             | DATE                 | 生年月日（YYYY/MM/DD）                 |
-| SHOW_BIRTH        | BOOLEAN              | 生年月日の公開設定                     |
-| GENDER            | INT                  | 性別（0:男性, 1:女性, 2:その他）       |
-| SHOW_GENDER       | BOOLEAN              | 性別の公開設定                         |
-| IDENTITY          | VARCHAR(1024)        | 本人確認書類（画像パス）               |
-| USERNAME          | VARCHAR(128)         | ユーザ名（32文字以内）                 |
-| SELF_INTRODUCTION | VARCHAR(512)         | 自己紹介（140字以内、NULL可）          |
-| ICON_IMAGE        | VARCHAR(1024)        | アイコン画像パス                       |
+| カラム名          | 型                   | 説明                                         |
+| ----------------- | -------------------- | -------------------------------------------- |
+| USER_ID           | INT (AUTO_INCREMENT) | 会員ID（主キー）                             |
+| EMAIL             | VARCHAR(1024)        | メールアドレス                               |
+| PASSWORD          | VARCHAR(64)          | パスワード（英数混合8〜20文字）              |
+| TEL               | VARCHAR(64)          | 電話番号（XXX-XXXX-XXXX）                    |
+| BIRTH             | DATE                 | 生年月日（YYYY/MM/DD）                       |
+| SHOW_BIRTH        | BOOLEAN              | 生年月日の公開設定                           |
+| GENDER            | INT                  | 性別（0:男性, 1:女性, 2:その他）             |
+| SHOW_GENDER       | BOOLEAN              | 性別の公開設定                               |
+| IDENTITY          | VARCHAR(1024)        | 本人確認書類（画像パス）                     |
+| USERNAME          | VARCHAR(128)         | ユーザ名（32文字以内）                       |
+| SELF_INTRODUCTION | VARCHAR(512)         | 自己紹介（140字以内、NULL可）                |
+| ICON_IMAGE        | VARCHAR(1024)        | アイコン画像パス                             |
 | ACCOUNT_STATUS    | INT                  | アカウント状態（0:ユーザ, 1:凍結, 2:管理者） |
 
 ### 2. 土地テーブル（LAND_TABLE）
 
-| カラム名          | 型                   | 説明                                     |
-| ----------------- | -------------------- | ---------------------------------------- |
-| LAND_ID           | INT (AUTO_INCREMENT) | 土地ID（主キー）                         |
-| PEREFECTURES      | INT                  | 都道府県（0:北海道〜46:沖縄）            |
-| CITY              | VARCHAR(256)         | 市区町村（50字制限）                     |
-| STREET_ADDRESS    | VARCHAR(256)         | 番地（50字制限）                         |
-| AREA              | DECIMAL(5,2)         | 面積                                     |
-| IMAGE             | VARCHAR(2048)        | 写真（画像パス、NULL可）                 |
-| TITLE_DEED        | VARCHAR(2048)        | 権利書（画像URL）                        |
-| DESCRIPTION       | VARCHAR(4096)        | 説明（1200文字以下、NULL可）             |
-| RENTAL_START_DATE | DATE                 | 貸し出し受付開始日（NULL可）             |
-| RENTAL_END_DATE   | DATE                 | 貸し出し受付終了日（NULL可）             |
-| RENTAL_START_TIME | TIME                 | 貸し出し受付開始時間（NULL可）           |
-| RENTAL_END_TIME   | TIME                 | 貸し出し受付終了時間（NULL可）           |
-| PRICE             | INT                  | 単価                                     |
-| PRICE_UNIT        | INT                  | 単価単位（0:日, 1:時間, 2:15分）         |
-| USER_ID           | INT                  | 所有者会員ID（外部キー）                 |
-| STATUS            | BOOLEAN              | ステータス（0:非公開, 1:公開中）         |
+| カラム名          | 型                   | 説明                             |
+| ----------------- | -------------------- | -------------------------------- |
+| LAND_ID           | INT (AUTO_INCREMENT) | 土地ID（主キー）                 |
+| PEREFECTURES      | INT                  | 都道府県（0:北海道〜46:沖縄）    |
+| CITY              | VARCHAR(256)         | 市区町村（50字制限）             |
+| STREET_ADDRESS    | VARCHAR(256)         | 番地（50字制限）                 |
+| AREA              | DECIMAL(5,2)         | 面積                             |
+| IMAGE             | VARCHAR(2048)        | 写真（画像パス、NULL可）         |
+| TITLE_DEED        | VARCHAR(2048)        | 権利書（画像URL）                |
+| DESCRIPTION       | VARCHAR(4096)        | 説明（1200文字以下、NULL可）     |
+| RENTAL_START_DATE | DATE                 | 貸し出し受付開始日（NULL可）     |
+| RENTAL_END_DATE   | DATE                 | 貸し出し受付終了日（NULL可）     |
+| RENTAL_START_TIME | TIME                 | 貸し出し受付開始時間（NULL可）   |
+| RENTAL_END_TIME   | TIME                 | 貸し出し受付終了時間（NULL可）   |
+| PRICE             | INT                  | 単価                             |
+| PRICE_UNIT        | INT                  | 単価単位（0:日, 1:時間, 2:15分） |
+| USER_ID           | INT                  | 所有者会員ID（外部キー）         |
+| STATUS            | BOOLEAN              | ステータス（0:非公開, 1:公開中） |
 
 ### 3. 貸し出し記録テーブル（RENTAL_RECORD_TABLE）
 
@@ -2026,8 +2026,6 @@ Route::get('/profile', [ProfileController::class, 'show'])->middleware('auth');
 
 > ⚠️ **注意**: これらのテーブルは既にマイグレーションで定義済みです。
 > `database/migrations/` フォルダ内のファイルで確認できます。
-
-
 
 ## 📖 phpMyAdminの使い方
 
