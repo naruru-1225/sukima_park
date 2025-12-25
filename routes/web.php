@@ -23,6 +23,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +62,22 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
  */
 Route::get('/test-layout', function () {
     return view('test-layout');
+});
+
+/**
+ * テストログイン（開発用）
+ * URL: /test-login
+ * 
+ * データベースの最初のユーザーで自動ログインする
+ * ※開発完了後は必ず削除してください
+ */
+Route::get('/test-login', function () {
+    $user = \App\Models\Member::first();
+    if ($user) {
+        \Illuminate\Support\Facades\Auth::login($user);
+        return redirect('/mypage')->with('success', 'テストログインしました: ' . $user->USERNAME);
+    }
+    return 'ユーザーが存在しません。php artisan db:seed --class=TestUserSeeder を実行してください。';
 });
 
 
@@ -114,3 +131,26 @@ Route::middleware('guest')->group(function () {
  */
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+
+// ============================================================
+// ユーザー関連ルート（ログイン必須）
+// ============================================================
+
+/**
+ * ログイン必須のルート
+ * 
+ * 未ログインユーザーがアクセスした場合は
+ * 自動的にログイン画面にリダイレクトされます
+ */
+Route::middleware('auth')->group(function () {
+    
+    /**
+     * マイページ
+     * URL: /mypage (GET)
+     * コントローラー: UserController@mypage
+     * ルート名: mypage
+     * 
+     * 画面定義: user_my.csv
+     */
+    Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
+});

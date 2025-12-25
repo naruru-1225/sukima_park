@@ -21,7 +21,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/profile') }}" class="nav-icon-btn user-icon" title="マイページ">
+                        <a href="{{ route('mypage') }}" class="nav-icon-btn user-icon" title="マイページ">
                             @if(Auth::user()->ICON_IMAGE && Auth::user()->ICON_IMAGE !== 'default_icon.png')
                                 <img src="{{ asset('storage/' . Auth::user()->ICON_IMAGE) }}" alt="アイコン">
                             @else
