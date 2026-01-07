@@ -14,6 +14,7 @@ class Land extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'NAME',
         'PEREFECTURES',
         'CITY',
         'STREET_ADDRESS',
