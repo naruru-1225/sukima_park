@@ -95,8 +95,8 @@
 
             {{-- 5. プロフィール編集 / 6. 自己保持土地一覧 --}}
             <div class="profile-actions">
-              <a href="#" class="btn btn-secondary">プロフィール編集</a>
-              <a href="#" class="btn btn-secondary">自己保持土地一覧</a>
+              <a href="{{ route('prof_custom') }}" class="btn btn-secondary">プロフィール編集</a>
+              <a href="{{ route('my_land_list') }}" class="btn btn-secondary">自己保持土地一覧</a>
             </div>
           </div>
         </div>
@@ -104,8 +104,8 @@
         {{-- 7. レンタル中一覧 / 8. 取引完了一覧 --}}
         <div class="container" style="padding-bottom: 24px">
           <div class="nav-quick">
-            <a href="#" class="nav-card">レンタル中一覧</a>
-            <a href="#" class="nav-card">取引完了一覧</a>
+            <a href="{{ route('rental_list') }}" class="nav-card">レンタル中一覧</a>
+            <a href="{{ route('trade_fin_list') }}" class="nav-card">取引完了一覧</a>
           </div>
         </div>
       </section>
@@ -115,7 +115,7 @@
         <div class="container">
           <div class="section-header">
             <h2 class="section-title">公開中の土地</h2>
-            <a href="#" class="btn btn-secondary" style="padding: 6px 14px">一覧を見る</a>
+            <a href="{{ route('my_land_list') }}" class="btn btn-secondary" style="padding: 6px 14px">一覧を見る</a>
           </div>
 
           {{-- 10-14. 公開中土地カード --}}
@@ -156,62 +156,33 @@
               例: 3件の土地があれば、土地カードが3枚表示される
             --}}
             @forelse($publicLands as $land)
-              <a href="#" class="card" style="text-decoration: none">
-                <button class="like-btn" onclick="this.classList.toggle('liked'); event.stopPropagation(); event.preventDefault();">♡</button>
-                {{-- 11. 土地写真 --}}
+              {{-- 
+                公開中土地カード（画面項目No.10）
+                クリックで土地詳細画面へ遷移（loan_detail）
+              --}}
+              <a href="{{ route('loan_detail', $land->LAND_ID) }}" class="card" style="text-decoration: none">
+                {{-- 画面項目No.11: 土地写真 --}}
                 <div class="card-image">
-                  {{-- 
-                    @if($land->IMAGE): 土地の画像パスがあるかチェック
-                    $landは現在ループ中のLandモデルインスタンス
-                  --}}
                   @if($land->IMAGE)
-                    {{-- 
-                      asset(): publicディレクトリへのパスを生成するヘルパー関数
-                      storage/土地画像パス のURLを生成
-                    --}}
                     <img src="{{ asset('storage/' . $land->IMAGE) }}" alt="{{ $land->CITY }}" style="width:100%;height:100%;object-fit:cover;">
                   @else
                     土地写真
                   @endif
                 </div>
                 <div class="card-body">
-                  {{-- 13. 土地住所 --}}
+                  {{-- 画面項目No.13: 土地住所 --}}
                   <div class="tag">
-                    {{-- 
-                      $prefectures[$land->PEREFECTURES]: 配列から都道府県名を取得
-                      ?? '': 該当するキーがない場合は空文字を返す
-                      $land->CITY: 市区町村名
-                    --}}
                     {{ $prefectures[$land->PEREFECTURES] ?? '' }}・{{ $land->CITY }}
                   </div>
-                  {{-- 12. 土地タイトル --}}
+                  {{-- 画面項目No.12: 土地タイトル --}}
                   <h3 class="card-title">
-                    {{-- 市区町村 + 番地を連結して表示 --}}
                     {{ $land->CITY }}{{ $land->STREET_ADDRESS }}
                   </h3>
-                  <p class="card-text">
-                    {{-- 
-                      Str::limit(): 文字列を指定文字数で切り詰める（Laravelヘルパー）
-                      第1引数: 対象文字列（nullなら'説明はありません'）
-                      第2引数: 最大文字数（40文字）
-                      40文字を超えると「...」が付加される
-                    --}}
-                    {{ Str::limit($land->DESCRIPTION ?? '説明はありません', 40) }}
-                  </p>
-                  {{-- 14. 土地料金 --}}
+                  {{-- 画面項目No.14: 土地料金 --}}
                   <div class="card-footer">
                     <span>
-                      {{-- 料金の表示ロジック --}}
                       @if($land->PRICE)
-                        {{-- 
-                          number_format(): 数値を3桁カンマ区切りで整形
-                          例: 12000 → 12,000
-                        --}}
                         ¥{{ number_format($land->PRICE) }}
-                        {{-- 
-                          PRICE_UNITによって単位を切り替え
-                          0: 日あたり, 1: 時間あたり, 2: 15分あたり
-                        --}}
                         @if($land->PRICE_UNIT == 0) / 日
                         @elseif($land->PRICE_UNIT == 1) / 時間
                         @elseif($land->PRICE_UNIT == 2) / 15分
@@ -219,10 +190,6 @@
                       @else
                         要相談
                       @endif
-                    </span>
-                    <span>
-                      {{-- ?? '-': AREAがnullの場合は'-'を表示 --}}
-                      面積: {{ $land->AREA ?? '-' }}㎡
                     </span>
                   </div>
                 </div>
