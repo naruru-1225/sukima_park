@@ -69,8 +69,51 @@ Route::get('/test-layout', function () {
  * ※開発用：認証なしでレンタル一覧を表示
  */
 Route::get('/test-rentals', function () {
-    // テスト用の空のコレクションを渡す
-    $rentals = collect([]);
+    // テスト用の仮データを作成
+    $rentals = collect([
+        (object)[
+            'RECORD_ID' => 1,
+            'PRICE' => 3000,
+            'PRICE_UNIT' => 0, // 0:日 1:時間 2:15分
+            'RENTAL_START_DATE' => now()->addDays(2),
+            'RENTAL_END_DATE' => now()->addDays(9),
+            'land' => (object)[
+                'LAND_ID' => 1,
+                'CITY' => '渋谷区',
+                'STREET_ADDRESS' => '神南1-2-3',
+                'AREA' => 25.50,
+                'IMAGE' => null,
+            ]
+        ],
+        (object)[
+            'RECORD_ID' => 2,
+            'PRICE' => 500,
+            'PRICE_UNIT' => 1,
+            'RENTAL_START_DATE' => now()->addDays(5),
+            'RENTAL_END_DATE' => now()->addDays(5),
+            'land' => (object)[
+                'LAND_ID' => 2,
+                'CITY' => '新宿区',
+                'STREET_ADDRESS' => '西新宿2-8-1',
+                'AREA' => 15.00,
+                'IMAGE' => null,
+            ]
+        ],
+        (object)[
+            'RECORD_ID' => 3,
+            'PRICE' => 5000,
+            'PRICE_UNIT' => 0,
+            'RENTAL_START_DATE' => now()->addDays(15),
+            'RENTAL_END_DATE' => now()->addDays(20),
+            'land' => (object)[
+                'LAND_ID' => 3,
+                'CITY' => '港区',
+                'STREET_ADDRESS' => '六本木6-10-1',
+                'AREA' => 30.00,
+                'IMAGE' => null,
+            ]
+        ],
+    ]);
     return view('rental_list', ['rentals' => $rentals]);
 });
 
@@ -140,4 +183,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
  */
 Route::get('/my-rentals', [RentalController::class, 'index'])
     ->name('rentals.index')
+    ->middleware('auth');
+
+/**
+ * レンタル詳細
+ * 
+ * URL: /my-rentals/{id}
+ * ミドルウェア: auth（ログイン必須）
+ * 
+ * レンタル記録の詳細情報を表示
+ */
+Route::get('/my-rentals/{id}', [RentalController::class, 'show'])
+    ->name('rentals.show')
     ->middleware('auth');

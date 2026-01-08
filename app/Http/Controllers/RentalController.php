@@ -69,4 +69,37 @@ class RentalController extends Controller
 
         return view('rental_list', ['rentals' => $rentals]);
     }
+
+    /**
+     * レンタル詳細を表示
+     * 
+     * 【処理内容】
+     * 1. レンタル記録IDを元にレンタル情報を取得
+     * 2. 自分のレンタル記録かチェック
+     * 3. rental_detail.blade.phpにデータを渡して表示
+     * 
+     * 【取得データ】
+     * $rental: レンタル記録の詳細
+     *   - RENTAL_RECORD_TABLEから取得
+     *   - 土地情報（LAND_TABLE）をリレーションで結合
+     * 
+     * @param int $id レンタル記録ID
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function show($id)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // レンタル記録を取得（自分のレンタルのみ）
+        $rental = RentalRecord::where('RECORD_ID', $id)
+            ->where('user_id', $user->id)
+            ->with('land')
+            ->firstOrFail();
+
+        return view('rental_detail', ['rental' => $rental]);
+    }
 }

@@ -14,15 +14,17 @@
 
 <div class="rental-card">
     <div class="rental-card-image">
-        @if($rental->land && $rental->land->image)
-            <img src="{{ asset('storage/' . $rental->land->image) }}" alt="{{ $rental->land->LAND_NAME ?? '土地' }}">
+        @if($rental->land && $rental->land->IMAGE)
+            <img src="{{ asset('storage/' . $rental->land->IMAGE) }}" alt="{{ $rental->land->CITY }} {{ $rental->land->STREET_ADDRESS }}">
         @else
-            📍 画像なし
+            <div style="background: #f0f0f0; height: 200px; display: flex; align-items: center; justify-content: center; font-size: 48px;">
+                📍
+            </div>
         @endif
     </div>
     <div class="rental-card-body">
         <h3 class="rental-card-title">
-            {{ $rental->land->LAND_NAME ?? '未指定の土地' }}
+            {{ $rental->land->CITY ?? '不明' }} {{ $rental->land->STREET_ADDRESS ?? '' }}
         </h3>
         <div class="rental-card-info">
             <div class="info-row">
@@ -33,15 +35,13 @@
                     {{ $rental->RENTAL_END_DATE->format('Y年m月d日') }}
                 </span>
             </div>
-            @if($rental->land && $rental->land->ADDRESS)
             <div class="info-row">
-                <span class="info-label">住所:</span>
-                <span class="info-value">{{ $rental->land->ADDRESS }}</span>
+                <span class="info-label">面積:</span>
+                <span class="info-value">{{ $rental->land->AREA ?? '不明' }}m²</span>
             </div>
-            @endif
         </div>
         <div class="rental-price">
-            ¥{{ number_format($rental->PRICE) }}/{{ $rental->PRICE_UNIT ?? '月' }}
+            ¥{{ number_format($rental->PRICE) }}/{{ ['日', '時間', '15分'][$rental->PRICE_UNIT] ?? '日' }}
         </div>
         <div class="rental-card-footer">
             <a href="{{ route('rentals.show', $rental->RECORD_ID) }}" class="btn btn-primary">詳細を見る</a>
