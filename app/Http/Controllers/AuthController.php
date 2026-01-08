@@ -120,7 +120,7 @@ class AuthController extends Controller
             'IDENTITY' => $identityPath ? true : false,
             'IDENTITY_IMAGE' => $identityPath,
             'ICON_IMAGE' => 'default_icon.png',
-            'ACCOUNT_STATUS' => 0,
+            'ACCOUNT_STATUS' => 1,
         ]);
 
         Auth::login($member);
