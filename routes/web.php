@@ -23,6 +23,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RentalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -61,6 +62,16 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
  */
 Route::get('/test-layout', function () {
     return view('test-layout');
+});
+
+/**
+ * レンタル一覧テストページ（認証なし）
+ * ※開発用：認証なしでレンタル一覧を表示
+ */
+Route::get('/test-rentals', function () {
+    // テスト用の空のコレクションを渡す
+    $rentals = collect([]);
+    return view('rental_list', ['rentals' => $rentals]);
 });
 
 
@@ -114,3 +125,19 @@ Route::middleware('guest')->group(function () {
  */
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
+
+// ============================================================
+// レンタル管理ルート
+// ============================================================
+
+/**
+ * レンタル中の土地一覧
+ * 
+ * URL: /my-rentals
+ * ミドルウェア: auth（ログイン必須）
+ * 
+ * ログインユーザーが現在借りている土地の一覧を表示
+ */
+Route::get('/my-rentals', [RentalController::class, 'index'])
+    ->name('rentals.index')
+    ->middleware('auth');
