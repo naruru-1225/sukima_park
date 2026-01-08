@@ -129,28 +129,28 @@ Route::get('/test-rentals', function () {
  * 自動的にホームにリダイレクトされます
  */
 Route::middleware('guest')->group(function () {
-    
+
     /**
      * ログインフォーム表示
      * URL: /login (GET)
      * 画面定義: login.csv
      */
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    
+
     /**
      * ログイン処理
      * URL: /login (POST)
      * フォームからのデータを受け取り認証を行う
      */
     Route::post('/login', [AuthController::class, 'login']);
-    
+
     /**
      * 会員登録フォーム表示
      * URL: /register (GET)
      * 画面定義: menber_register.csv
      */
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    
+
     /**
      * 会員登録処理
      * URL: /register (POST)
@@ -167,6 +167,7 @@ Route::middleware('guest')->group(function () {
  * セッションを破棄してログアウトする
  */
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
 
 
 // ============================================================
@@ -196,3 +197,16 @@ Route::get('/my-rentals', [RentalController::class, 'index'])
 Route::get('/my-rentals/{id}', [RentalController::class, 'show'])
     ->name('rentals.show')
     ->middleware('auth');
+
+//テスト用ルート
+
+Route::get('/test', function () {
+    // テスト用ダミーデータ
+    $users = collect([
+        (object) ['id' => 1, 'name' => '田中 太郎', 'email' => 'tanaka.taro@example.com', 'created_at' => now()->subDays(30)],
+        (object) ['id' => 2, 'name' => '佐藤 花子', 'email' => 'sato.hanako@example.com', 'created_at' => now()->subDays(60)],
+        (object) ['id' => 3, 'name' => '鈴木 一郎', 'email' => 'suzuki.ichiro@example.com', 'created_at' => now()->subDays(90)],
+    ]);
+    return view('user_list', compact('users'));
+});
+
