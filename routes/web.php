@@ -126,3 +126,25 @@ Route::get('/test', function () {
     ]);
     return view('user_list', compact('users'));
 });
+
+// ユーザ詳細画面テスト用ルート
+Route::get('/test-user-detail', function () {
+    // テスト用ダミーユーザーデータ
+    $user = (object) [
+        'id' => 1,
+        'login_id' => 'tanaka_taro',
+        'name' => '田中 太郎',
+        'email' => 'tanaka.taro@example.com',
+        'phone' => '090-1234-5678',
+        'birthday' => '1990-04-15',
+        'gender' => 'male',
+        'birthday_public' => 'private',
+        'gender_public' => 'public',
+        'status' => 'active',
+        'bio' => '都内在住のフリーランスエンジニアです。週末に空きスペースを探しています。',
+        'avatar' => null,
+        'created_at' => now()->subDays(30),
+        'updated_at' => now()->subDays(5),
+    ];
+    return view('user_detail', compact('user'));
+});
