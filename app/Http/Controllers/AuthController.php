@@ -62,6 +62,9 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        // 許可する拡張子リスト
+        $allowedExtensions = ['jpeg', 'jpg', 'png', 'heic'];
+
         $request->validate([
             'username' => 'required|string|max:255',
             'email' => 'required|email|unique:MEMBER_TABLE,EMAIL',
@@ -76,7 +79,34 @@ class AuthController extends Controller
             'tel' => 'nullable|string|max:20',
             'birth' => 'nullable|date',
             'gender' => 'nullable|integer|in:0,1,2',
+            'identification' => 'required|file|max:5120', // 5MB以下
         ]);
+
+        // 本人確認書類の処理
+        $identityPath = null;
+        if ($request->hasFile('identification')) {
+            $file = $request->file('identification');
+            $originalExtension = strtolower($file->getClientOriginalExtension());
+
+            // 拡張子チェック
+            if (!in_array($originalExtension, $allowedExtensions)) {
+                return back()->withErrors([
+                    'identification' => '許可されていないファイル形式です。jpeg, jpg, png, heicのみアップロード可能です。',
+                ])->withInput();
+            }
+
+            // ファイル名生成（ユニークなファイル名）
+            $fileName = uniqid('identity_') . '_' . time();
+
+            // HEIC形式の場合はJPGに変換
+            if ($originalExtension === 'heic') {
+                $identityPath = $this->convertHeicToJpg($file, $fileName);
+            } else {
+                // その他の形式はそのまま保存（拡張子は小文字に統一）
+                $newExtension = ($originalExtension === 'jpeg') ? 'jpg' : $originalExtension;
+                $identityPath = $file->storeAs('identifications', $fileName . '.' . $newExtension, 'public');
+            }
+        }
 
         $member = Member::create([
             'USERNAME' => $request->username,
@@ -87,7 +117,8 @@ class AuthController extends Controller
             'GENDER' => $request->gender ?? 0,
             'SHOW_BIRTH' => false,
             'SHOW_GENDER' => false,
-            'IDENTITY' => false,
+            'IDENTITY' => $identityPath ? true : false,
+            'IDENTITY_IMAGE' => $identityPath,
             'ICON_IMAGE' => 'default_icon.png',
             'ACCOUNT_STATUS' => 0,
         ]);
@@ -95,6 +126,47 @@ class AuthController extends Controller
         Auth::login($member);
 
         return redirect('/')->with('success', '会員登録が完了しました！');
+    }
+
+    /**
+     * HEIC形式の画像をJPGに変換
+     *
+     * @param \Illuminate\Http\UploadedFile $file
+     * @param string $fileName
+     * @return string 保存されたファイルパス
+     */
+    private function convertHeicToJpg($file, $fileName)
+    {
+        $destinationPath = storage_path('app/public/identifications');
+        
+        // ディレクトリが存在しない場合は作成
+        if (!file_exists($destinationPath)) {
+            mkdir($destinationPath, 0755, true);
+        }
+
+        $outputPath = $destinationPath . '/' . $fileName . '.jpg';
+
+        // ImageMagickを使用してHEICをJPGに変換
+        if (extension_loaded('imagick')) {
+            $imagick = new \Imagick();
+            $imagick->readImage($file->getPathname());
+            $imagick->setImageFormat('jpg');
+            $imagick->setImageCompressionQuality(85);
+            $imagick->writeImage($outputPath);
+            $imagick->destroy();
+        } else {
+            // ImageMagickがない場合はコマンドラインで変換を試みる
+            $inputPath = $file->getPathname();
+            $command = "magick convert \"{$inputPath}\" \"{$outputPath}\"";
+            exec($command, $output, $returnCode);
+
+            if ($returnCode !== 0) {
+                // 変換に失敗した場合はエラー
+                throw new \Exception('HEIC画像の変換に失敗しました。ImageMagickがインストールされているか確認してください。');
+            }
+        }
+
+        return 'identifications/' . $fileName . '.jpg';
     }
 
     /**

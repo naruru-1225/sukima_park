@@ -1,3 +1,8 @@
+@extends('layouts.app')
+
+@section('title', '会員登録')
+
+@section('content')
 <style>
       :root {
         --primary-color: #2e7d32;
@@ -294,7 +299,8 @@
               登録が完了しました！
             </div>
 
-            <form id="registrationForm" novalidate>
+            <form id="registrationForm" method="POST" action="{{ route('register') }}" enctype="multipart/form-data" novalidate>
+              @csrf
               <div class="form-group">
                 <label for="loginId"
                   >ログインID<span class="required">必須</span></label
@@ -424,12 +430,13 @@
                 <input
                   type="file"
                   id="identification"
+                  name="identification"
                   class="form-control"
                   required
-                  accept="image/*,.pdf"
+                  accept=".jpg,.jpeg,.png,.heic"
                 />
                 <p class="form-control-hint">
-                  運転免許証、マイナンバーカード、パスポートなどの画像（最大5MB）
+                  jpeg, jpg, png, heic形式の画像（最大5MB）
                 </p>
                 <p class="error-message" id="identificationError"></p>
               </div>
@@ -566,13 +573,21 @@
 
         // 本人確認書類
         const identification = document.getElementById("identification");
+        const allowedExtensions = ['jpg', 'jpeg', 'png', 'heic'];
         if (!identification.files || identification.files.length === 0) {
           showError("identification", "本人確認書類をアップロードしてください");
           isValid = false;
         } else {
           const file = identification.files[0];
           const maxSize = 5 * 1024 * 1024; // 5MB
-          if (file.size > maxSize) {
+          const fileName = file.name.toLowerCase();
+          const extension = fileName.split('.').pop();
+          
+          // 拡張子チェック
+          if (!allowedExtensions.includes(extension)) {
+            showError("identification", "jpeg, jpg, png, heic形式のみアップロード可能です");
+            isValid = false;
+          } else if (file.size > maxSize) {
             showError("identification", "ファイルサイズは5MB以下にしてください");
             isValid = false;
           }
@@ -606,3 +621,4 @@
         }
       });
     </script>
+@endsection
