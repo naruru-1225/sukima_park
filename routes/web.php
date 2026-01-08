@@ -127,6 +127,8 @@ Route::get('/test', function () {
     return view('user_list', compact('users'));
 });
 
+
+
 // ユーザ詳細画面テスト用ルート
 Route::get('/test-user-detail', function () {
     // テスト用ダミーユーザーデータ
