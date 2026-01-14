@@ -95,8 +95,8 @@
 
               {{-- アクションボタン --}}
               <div class="card-actions">
-                <a href="{{ url('/admin/users/' . $user->id) }}" class="btn btn-secondary">詳細</a>
-                <a href="{{ url('/admin/users/' . $user->id . '/edit') }}" class="btn btn-primary">編集</a>
+                <a href="{{ url('/admin/users/' . $user->USER_ID) }}" class="btn btn-secondary">詳細</a>
+                <a href="{{ url('/admin/users/' . $user->USER_ID . '/edit') }}" class="btn btn-primary">編集</a>
               </div>
             </div>
           @empty

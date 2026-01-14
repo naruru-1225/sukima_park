@@ -27,6 +27,8 @@ use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
 use App\Http\Controllers\MyLandListController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserListController;
+use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\RentalController;
 use Illuminate\Support\Facades\Route;
 
@@ -94,6 +96,25 @@ Route::middleware('auth')->group(function () {
 
 
 // ============================================================
+// 管理者向けユーザー管理ルート
+// ============================================================
+
+Route::middleware('auth')->group(function () {
+    // ユーザー一覧
+    Route::get('/admin/users', [UserListController::class, 'index'])->name('admin.users.index');
+
+    // ユーザー詳細
+    Route::get('/admin/users/{id}', [UserDetailController::class, 'show'])->name('admin.users.show');
+
+    // ユーザー更新
+    Route::put('/admin/users/{id}', [UserDetailController::class, 'update'])->name('admin.users.update');
+
+    // ユーザー削除
+    Route::delete('/admin/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.users.destroy');
+});
+
+
+// ============================================================
 // 公開ビュー確認用ルート（認証不要）
 // ============================================================
 
@@ -136,13 +157,13 @@ Route::get('/test-layout', function () {
 // レンタル一覧テスト
 Route::get('/test-rentals', function () {
     $rentals = collect([
-        (object)[
+        (object) [
             'RECORD_ID' => 1,
             'PRICE' => 3000,
             'PRICE_UNIT' => 0,
             'RENTAL_START_DATE' => now()->addDays(2),
             'RENTAL_END_DATE' => now()->addDays(9),
-            'land' => (object)[
+            'land' => (object) [
                 'LAND_ID' => 1,
                 'CITY' => '渋谷区',
                 'STREET_ADDRESS' => '神南1-2-3',
