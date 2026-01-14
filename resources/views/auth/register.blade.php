@@ -3,6 +3,8 @@
 @section('title', '会員登録')
 
 @section('content')
+
+
 <style>
       :root {
         --primary-color: #2e7d32;
