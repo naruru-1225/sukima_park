@@ -66,6 +66,7 @@ class Member extends Authenticatable
         'GENDER',             // 性別（0:未設定, 1:男性, 2:女性）
         'SHOW_GENDER',        // 性別を公開するか
         'IDENTITY',           // 本人確認済みフラグ
+        'IDENTITY_IMAGE',     // 本人確認書類の画像パス
         'USERNAME',           // ユーザー名（表示名）
         'SELF_INTRODUCTION',  // 自己紹介文
         'ICON_IMAGE',         // プロフィール画像のパス

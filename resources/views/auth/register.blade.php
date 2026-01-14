@@ -373,6 +373,18 @@
               登録が完了しました！
             </div>
 
+            {{-- サーバー側バリデーションエラー表示 --}}
+            @if ($errors->any())
+            <div style="background: #ffebee; color: #c62828; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+              <strong>エラーが発生しました：</strong>
+              <ul style="margin: 8px 0 0 20px;">
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+            @endif
+
             {{--
               会員登録フォーム
               - method="POST": データをPOSTで送信
@@ -393,6 +405,7 @@
                 <input
                   type="text"
                   id="loginId"
+                  name="username"
                   class="form-control"
                   placeholder="例: sukimapark_user"
                   required
@@ -400,6 +413,7 @@
                   minlength="4"
                   maxlength="20"
                   autocomplete="username"
+                  value="{{ old('username') }}"
                 />
                 <p class="form-control-hint">
                   4〜20文字の半角英数記号（_）が使えます
@@ -415,10 +429,12 @@
                 <input
                   type="email"
                   id="email"
+                  name="email"
                   class="form-control"
                   placeholder="例: user@example.com"
                   required
                   autocomplete="email"
+                  value="{{ old('email') }}"
                 />
                 <p class="error-message" id="emailError"></p>
               </div>
@@ -431,6 +447,7 @@
                 <input
                   type="password"
                   id="password"
+                  name="password"
                   class="form-control"
                   placeholder="8文字以上の半角英数字"
                   required
@@ -449,6 +466,7 @@
                 <input
                   type="password"
                   id="passwordConfirm"
+                  name="password_confirmation"
                   class="form-control"
                   placeholder="もう一度パスワードを入力してください"
                   required
@@ -466,11 +484,13 @@
                 <input
                   type="tel"
                   id="phone"
+                  name="tel"
                   class="form-control"
                   placeholder="例: 09012345678（ハイフンなし）"
                   required
                   pattern="[0-9]{10,11}"
                   autocomplete="tel"
+                  value="{{ old('tel') }}"
                 />
                 <p class="form-control-hint">
                   10〜11桁の数字で入力してください
@@ -486,10 +506,12 @@
                 <input
                   type="date"
                   id="birthdate"
+                  name="birth"
                   class="form-control"
                   required
                   max=""
                   autocomplete="bday"
+                  value="{{ old('birth') }}"
                 />
                 <p class="error-message" id="birthdateError"></p>
               </div>
