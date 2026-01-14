@@ -1,43 +1,55 @@
 <?php
-
 /**
  * ============================================================
- * アプリ全体シーダー (DatabaseSeeder.php)
+ * データベースシーダー (DatabaseSeeder.php)
  * ============================================================
- * 個別テーブルのシーダーを順序通りに呼び出すエントリーポイント。
- * 外部キー制約を一時的に無効化して truncate の順序依存を回避します。
- *
+ * 
+ * アプリケーション全体のテストデータを一括登録するメインシーダー
+ * 
  * 【使い方】
  * docker compose exec laravel.test php artisan db:seed
- *
+ * 
+ * 【実行内容】
+ * 以下のシーダーを順番に実行します：
+ * 1. TestUserSeeder     - テストユーザー（1件）
+ * 2. TestLandSeeder     - テスト用土地データ（5件）
+ * 3. TestRentalSeeder   - レンタル記録（3件）+ レビュー（2件）
+ * 
  * 【注意】
+ * - 開発環境でのみ使用してください
  * - 本番環境では実行しないでください
- * - 既存データは各シーダーで truncate されます
+ * - データベースをリセットする場合: php artisan migrate:fresh --seed
+ * 
  * ============================================================
  */
 
 namespace Database\Seeders;
 
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
+    use WithoutModelEvents;
+
+    /**
+     * アプリケーション全体のテストデータを登録
+     * 
+     * 【実行順序の重要性】
+     * - TestUserSeeder を最初に実行（USER_ID=1を作成）
+     * - TestLandSeeder でそのユーザーの土地を作成
+     * - TestRentalSeeder でレンタル記録とレビューを作成
+     * 
+     * この順序を変えると外部キー制約エラーが発生します
+     */
     public function run(): void
     {
-        Schema::disableForeignKeyConstraints();
-
-        // 基本テーブルを順序通りに投入
+        // 各シーダーを順番に実行
         $this->call([
-            MemberTableSeeder::class,
-            LandTableSeeder::class,
-            ContactTableSeeder::class,
-            ReplyTableSeeder::class,
-            RentalRecordTableSeeder::class,
-            ReviewCommentTableSeeder::class,
-            ChatTableSeeder::class,
+            TestUserSeeder::class,    // ① ユーザー作成
+            TestLandSeeder::class,    // ② 土地データ作成（USER_ID=1の土地）
+            TestRentalSeeder::class,  // ③ レンタル記録とレビュー作成
         ]);
-
-        Schema::enableForeignKeyConstraints();
     }
 }
