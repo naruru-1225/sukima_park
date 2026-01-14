@@ -22,10 +22,12 @@
  */
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
 use App\Http\Controllers\MyLandListController;
+use App\Http\Controllers\SearchListController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RentalController;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +56,32 @@ use Illuminate\Support\Facades\Route;
  * 画面定義: index.csv
  */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// ============================================================
+// 土地検索ルート
+// ============================================================
+
+/**
+ * 土地検索結果一覧
+ * 
+ * URL: /lands
+ * コントローラー: SearchListController@index
+ * ルート名: lands.index
+ * 
+ * 画面定義: search_list.csv
+ */
+Route::get('/lands', [SearchListController::class, 'index'])->name('lands.index');
+
+/**
+ * 土地詳細画面
+ * 
+ * URL: /lands/{id}
+ * コントローラー: SearchListController@show
+ * ルート名: lands.show
+ * 
+ * 画面定義: land_detail.csv
+ */
+Route::get('/lands/{id}', [SearchListController::class, 'show'])->name('lands.show');
 
 
 // ============================================================
@@ -92,13 +120,13 @@ Route::get('/test-login', function () {
 Route::get('/test-rentals', function () {
     // テスト用の仮データを作成
     $rentals = collect([
-        (object)[
+        (object) [
             'RECORD_ID' => 1,
             'PRICE' => 3000,
             'PRICE_UNIT' => 0, // 0:日 1:時間 2:15分
             'RENTAL_START_DATE' => now()->addDays(2),
             'RENTAL_END_DATE' => now()->addDays(9),
-            'land' => (object)[
+            'land' => (object) [
                 'LAND_ID' => 1,
                 'CITY' => '渋谷区',
                 'STREET_ADDRESS' => '神南1-2-3',
@@ -106,13 +134,13 @@ Route::get('/test-rentals', function () {
                 'IMAGE' => null,
             ]
         ],
-        (object)[
+        (object) [
             'RECORD_ID' => 2,
             'PRICE' => 500,
             'PRICE_UNIT' => 1,
             'RENTAL_START_DATE' => now()->addDays(5),
             'RENTAL_END_DATE' => now()->addDays(5),
-            'land' => (object)[
+            'land' => (object) [
                 'LAND_ID' => 2,
                 'CITY' => '新宿区',
                 'STREET_ADDRESS' => '西新宿2-8-1',
@@ -120,13 +148,13 @@ Route::get('/test-rentals', function () {
                 'IMAGE' => null,
             ]
         ],
-        (object)[
+        (object) [
             'RECORD_ID' => 3,
             'PRICE' => 5000,
             'PRICE_UNIT' => 0,
             'RENTAL_START_DATE' => now()->addDays(15),
             'RENTAL_END_DATE' => now()->addDays(20),
-            'land' => (object)[
+            'land' => (object) [
                 'LAND_ID' => 3,
                 'CITY' => '港区',
                 'STREET_ADDRESS' => '六本木6-10-1',
@@ -243,7 +271,7 @@ Route::view('/test-design', 'login', ['EMAIL' => 'email@example.com', 'PASSWORD'
  * 自動的にログイン画面にリダイレクトされます
  */
 Route::middleware('auth')->group(function () {
-    
+
     /**
      * マイページ
      * URL: /mypage (GET)
@@ -329,6 +357,22 @@ Route::middleware('auth')->group(function () {
     Route::get('/trade_fin_list', function () {
         return '取引完了一覧画面（未実装）';
     })->name('trade_fin_list');
+
+    /**
+     * お問い合わせフォーム表示
+     * URL: /contact (GET)
+     * コントローラー: ContactController@showForm
+     * ルート名: contact.form
+     */
+    Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
+
+    /**
+     * お問い合わせ送信処理
+     * URL: /contact (POST)
+     * コントローラー: ContactController@store
+     * ルート名: contact
+     */
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact');
 });
 
 
