@@ -1,107 +1,133 @@
 <?php
 
+/**
+ * ============================================================
+ * 認証設定ファイル (auth.php)
+ * ============================================================
+ * 
+ * 【このファイルの役割】
+ * Laravelの認証（ログイン）機能の設定を管理します。
+ * 
+ * 【主な設定項目】
+ * - デフォルトの認証ガード（認証方法）
+ * - ユーザープロバイダー（ユーザー情報の取得元）
+ * - パスワードリセット設定
+ * - Remember Me機能の設定
+ * 
+ * ============================================================
+ */
+
 return [
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Defaults
+    | 認証のデフォルト設定
     |--------------------------------------------------------------------------
     |
-    | This option defines the default authentication "guard" and password
-    | reset "broker" for your application. You may change these values
-    | as required, but they're a perfect start for most applications.
+    | アプリケーションのデフォルトの認証「ガード」とパスワード
+    | リセット「ブローカー」を定義します。必要に応じてこれらの値は
+    | 変更可能です。
+    |
+    | 【用語解説】
+    | - guard: 認証方法を管理する仕組み（例: セッション、トークン）
+    | - passwords: パスワードリセット機能の設定名
     |
     */
 
     'defaults' => [
+        // デフォルトのガード名 (.envのAUTH_GUARDで上書き可能)
         'guard' => env('AUTH_GUARD', 'web'),
+        // デフォルトのパスワードリセット設定名
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Authentication Guards
+    | 認証ガード設定
     |--------------------------------------------------------------------------
     |
-    | Next, you may define every authentication guard for your application.
-    | Of course, a great default configuration has been defined for you
-    | which utilizes session storage plus the Eloquent user provider.
+    | アプリケーションで使用するすべての認証ガードを定義します。
+    | デフォルト設定として、セッションストレージとEloquentユーザー
+    | プロバイダーを利用する設定が用意されています。
     |
-    | All authentication guards have a user provider, which defines how the
-    | users are actually retrieved out of your database or other storage
-    | system used by the application. Typically, Eloquent is utilized.
+    | 【用語解説】
+    | - driver: 認証状態の保存方法（session = セッションに保存）
+    | - provider: ユーザー情報の取得元（下記のprovidersで定義）
     |
-    | Supported: "session"
+    | サポートされるドライバー: "session"
     |
     */
 
     'guards' => [
+        // Webアプリケーション用のガード（ブラウザからのアクセス用）
         'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+            'driver' => 'session',      // セッションを使用して認証状態を管理
+            'provider' => 'users',      // 下記のprovidersの'users'を参照
         ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | User Providers
+    | ユーザープロバイダー設定
     |--------------------------------------------------------------------------
     |
-    | All authentication guards have a user provider, which defines how the
-    | users are actually retrieved out of your database or other storage
-    | system used by the application. Typically, Eloquent is utilized.
+    | すべての認証ガードにはユーザープロバイダーがあり、データベースや
+    | その他のストレージからユーザー情報を取得する方法を定義します。
+    | 通常はEloquent（LaravelのORM）が使用されます。
     |
-    | If you have multiple user tables or models you may configure multiple
-    | providers to represent the model / table. These providers may then
-    | be assigned to any extra authentication guards you have defined.
+    | 複数のユーザーテーブルやモデルがある場合は、複数のプロバイダーを
+    | 設定できます。
     |
-    | Supported: "database", "eloquent"
+    | 【用語解説】
+    | - driver: ユーザー取得方法（eloquent = Eloquentモデルを使用）
+    | - model: 認証に使用するモデルクラス
+    |
+    | サポートされるドライバー: "database", "eloquent"
     |
     */
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Member::class,
+            'driver' => 'eloquent',                  // Eloquentを使用
+            'model' => App\Models\Member::class,     // 会員モデルを認証ユーザーとして使用
         ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Resetting Passwords
+    | パスワードリセット設定
     |--------------------------------------------------------------------------
     |
-    | These configuration options specify the behavior of Laravel's password
-    | reset functionality, including the table utilized for token storage
-    | and the user provider that is invoked to actually retrieve users.
+    | パスワードリセット機能の動作を設定します。トークン保存用のテーブル、
+    | ユーザーを取得するプロバイダー、トークンの有効期限などを指定します。
     |
-    | The expiry time is the number of minutes that each reset token will be
-    | considered valid. This security feature keeps tokens short-lived so
-    | they have less time to be guessed. You may change this as needed.
-    |
-    | The throttle setting is the number of seconds a user must wait before
-    | generating more password reset tokens. This prevents the user from
-    | quickly generating a very large amount of password reset tokens.
+    | 【設定項目】
+    | - provider: ユーザー取得に使用するプロバイダー
+    | - table: パスワードリセットトークンを保存するテーブル
+    | - expire: トークンの有効期限（分単位）
+    | - throttle: 次のトークン発行までの待機時間（秒単位）
     |
     */
 
     'passwords' => [
         'users' => [
-            'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
+            'provider' => 'users',                                        // 使用するプロバイダー
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'), // トークン保存テーブル
+            'expire' => 60,                                               // トークン有効期限: 60分
+            'throttle' => 60,                                             // 連続発行制限: 60秒
         ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Password Confirmation Timeout
+    | パスワード確認タイムアウト
     |--------------------------------------------------------------------------
     |
-    | Here you may define the number of seconds before a password confirmation
-    | window expires and users are asked to re-enter their password via the
-    | confirmation screen. By default, the timeout lasts for three hours.
+    | パスワード確認画面の有効期限を秒単位で定義します。
+    | この時間が経過すると、ユーザーは再度パスワードを入力する
+    | 必要があります。デフォルトは3時間です。
+    |
+    | 10800秒 = 3時間
     |
     */
 
@@ -109,12 +135,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Remember Me Cookie Duration
+    | Remember Me（ログイン状態を保持する）機能のCookie有効期限
     |--------------------------------------------------------------------------
     |
-    | 「ログイン状態を保持する」チェックボックスを選択した場合の
-    | Cookieの有効期限を分単位で指定します。
-    | 30日 = 30 x 24 x 60 = 43200分
+    | ログイン画面の「ログイン状態を保持する」チェックボックスを
+    | 選択した場合に設定されるCookieの有効期限を分単位で指定します。
+    |
+    | 【計算式】
+    | 30日 = 30日 x 24時間 x 60分 = 43200分
+    |
+    | 【動作】
+    | チェックを入れてログインした場合、ブラウザを閉じても
+    | 30日間はログイン状態が維持されます。
     |
     */
 

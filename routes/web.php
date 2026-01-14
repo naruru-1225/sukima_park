@@ -225,6 +225,12 @@ Route::middleware('guest')->group(function () {
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
 
+// ============================================================
+// 開発用ルート（本番前に削除）
+// ============================================================
+
+// データを渡して確認したい場合
+Route::view('/test-design', 'login', ['EMAIL' => 'email@example.com', 'PASSWORD' => 'password']);
 
 // ============================================================
 // ユーザー関連ルート（ログイン必須）
