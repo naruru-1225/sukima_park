@@ -152,7 +152,7 @@ Route::get('/test-rentals', function () {
         ],
     ]);
     return view('rental_list', ['rentals' => $rentals, 'detailRoute' => 'dev.rental-detail']);
-});
+})->name('test-rentals');
 
 // レンタル詳細テスト
 Route::get('/dev/rental-detail', function () {
