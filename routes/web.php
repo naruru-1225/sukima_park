@@ -22,175 +22,88 @@
  */
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\LandDetailController;
-use App\Http\Controllers\LandController;
 use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
 use App\Http\Controllers\MyLandListController;
 use App\Http\Controllers\SearchListController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\UserListController;
-use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\RentalController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\ContactListController;
-use App\Http\Controllers\ContactDetailController;
-use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| ここでアプリケーションのWebルートを定義します。
+| これらのルートはRouteServiceProviderによってロードされます。
+|
 */
 
 // ============================================================
-// トップ画面
+// トップ画面ルート
 // ============================================================
 
+/**
+ * トップ画面（index.php相当）
+ * 
+ * URL: /
+ * コントローラー: HomeController@index
+ * ルート名: home
+ * 
+ * 画面定義: index.csv
+ */
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-
 // ============================================================
-// 認証ルート（ログイン・会員登録・ログアウト）
-// ============================================================
-
-// ゲスト（未ログイン）のみアクセス可能
-Route::middleware('guest')->group(function () {
-    // ログイン
-    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
-
-    // 会員登録
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
-});
-
-// ログアウト
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
-
-
-// ============================================================
-// ユーザー関連ルート（ログイン必須）
+// 土地検索ルート
 // ============================================================
 
-Route::middleware('auth')->group(function () {
-
-    // --- マイページ ---
-    // --- マイページ ---
-    Route::get('/mypage/{id?}', [UserController::class, 'mypage'])->name('mypage');
-
-    // --- プロフィール編集 ---
-    Route::get('/prof_custom', function () {
-        $user = \Illuminate\Support\Facades\Auth::user();
-        return view('profile_edit_screen', compact('user'));
-    })->name('prof_custom');
-
-    // プロフィール確認画面
-    Route::get('/profile/confirm', function () {
-        $user = \Illuminate\Support\Facades\Auth::user();
-        return view('profile_comfirmation_screen', compact('user'));
-    })->name('profile.confirm');
-
-    // --- 土地管理 ---
-    Route::get('/my_land_list', [MyLandListController::class, 'index'])->name('my_land_list');
-    Route::get('/loan_detail/{id}', [LoanDetailController::class, 'show'])->name('loan_detail');
-    Route::get('/land_public/{id}', [LandPublicController::class, 'edit'])->name('land_public');
-    Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
-
-    // --- 土地登録 ---
-    Route::get('/land/register', [LandController::class, 'showRegisterForm'])->name('land.register');
-    Route::post('/land/register', [LandController::class, 'register']);
-    Route::get('/land/register/confirm', [LandController::class, 'showConfirm'])->name('land.register.confirm');
-    Route::post('/land/register/store', [LandController::class, 'store'])->name('land.register.store');
-
-    // --- レンタル一覧（借りている土地一覧） ---
-    Route::get('/rental_list', [RentalController::class, 'index'])->name('rental_list');
-    Route::get('/rental_list/{id}', [RentalController::class, 'show'])->name('rental_list.show');
-
-    // --- 取引完了一覧 ---
-    Route::get('/trade_fin_list', [RentalController::class, 'completedList'])->name('trade_fin_list');
-    Route::get('/trade_detail/{recordId}', [App\Http\Controllers\TradeDetailController::class, 'show'])->name('trade.detail');
-
-    // レンタル履歴の別名ルート
-    Route::get('/rental/history', [RentalController::class, 'completedList'])->name('rental.history');
-
-    // --- レビュー関連 ---
-    Route::get('/review/{recordId}', [ReviewController::class, 'create'])->name('review.create');
-    Route::post('/review/store/{recordId}', [ReviewController::class, 'store'])->name('review.store');
-
-    // --- メッセージ ---
-    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
-    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
-    Route::get('/messages/search', [MessageController::class, 'search'])->name('messages.search');
-    Route::get('/messages/{partnerId}', [MessageController::class, 'show'])->name('messages.show');
-    Route::get('/messages/{partnerId}/poll', [MessageController::class, 'poll'])->name('messages.poll');
-    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
-});
-
-
-// ============================================================
-// 管理者専用ルート（ACCOUNT_STATUS = 2 のみアクセス可能）
-// ============================================================
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    // --- ユーザー管理 ---
-    Route::get('/users', [UserListController::class, 'index'])->name('admin.users.index');
-    Route::get('/users/{id}', [UserDetailController::class, 'show'])->name('admin.users.show');
-    Route::put('/users/{id}', [UserDetailController::class, 'update'])->name('admin.users.update');
-    Route::delete('/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.users.destroy');
-
-    // --- 問い合わせ管理 ---
-    Route::get('/contacts', [ContactListController::class, 'index'])->name('admin.contacts.index');
-    Route::get('/contacts/{id}', [ContactDetailController::class, 'show'])->name('admin.contacts.show');
-    Route::put('/contacts/{id}/status', [ContactDetailController::class, 'updateStatus'])->name('admin.contacts.updateStatus');
-    Route::post('/contacts/{id}/reply', [ContactDetailController::class, 'reply'])->name('admin.contacts.reply');
-});
-
-
-// ============================================================
-// 公開ビュー確認用ルート（認証不要）
-// ============================================================
-
-// 土地検索結果一覧（SearchListControllerで処理）
+/**
+ * 土地検索結果一覧
+ * 
+ * URL: /lands
+ * コントローラー: SearchListController@index
+ * ルート名: lands.index
+ * 
+ * 画面定義: search_list.csv
+ */
 Route::get('/lands', [SearchListController::class, 'index'])->name('lands.index');
-Route::get('/lands/{id}', [LandDetailController::class, 'show'])->name('lands.show');
 
-// レンタル確認画面（ログイン必須）
-Route::middleware('auth')->group(function () {
-    Route::get('/rental/confirm/{id}', function ($id) {
-        $land = \App\Models\Land::with('owner')->findOrFail($id);
-        return view('rental_confirm', [
-            'land' => $land,
-            'time_start' => request('time_start'),
-            'time_end' => request('time_end'),
-        ]);
-    })->name('rental.confirm');
-});
-
-// 土地検索結果（レガシールート - 互換性のため残す）
-Route::get('/search', function () {
-    return view('search_list', ['lands' => collect([])]);
-})->name('search');
-
-// お問い合わせフォーム
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
-
-// ユーザー詳細（他ユーザープロフィール）
-Route::get('/users/{id}', function ($id) {
-    $user = \App\Models\Member::findOrFail($id);
-    return view('user_detail', compact('user'));
-})->name('user.show');
+/**
+ * 土地詳細画面
+ * 
+ * URL: /lands/{id}
+ * コントローラー: SearchListController@show
+ * ルート名: lands.show
+ * 
+ * 画面定義: land_detail.csv
+ */
+Route::get('/lands/{id}', [SearchListController::class, 'show'])->name('lands.show');
 
 
 // ============================================================
 // 開発用ルート（本番前に削除）
 // ============================================================
 
-// テストログイン
+/**
+ * レイアウト確認用テストページ
+ * ※開発完了後は削除してください
+ */
+Route::get('/test-layout', function () {
+    return view('test-layout');
+});
+
+/**
+
+ * テストログイン（開発用）
+ * URL: /test-login
+ * 
+ * データベースの最初のユーザーで自動ログインする
+ * ※開発完了後は必ず削除してください
+ */
 Route::get('/test-login', function () {
     $user = \App\Models\Member::first();
     if ($user) {
@@ -200,18 +113,17 @@ Route::get('/test-login', function () {
     return 'ユーザーが存在しません。php artisan db:seed --class=TestUserSeeder を実行してください。';
 });
 
-// レイアウト確認
-Route::get('/test-layout', function () {
-    return view('test-layout');
-});
-
-// レンタル一覧テスト
+/**
+ * レンタル一覧テストページ（認証なし）
+ * ※開発用：認証なしでレンタル一覧を表示
+ */
 Route::get('/test-rentals', function () {
+    // テスト用の仮データを作成
     $rentals = collect([
         (object) [
             'RECORD_ID' => 1,
             'PRICE' => 3000,
-            'PRICE_UNIT' => 0,
+            'PRICE_UNIT' => 0, // 0:日 1:時間 2:15分
             'RENTAL_START_DATE' => now()->addDays(2),
             'RENTAL_END_DATE' => now()->addDays(9),
             'land' => (object) [
@@ -222,16 +134,50 @@ Route::get('/test-rentals', function () {
                 'IMAGE' => null,
             ]
         ],
+        (object) [
+            'RECORD_ID' => 2,
+            'PRICE' => 500,
+            'PRICE_UNIT' => 1,
+            'RENTAL_START_DATE' => now()->addDays(5),
+            'RENTAL_END_DATE' => now()->addDays(5),
+            'land' => (object) [
+                'LAND_ID' => 2,
+                'CITY' => '新宿区',
+                'STREET_ADDRESS' => '西新宿2-8-1',
+                'AREA' => 15.00,
+                'IMAGE' => null,
+            ]
+        ],
+        (object) [
+            'RECORD_ID' => 3,
+            'PRICE' => 5000,
+            'PRICE_UNIT' => 0,
+            'RENTAL_START_DATE' => now()->addDays(15),
+            'RENTAL_END_DATE' => now()->addDays(20),
+            'land' => (object) [
+                'LAND_ID' => 3,
+                'CITY' => '港区',
+                'STREET_ADDRESS' => '六本木6-10-1',
+                'AREA' => 30.00,
+                'IMAGE' => null,
+            ]
+        ],
     ]);
-    return view('rental_list', ['rentals' => $rentals, 'detailRoute' => 'dev.rental-detail']);
+    return view('rental_list', [
+        'rentals' => $rentals,
+        'detailRoute' => 'dev.rental-detail',
+    ]);
 });
 
-// レンタル詳細テスト
+/**
+ * レンタル詳細モック（認証なし）
+ * 開発用：UI確認のみ。実データ・認証不要。
+ */
 Route::get('/dev/rental-detail', function () {
     $rental = (object) [
         'RECORD_ID' => 1,
         'PRICE' => 3000,
-        'PRICE_UNIT' => 0,
+        'PRICE_UNIT' => 0, // 0:日 1:時間 2:15分
         'RENTAL_START_DATE' => now()->addDays(2),
         'RENTAL_END_DATE' => now()->addDays(7),
         'RENTAL_START_TIME' => now()->setTime(8, 0),
@@ -244,24 +190,237 @@ Route::get('/dev/rental-detail', function () {
         ],
         'review' => (object) [
             'RATING' => 5,
-            'COMMENT' => 'テストレビューです。',
+            'COMMENT' => 'テストレビューです。UI確認用のダミーです。',
             'created_at' => now()->subDay(),
         ],
     ];
-    return view('rental_detail', ['rental' => $rental, 'backRoute' => 'test-rentals']);
+
+    return view('rental_detail', [
+        'rental' => $rental,
+        'backRoute' => 'test-rentals',
+    ]);
 })->name('dev.rental-detail');
 
-// ユーザー一覧テスト
-Route::get('/test-users', function () {
+
+// ============================================================
+// 認証ルート（ログイン・会員登録）
+// ============================================================
+
+/**
+ * ゲスト（未ログイン）のみアクセス可能なルート
+ * 
+ * ログイン済みユーザーがアクセスした場合は
+ * 自動的にホームにリダイレクトされます
+ */
+Route::middleware('guest')->group(function () {
+
+    /**
+     * ログインフォーム表示
+     * URL: /login (GET)
+     * 画面定義: login.csv
+     */
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
+    /**
+     * ログイン処理
+     * URL: /login (POST)
+     * フォームからのデータを受け取り認証を行う
+     */
+    Route::post('/login', [AuthController::class, 'login']);
+
+    /**
+     * 会員登録フォーム表示
+     * URL: /register (GET)
+     * 画面定義: menber_register.csv
+     */
+    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+
+    /**
+     * 会員登録処理
+     * URL: /register (POST)
+     * フォームからのデータを受け取り会員を登録する
+     */
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
+/**
+ * ログアウト処理
+ * URL: /logout (POST)
+ * 
+ * 認証済み（auth）のみアクセス可能
+ * セッションを破棄してログアウトする
+ */
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+
+
+// ============================================================
+// 開発用ルート（本番前に削除）
+// ============================================================
+
+// データを渡して確認したい場合
+Route::view('/test-design', 'login', ['EMAIL' => 'email@example.com', 'PASSWORD' => 'password']);
+
+// ============================================================
+// ユーザー関連ルート（ログイン必須）
+// ============================================================
+
+/**
+ * ログイン必須のルート
+ * 
+ * 未ログインユーザーがアクセスした場合は
+ * 自動的にログイン画面にリダイレクトされます
+ */
+Route::middleware('auth')->group(function () {
+
+    /**
+     * マイページ
+     * URL: /mypage (GET)
+     * コントローラー: UserController@mypage
+     * ルート名: mypage
+     * 
+     * 画面定義: user_my.csv
+     */
+    Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
+
+    /**
+     * プロフィール編集（仮実装）
+     * URL: /prof_custom (GET)
+     * ルート名: prof_custom
+     * 
+     * 画面定義: prof_custom.csv
+     * TODO: ProfileControllerを作成後、コントローラーに置き換える
+     */
+    Route::get('/prof_custom', function () {
+        return 'プロフィール編集画面（未実装）';
+    })->name('prof_custom');
+
+    /**
+     * 自己保持土地一覧
+     * URL: /my_land_list (GET)
+     * コントローラー: MyLandListController@index
+     * ルート名: my_land_list
+     * 
+     * 画面定義: my_land_list.csv
+     */
+    Route::get('/my_land_list', [MyLandListController::class, 'index'])->name('my_land_list');
+
+    /**
+     * 貸出中詳細
+     * URL: /loan_detail/{id} (GET)
+     * コントローラー: LoanDetailController@show
+     * ルート名: loan_detail
+     */
+    Route::get('/loan_detail/{id}', [LoanDetailController::class, 'show'])->name('loan_detail');
+
+    /**
+     * 土地貸出設定
+     * URL: /land_public/{id} (GET)
+     * コントローラー: LandPublicController@edit
+     * ルート名: land_public
+     * 
+     * 画面定義: land_public.csv
+     */
+    Route::get('/land_public/{id}', [LandPublicController::class, 'edit'])->name('land_public');
+
+    /**
+     * 土地公開ステータス切り替え
+     * URL: /land_public/{id}/toggle_status (POST)
+     * コントローラー: LandPublicController@toggleStatus
+     * ルート名: land_public.toggle_status
+     * 
+     * ステータス変更後のリダイレクト:
+     * - 非公開→公開: loan_detail画面へ
+     * - 公開→非公開: land_public画面へ
+     */
+    Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
+
+    /**
+     * レンタル中一覧（仮実装）
+     * URL: /rental_list (GET)
+     * ルート名: rental_list
+     * 
+     * 画面定義: rental_list.csv
+     * TODO: RentalControllerを作成後、コントローラーに置き換える
+     */
+    Route::get('/rental_list', function () {
+        return 'レンタル中一覧画面（未実装）';
+    })->name('rental_list');
+
+    /**
+     * 取引完了一覧（仮実装）
+     * URL: /trade_fin_list (GET)
+     * ルート名: trade_fin_list
+     * 
+     * 画面定義: trade_fin_list.csv
+     * TODO: TradeControllerを作成後、コントローラーに置き換える
+     */
+    Route::get('/trade_fin_list', function () {
+        return '取引完了一覧画面（未実装）';
+    })->name('trade_fin_list');
+
+    /**
+     * お問い合わせフォーム表示
+     * URL: /contact (GET)
+     * コントローラー: ContactController@showForm
+     * ルート名: contact.form
+     */
+    Route::get('/contact', [ContactController::class, 'showForm'])->name('contact.form');
+
+    /**
+     * お問い合わせ送信処理
+     * URL: /contact (POST)
+     * コントローラー: ContactController@store
+     * ルート名: contact
+     */
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact');
+});
+
+
+// ============================================================
+// レンタル管理ルート
+// ============================================================
+
+/**
+ * レンタル中の土地一覧
+ * 
+ * URL: /my-rentals
+ * ミドルウェア: auth（ログイン必須）
+ * 
+ * ログインユーザーが現在借りている土地の一覧を表示
+ */
+Route::get('/my-rentals', [RentalController::class, 'index'])
+    ->name('rentals.index')
+    ->middleware('auth');
+
+/**
+ * レンタル詳細
+ * 
+ * URL: /my-rentals/{id}
+ * ミドルウェア: auth（ログイン必須）
+ * 
+ * レンタル記録の詳細情報を表示
+ */
+Route::get('/my-rentals/{id}', [RentalController::class, 'show'])
+    ->name('rentals.show')
+    ->middleware('auth');
+
+//テスト用ルート
+
+Route::get('/test', function () {
+    // テスト用ダミーデータ
     $users = collect([
         (object) ['id' => 1, 'name' => '田中 太郎', 'email' => 'tanaka.taro@example.com', 'created_at' => now()->subDays(30)],
         (object) ['id' => 2, 'name' => '佐藤 花子', 'email' => 'sato.hanako@example.com', 'created_at' => now()->subDays(60)],
+        (object) ['id' => 3, 'name' => '鈴木 一郎', 'email' => 'suzuki.ichiro@example.com', 'created_at' => now()->subDays(90)],
     ]);
     return view('user_list', compact('users'));
 });
 
-// ユーザー詳細テスト
+
+
+// ユーザ詳細画面テスト用ルート
 Route::get('/test-user-detail', function () {
+    // テスト用ダミーユーザーデータ
     $user = (object) [
         'id' => 1,
         'login_id' => 'tanaka_taro',
@@ -273,7 +432,7 @@ Route::get('/test-user-detail', function () {
         'birthday_public' => 'private',
         'gender_public' => 'public',
         'status' => 'active',
-        'bio' => '都内在住のフリーランスエンジニアです。',
+        'bio' => '都内在住のフリーランスエンジニアです。週末に空きスペースを探しています。',
         'avatar' => null,
         'created_at' => now()->subDays(30),
         'updated_at' => now()->subDays(5),
