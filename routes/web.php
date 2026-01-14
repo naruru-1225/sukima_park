@@ -71,16 +71,32 @@ Route::middleware('auth')->group(function () {
     // --- マイページ ---
     Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
 
-    // --- プロフィール編集（仮実装） ---
+    // --- プロフィール編集 ---
     Route::get('/prof_custom', function () {
-        return 'プロフィール編集画面（未実装）';
+        $user = \Illuminate\Support\Facades\Auth::user();
+        return view('profile_edit_screen', compact('user'));
     })->name('prof_custom');
+
+    // プロフィール確認画面
+    Route::get('/profile/confirm', function () {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        return view('profile_comfirmation_screen', compact('user'));
+    })->name('profile.confirm');
 
     // --- 土地管理 ---
     Route::get('/my_land_list', [MyLandListController::class, 'index'])->name('my_land_list');
     Route::get('/loan_detail/{id}', [LoanDetailController::class, 'show'])->name('loan_detail');
     Route::get('/land_public/{id}', [LandPublicController::class, 'edit'])->name('land_public');
     Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
+
+    // --- 土地登録 ---
+    Route::get('/land/register', function () {
+        return view('land_register');
+    })->name('land.register');
+
+    Route::get('/land/register/confirm', function () {
+        return view('land_register_confirm');
+    })->name('land.register.confirm');
 
     // --- レンタル一覧（借りている土地一覧） ---
     Route::get('/rental_list', [RentalController::class, 'index'])->name('rental_list');
@@ -90,6 +106,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/trade_fin_list', function () {
         return view('trade_list', ['trades' => collect([])]);
     })->name('trade_fin_list');
+
+    // --- メッセージ ---
+    Route::get('/messages', function () {
+        return view('message_list_screen', ['messages' => collect([])]);
+    })->name('messages.index');
+
+    Route::get('/messages/{id}', function ($id) {
+        return view('message_detail_screen', ['messageId' => $id]);
+    })->name('messages.show');
 });
 
 
