@@ -83,7 +83,9 @@ Route::get('/test-login', function () {
         return redirect('/mypage')->with('success', 'テストログインしました: ' . $user->USERNAME);
     }
     return 'ユーザーが存在しません。php artisan db:seed --class=TestUserSeeder を実行してください。';
+});
 
+/**
  * レンタル一覧テストページ（認証なし）
  * ※開発用：認証なしでレンタル一覧を表示
  */
@@ -133,8 +135,43 @@ Route::get('/test-rentals', function () {
             ]
         ],
     ]);
-    return view('rental_list', ['rentals' => $rentals]);
+    return view('rental_list', [
+        'rentals' => $rentals,
+        'detailRoute' => 'dev.rental-detail',
+    ]);
 });
+
+/**
+ * レンタル詳細モック（認証なし）
+ * 開発用：UI確認のみ。実データ・認証不要。
+ */
+Route::get('/dev/rental-detail', function () {
+    $rental = (object) [
+        'RECORD_ID' => 1,
+        'PRICE' => 3000,
+        'PRICE_UNIT' => 0, // 0:日 1:時間 2:15分
+        'RENTAL_START_DATE' => now()->addDays(2),
+        'RENTAL_END_DATE' => now()->addDays(7),
+        'RENTAL_START_TIME' => now()->setTime(8, 0),
+        'RENTAL_END_TIME' => now()->setTime(20, 0),
+        'land' => (object) [
+            'CITY' => '渋谷区',
+            'STREET_ADDRESS' => '神南1-2-3',
+            'AREA' => 25.5,
+            'IMAGE' => null,
+        ],
+        'review' => (object) [
+            'RATING' => 5,
+            'COMMENT' => 'テストレビューです。UI確認用のダミーです。',
+            'created_at' => now()->subDay(),
+        ],
+    ];
+
+    return view('rental_detail', [
+        'rental' => $rental,
+        'backRoute' => 'test-rentals',
+    ]);
+})->name('dev.rental-detail');
 
 
 // ============================================================
