@@ -410,15 +410,15 @@
                 <label>性別<span class="required">必須</span></label>
                 <div class="radio-group">
                   <label class="radio-label">
-                    <input type="radio" name="gender" value="male" required />
+                    <input type="radio" name="gender" value="0" required />
                     <span>男性</span>
                   </label>
                   <label class="radio-label">
-                    <input type="radio" name="gender" value="female" />
+                    <input type="radio" name="gender" value="1" />
                     <span>女性</span>
                   </label>
                   <label class="radio-label">
-                    <input type="radio" name="gender" value="other" />
+                    <input type="radio" name="gender" value="2" />
                     <span>その他</span>
                   </label>
                 </div>
