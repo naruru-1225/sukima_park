@@ -63,7 +63,7 @@ class RentalController extends Controller
         }
 
         // ユーザーが借りている土地のレンタル記録を取得
-        $rentals = RentalRecord::where('user_id', $user->id)
+        $rentals = RentalRecord::where('USER_ID', $user->USER_ID)
             ->with('land')
             ->get();
 
@@ -96,7 +96,7 @@ class RentalController extends Controller
 
         // レンタル記録を取得（自分のレンタルのみ）
         $rental = RentalRecord::where('RECORD_ID', $id)
-            ->where('user_id', $user->id)
+            ->where('USER_ID', $user->USER_ID)
             ->with('land')
             ->firstOrFail();
 
