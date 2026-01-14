@@ -1,0 +1,14 @@
+[90m= [39m[34;4mApp\Models\Member[39;24m {#5762
+    [34mUSER_ID[39m: [35m1[39m,
+    [34mEMAIL[39m: "[32mtest@example.com[39m",
+    #[33mPASSWORD[39m: "[32m$2y$12[39m",
+    [34mTEL[39m: "[32m09012345678[39m",
+    [34mBIRTH[39m: "[32m1990-01-01[39m",
+    [34mSHOW_BIRTH[39m: [35m0[39m,
+    [34mGENDER[39m: [35m0[39m,
+    [34mSHOW_GENDER[39m: [35m0[39m,
+    [34mIDENTITY[39m: "[32mnone[39m",
+    [34mUSERNAME[39m: "[32mtestuser[39m",
+    [34mremember_token[39m: [36mnull[39m,
+  }
+

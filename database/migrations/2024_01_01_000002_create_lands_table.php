@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('LAND_TABLE', function (Blueprint $table) {
             $table->integer('LAND_ID')->autoIncrement();
+            $table->string('NAME', 128); // 土地名: 40文字以下
             $table->integer('PEREFECTURES');
             $table->string('CITY', 256);
             $table->string('STREET_ADDRESS', 256);
