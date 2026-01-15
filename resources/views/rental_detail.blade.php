@@ -144,5 +144,5 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/rental_detail.css') }}">
+<link rel="stylesheet" href="{{ asset('css/detail.css') }}">
 @endpush

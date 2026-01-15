@@ -22,13 +22,16 @@ use App\Models\Member;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Schema;
 
 class MemberTableSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
         // 既存データをクリア
         DB::table('MEMBER_TABLE')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         Member::create([
             'EMAIL' => 'userA@example.com',
