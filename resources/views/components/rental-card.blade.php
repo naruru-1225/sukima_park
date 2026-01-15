@@ -44,7 +44,7 @@
             ¥{{ number_format($rental->PRICE) }}/{{ ['日', '時間', '15分'][$rental->PRICE_UNIT] ?? '日' }}
         </div>
         <div class="rental-card-footer">
-            <a href="{{ route($detailRoute ?? 'rentals.show', $rental->RECORD_ID) }}" class="btn btn-primary">詳細を見る</a>
+            <a href="{{ route($detailRoute ?? 'rental_list.show', $rental->RECORD_ID) }}" class="btn btn-primary">詳細を見る</a>
         </div>
     </div>
 </div>
