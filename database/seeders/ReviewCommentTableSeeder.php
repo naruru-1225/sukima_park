@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ReviewCommentTableSeeder extends Seeder
 {
@@ -31,7 +32,9 @@ class ReviewCommentTableSeeder extends Seeder
     {
         $faker = Faker::create('ja_JP');
 
+        Schema::disableForeignKeyConstraints();
         DB::table('REVIEW_COMMENT_TABLE')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         $rentalRecords = RentalRecord::all()->shuffle()->take(5);
         $users = Member::whereIn('EMAIL', ['userA@example.com', 'userB@example.com'])->get();

@@ -27,7 +27,7 @@
 </div>
 
 <section class="section">
-    <div class="trade-list">
+    <div class="rental-list">
         @forelse($trades as $trade)
             <x-trade-card :trade="$trade" />
         @empty
@@ -44,5 +44,5 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/trade_list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/list.css') }}">
 @endpush

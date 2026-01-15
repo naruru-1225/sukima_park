@@ -102,4 +102,36 @@ class RentalController extends Controller
 
         return view('rental_detail', ['rental' => $rental]);
     }
+
+    /**
+     * 取引完了一覧を表示
+     * 
+     * 【処理内容】
+     * 1. ログイン中のユーザーIDを取得
+     * 2. ユーザーが完了した取引記録を取得
+     * 3. 土地情報とレビュー情報を結合
+     * 4. trade_list.blade.phpにデータを渡して表示
+     * 
+     * 【取得データ】
+     * $trades: 完了した取引記録
+     *   - RENTAL_RECORD_TABLEから取得
+     *   - 土地情報、レビューをリレーションで結合
+     * 
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function completedList()
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // ユーザーが完了した取引記録を取得
+        $trades = RentalRecord::where('USER_ID', $user->USER_ID)
+            ->with(['land', 'review'])
+            ->get();
+
+        return view('trade_list', ['trades' => $trades]);
+    }
 }

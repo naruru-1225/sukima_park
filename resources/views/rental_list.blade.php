@@ -45,5 +45,5 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/rental_list.css') }}">
+<link rel="stylesheet" href="{{ asset('css/list.css') }}">
 @endpush

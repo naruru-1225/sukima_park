@@ -24,6 +24,7 @@ use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class ReplyTableSeeder extends Seeder
 {
@@ -31,7 +32,9 @@ class ReplyTableSeeder extends Seeder
     {
         $faker = Faker::create('ja_JP');
 
+        Schema::disableForeignKeyConstraints();
         DB::table('REPLY_TABLE')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         $users = Member::whereIn('EMAIL', ['userA@example.com', 'userB@example.com'])->get();
         $contacts = Contact::all();
