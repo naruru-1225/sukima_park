@@ -235,8 +235,7 @@ class AuthController extends Controller
             'GENDER' => $request->gender ?? 0,                  // 性別（デフォルト0）
             'SHOW_BIRTH' => false,                              // 生年月日公開（デフォルトfalse）
             'SHOW_GENDER' => false,                             // 性別公開（デフォルトfalse）
-            'IDENTITY' => $identityPath ? true : false,         // 本人確認書類あり/なし
-            'IDENTITY_IMAGE' => $identityPath,                  // 本人確認書類のパス
+            'IDENTITY_IMAGE' => $identityPath,                  // 本人確認書類の画像パス
             'ICON_IMAGE' => 'default_icon.png',                 // デフォルトアイコン
             'ACCOUNT_STATUS' => 1,                              // アカウント状態（1=審査中）
         ]);
