@@ -23,6 +23,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LandController;
 use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
 use App\Http\Controllers\MyLandListController;
@@ -81,6 +82,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/loan_detail/{id}', [LoanDetailController::class, 'show'])->name('loan_detail');
     Route::get('/land_public/{id}', [LandPublicController::class, 'edit'])->name('land_public');
     Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
+
+    // --- 土地登録 ---
+    Route::get('/land/register', [LandController::class, 'showRegisterForm'])->name('land.register');
+    Route::post('/land/register', [LandController::class, 'register']);
+    Route::get('/land/register/confirm', [LandController::class, 'showConfirm'])->name('land.register.confirm');
+    Route::post('/land/register/store', [LandController::class, 'store'])->name('land.register.store');
 
     // --- レンタル一覧（借りている土地一覧） ---
     Route::get('/rental_list', [RentalController::class, 'index'])->name('rental_list');
