@@ -27,6 +27,9 @@ class RentalRecord extends Model
     protected $casts = [
         'RENTAL_START_DATE' => 'date',
         'RENTAL_END_DATE' => 'date',
+        // 時刻カラムはCarbonにキャストしてビュー側のformat()を安全に利用する
+        'RENTAL_START_TIME' => 'datetime:H:i:s',
+        'RENTAL_END_TIME' => 'datetime:H:i:s',
     ];
 
     // この記録の土地

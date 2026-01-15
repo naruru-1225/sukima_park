@@ -104,7 +104,14 @@
                         @endfor
                     </span>
                 </div>
-                <div class="review-date">投稿日: {{ $rental->review->created_at->format('Y年m月d日') }}</div>
+                <div class="review-date">
+                    投稿日:
+                    @if($rental->review && $rental->review->DATE)
+                        {{ $rental->review->DATE->format('Y年m月d日') }}
+                    @else
+                        -
+                    @endif
+                </div>
                 <div class="review-comment">
                     {{ $rental->review->COMMENT }}
                 </div>
