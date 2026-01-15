@@ -30,7 +30,7 @@
 <section class="section">
     <div class="rental-list">
         @forelse($rentals as $rental)
-            <x-rental-card :rental="$rental" :detailRoute="$detailRoute ?? 'rentals.show'" />
+            <x-rental-card :rental="$rental" :detailRoute="$detailRoute ?? 'rental_list.show'" />
         @empty
             <x-empty-state
                 icon="📦"
