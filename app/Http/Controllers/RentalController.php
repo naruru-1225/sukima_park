@@ -97,10 +97,34 @@ class RentalController extends Controller
         // レンタル記録を取得（自分のレンタルのみ）
         $rental = RentalRecord::where('RECORD_ID', $id)
             ->where('USER_ID', $user->USER_ID)
-            ->with('land')
+            ->with('land.owner')
             ->firstOrFail();
 
-        return view('rental_detail', ['rental' => $rental]);
+        // 合計金額を計算
+        $totalAmount = $this->calculateTotalAmount($rental);
+
+        return view('rental_detail', [
+            'rental' => $rental,
+            'totalAmount' => $totalAmount
+        ]);
+    }
+
+    /**
+     * 合計金額を計算
+     * 
+     * @param RentalRecord $rental
+     * @return int
+     */
+    private function calculateTotalAmount(RentalRecord $rental): int
+    {
+        $days = $rental->RENTAL_START_DATE->diffInDays($rental->RENTAL_END_DATE) + 1;
+        
+        return match($rental->PRICE_UNIT) {
+            'day' => $rental->PRICE * $days,
+            'month' => $rental->PRICE,
+            'year' => $rental->PRICE,
+            default => $rental->PRICE * $days,
+        };
     }
 
     /**

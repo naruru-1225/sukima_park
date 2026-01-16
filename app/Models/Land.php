@@ -56,4 +56,31 @@ class Land extends Model
     {
         return $this->hasMany(ReviewComment::class, 'LAND_ID', 'LAND_ID');
     }
+
+    /**
+     * ============================================================
+     * アクセサ（Accessor）
+     * ============================================================
+     */
+
+    // 土地名を取得（Bladeで$land->nameでアクセス可能）
+    public function getNameAttribute()
+    {
+        return $this->attributes['NAME'] ?? null;
+    }
+
+    // メイン画像を取得
+    public function getMainImageAttribute()
+    {
+        return $this->attributes['IMAGE'] ?? null;
+    }
+
+    // 完全な住所を取得
+    public function getFullAddressAttribute()
+    {
+        $prefecture = $this->attributes['PEREFECTURES'] ?? '';
+        $city = $this->attributes['CITY'] ?? '';
+        $street = $this->attributes['STREET_ADDRESS'] ?? '';
+        return $prefecture . $city . $street;
+    }
 }

@@ -196,4 +196,16 @@ class Member extends Authenticatable
     {
         return $this->hasMany(Chat::class, 'USER_ID_TO', 'USER_ID');
     }
+
+    /**
+     * ============================================================
+     * アクセサ（Accessor）
+     * ============================================================
+     */
+
+    // 会員名を取得（Bladeで$member->nameでアクセス可能）
+    public function getNameAttribute()
+    {
+        return $this->attributes['USERNAME'] ?? null;
+    }
 }
