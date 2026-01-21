@@ -39,7 +39,7 @@
             <div class="container">
                 <div class="section-header">
                     <h2 class="section-title">ユーザー詳細</h2>
-                    <a href="{{ url('/admin/users') }}" class="view-all">← ユーザー一覧に戻る</a>
+                    <a href="{{ url('/admin/users') }}" class="view-all">← ユーザ一覧に戻る</a>
                 </div>
 
                 <div class="detail-box">
@@ -131,11 +131,14 @@
                                 </div>
 
                                 {{-- ステータス（編集可能） --}}
+                                {{-- ACCOUNT_STATUS: "0" = 有効, "1" = 利用停止中 --}}
                                 <div class="form-group">
                                     <label for="status">ステータス</label>
                                     <select id="status" name="status" class="form-control">
-                                        <option value="active" {{ ($user->STATUS ?? $user->status ?? 'active') === 'active' ? 'selected' : '' }}>有効</option>
-                                        <option value="suspended" {{ ($user->STATUS ?? $user->status ?? '') === 'suspended' ? 'selected' : '' }}>利用停止中</option>
+                                        <option value="0" {{ ($user->ACCOUNT_STATUS ?? '0') == '0' ? 'selected' : '' }}>有効
+                                        </option>
+                                        <option value="1" {{ ($user->ACCOUNT_STATUS ?? '0') == '1' ? 'selected' : '' }}>利用停止中
+                                        </option>
                                     </select>
                                 </div>
                             </div>

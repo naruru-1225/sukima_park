@@ -50,6 +50,9 @@ class UserListController extends Controller
     // クエリビルダーを初期化
     $query = Member::query();
 
+    // ACCOUNT_STATUS = 2 のユーザーは表示しない
+    $query->where('ACCOUNT_STATUS', '!=', 2);
+
     // キーワード検索（ユーザー名 or メール）
     if ($keyword = $request->input('keyword')) {
       $query->where(function ($q) use ($keyword) {
