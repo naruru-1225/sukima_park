@@ -16,7 +16,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ url('/chats') }}" class="nav-icon-btn" title="メッセージ">
+                        <a href="{{ route('messages.index') }}" class="nav-icon-btn" title="メッセージ">
                             💬
                         </a>
                     </li>

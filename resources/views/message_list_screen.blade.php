@@ -290,18 +290,7 @@
 @endpush
 
 @section('content')
-<header>
-    <div class="container header-inner">
-        <a href="{{ route('home') }}" class="logo">スキマパーク</a>
-        <div class="header-nav">
-            <a href="{{ route('land.register') }}" class="btn btn-primary">土地を登録</a>
-            <button class="icon-btn" title="メッセージ">💬</button>
-            <button class="icon-btn" title="アカウント">👤</button>
-        </div>
-    </div>
-</header>
-
-<main class="main-content">
+<div class="section">
     <div class="container">
         <div class="dm-header">
             <h2>メッセージ</h2>
@@ -336,24 +325,7 @@
             @endforelse
         </div>
     </div>
-</main>
-
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">スキマパーク</div>
-            <div class="footer-links">
-                <a href="#" class="footer-link">利用規約</a>
-                <a href="#" class="footer-link">プライバシーポリシー</a>
-                <a href="#" class="footer-link">ヘルプ</a>
-                <a href="#" class="footer-link">お問い合わせ</a>
-            </div>
-        </div>
-        <div class="footer-copyright">
-            &copy; 2025 スキマパーク All rights reserved.
-        </div>
-    </div>
-</footer>
+</div>
 @endsection
 
 @push('scripts')

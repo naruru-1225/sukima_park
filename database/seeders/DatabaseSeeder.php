@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             ReplyTableSeeder::class,
             RentalRecordTableSeeder::class,
             ReviewCommentTableSeeder::class,
+            ChatTableSeeder::class,
         ]);
 
         Schema::enableForeignKeyConstraints();
