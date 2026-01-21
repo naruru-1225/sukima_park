@@ -67,7 +67,10 @@
             @endif
         </div>
         <div class="rental-card-footer">
-            <a href="{{ route('rental_list.show', $trade->RECORD_ID) }}" class="btn btn-primary">詳細を見る</a>
+            @unless($trade->review)
+                <a href="{{ route('trade.detail', $trade->RECORD_ID) }}#review-form" class="btn btn-secondary" style="margin-right: 8px;">レビューを投稿する</a>
+            @endunless
+            <a href="{{ route('trade.detail', $trade->RECORD_ID) }}" class="btn btn-primary">詳細を見る</a>
         </div>
     </div>
 </div>

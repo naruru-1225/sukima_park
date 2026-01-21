@@ -31,6 +31,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserListController;
 use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -107,6 +108,13 @@ Route::middleware('auth')->group(function () {
 
     // --- 取引完了一覧 ---
     Route::get('/trade_fin_list', [RentalController::class, 'completedList'])->name('trade_fin_list');
+    Route::get('/trade_detail/{recordId}', [App\Http\Controllers\TradeDetailController::class, 'show'])->name('trade.detail');
+
+    // レンタル履歴の別名ルート
+    Route::get('/rental/history', [RentalController::class, 'completedList'])->name('rental.history');
+
+    // --- レビュー関連 ---
+    Route::post('/review/store/{recordId}', [ReviewController::class, 'store'])->name('review.store');
 
     // --- メッセージ ---
     Route::get('/messages', function () {
