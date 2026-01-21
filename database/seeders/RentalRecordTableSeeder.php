@@ -41,7 +41,10 @@ class RentalRecordTableSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             $land = $faker->randomElement($lands);
-            $renter = $faker->randomElement($users);
+            $landOwnerId = $land->USER_ID;
+            
+            // 持ち主以外のユーザーを借り手として選択
+            $renter = $users->where('USER_ID', '!=', $landOwnerId)->random();
 
             $start = Carbon::today()->subDays($faker->numberBetween(1, 60));
             $end = (clone $start)->addDays($faker->numberBetween(1, 14));
