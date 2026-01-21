@@ -50,25 +50,25 @@ class UserListController extends Controller
     // クエリビルダーを初期化
     $query = Member::query();
 
-    // キーワード検索（名前 or メール）
+    // キーワード検索（ユーザー名 or メール）
     if ($keyword = $request->input('keyword')) {
       $query->where(function ($q) use ($keyword) {
-        $q->where('NAME', 'like', "%{$keyword}%")
+        $q->where('USERNAME', 'like', "%{$keyword}%")
           ->orWhere('EMAIL', 'like', "%{$keyword}%");
       });
     }
 
-    // ステータスフィルタ
+    // ステータスフィルタ（ACCOUNT_STATUS: 0=通常, 1=凍結, 2=管理者）
     if ($status = $request->input('status')) {
       if ($status === 'active') {
-        $query->where('STATUS', 1); // 有効
+        $query->where('ACCOUNT_STATUS', 0); // 通常ユーザー
       } elseif ($status === 'suspended') {
-        $query->where('STATUS', 0); // 利用停止中
+        $query->where('ACCOUNT_STATUS', 1); // 凍結ユーザー
       }
     }
 
-    // 登録日の降順でソート、ページネーション付きで取得
-    $users = $query->orderByDesc('created_at')->paginate(20);
+    // USER_IDの降順でソート、ページネーション付きで取得
+    $users = $query->orderByDesc('USER_ID')->paginate(20);
 
     // user_list.blade.phpを表示し、データを渡す
     return view('user_list', compact('users'));

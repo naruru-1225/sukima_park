@@ -118,8 +118,15 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             // ============================================================
-            // 7. リダイレクト
+            // 7. リダイレクト（ユーザー種別で分岐）
             // ============================================================
+            // ACCOUNT_STATUS == 2 は管理者
+            if ($member->ACCOUNT_STATUS == 2) {
+                // 管理者はユーザー一覧画面へ
+                return redirect()->intended('/admin/users');
+            }
+            
+            // 一般ユーザーはホーム画面へ
             // intended()は、ログイン前にアクセスしようとしていたURLに
             // リダイレクトする（なければ引数のURLへ）
             return redirect()->intended('/');

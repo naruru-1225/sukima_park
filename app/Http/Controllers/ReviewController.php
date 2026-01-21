@@ -28,6 +28,35 @@ use Illuminate\Support\Facades\Auth;
 class ReviewController extends Controller
 {
     /**
+     * レビュー投稿画面を表示
+     * 
+     * @param int $recordId 貸出記録ID
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function create($recordId)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // レンタル記録を取得（自分のレンタルのみ）
+        $rental = RentalRecord::where('RECORD_ID', $recordId)
+            ->where('USER_ID', $user->USER_ID)
+            ->with(['land', 'land.owner'])
+            ->firstOrFail();
+
+        // 既存のレビューがあれば取得
+        $existingReview = ReviewComment::where('RECORD_ID', $recordId)->first();
+
+        return view('review_create', [
+            'rental' => $rental,
+            'existingReview' => $existingReview,
+        ]);
+    }
+
+    /**
      * レビューを投稿
      * 
      * @param Request $request

@@ -32,6 +32,8 @@ use App\Http\Controllers\UserListController;
 use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ContactListController;
+use App\Http\Controllers\ContactDetailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -114,6 +116,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/rental/history', [RentalController::class, 'completedList'])->name('rental.history');
 
     // --- レビュー関連 ---
+    Route::get('/review/{recordId}', [ReviewController::class, 'create'])->name('review.create');
     Route::post('/review/store/{recordId}', [ReviewController::class, 'store'])->name('review.store');
 
     // --- メッセージ ---
@@ -128,21 +131,21 @@ Route::middleware('auth')->group(function () {
 
 
 // ============================================================
-// 管理者向けユーザー管理ルート
+// 管理者専用ルート（ACCOUNT_STATUS = 2 のみアクセス可能）
 // ============================================================
 
-Route::middleware('auth')->group(function () {
-    // ユーザー一覧
-    Route::get('/admin/users', [UserListController::class, 'index'])->name('admin.users.index');
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    // --- ユーザー管理 ---
+    Route::get('/users', [UserListController::class, 'index'])->name('admin.users.index');
+    Route::get('/users/{id}', [UserDetailController::class, 'show'])->name('admin.users.show');
+    Route::put('/users/{id}', [UserDetailController::class, 'update'])->name('admin.users.update');
+    Route::delete('/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.users.destroy');
 
-    // ユーザー詳細
-    Route::get('/admin/users/{id}', [UserDetailController::class, 'show'])->name('admin.users.show');
-
-    // ユーザー更新
-    Route::put('/admin/users/{id}', [UserDetailController::class, 'update'])->name('admin.users.update');
-
-    // ユーザー削除
-    Route::delete('/admin/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.users.destroy');
+    // --- 問い合わせ管理 ---
+    Route::get('/contacts', [ContactListController::class, 'index'])->name('admin.contacts.index');
+    Route::get('/contacts/{id}', [ContactDetailController::class, 'show'])->name('admin.contacts.show');
+    Route::put('/contacts/{id}/status', [ContactDetailController::class, 'updateStatus'])->name('admin.contacts.updateStatus');
+    Route::post('/contacts/{id}/reply', [ContactDetailController::class, 'reply'])->name('admin.contacts.reply');
 });
 
 
