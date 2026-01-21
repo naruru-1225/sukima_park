@@ -76,7 +76,8 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 Route::middleware('auth')->group(function () {
 
     // --- マイページ ---
-    Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
+    // --- マイページ ---
+    Route::get('/mypage/{id?}', [UserController::class, 'mypage'])->name('mypage');
 
     // --- プロフィール編集 ---
     Route::get('/prof_custom', function () {

@@ -303,9 +303,11 @@
 
         <div class="dm-list" id="dmList">
             @forelse($messages ?? [] as $message)
-                <div class="dm-item {{ $message->unread ? 'unread' : '' }}" onclick="openDM({{ $message->id }})">
-                    <div class="avatar">{{ mb_substr($message->sender_name, 0, 1) }}</div>
-                    <div class="dm-content">
+                <div class="dm-item {{ $message->unread ? 'unread' : '' }}">
+                    <a href="{{ route('mypage', $message->id) }}" class="avatar" onclick="event.stopPropagation();" style="text-decoration: none; color: inherit;">
+                        {{ mb_substr($message->sender_name, 0, 1) }}
+                    </a>
+                    <div class="dm-content" onclick="openDM({{ $message->id }})" style="cursor: pointer; flex: 1;">
                         <div class="dm-top">
                             <span class="dm-name">{{ $message->sender_name }}</span>
                             <span class="dm-time">{{ $message->time_ago }}</span>

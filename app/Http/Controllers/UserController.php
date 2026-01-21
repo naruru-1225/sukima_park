@@ -49,9 +49,23 @@ class UserController extends Controller
      * 
      * @return \Illuminate\Contracts\View\View
      */
-    public function mypage()
+    public function mypage($id = null)
     {
-        // ログインユーザーを取得
+        // IDが指定されている場合、かつ自分自身のIDでない場合は、他ユーザーのプロフィールを表示
+        if ($id && $id != Auth::id()) {
+            $user = \App\Models\Member::findOrFail($id);
+            
+            // 公開中の土地を取得
+            $publicLands = Land::where('USER_ID', $id)
+                ->where('STATUS', 1)
+                ->orderByDesc('LAND_ID')
+                ->get();
+
+            // user_other.blade.php（他ユーザー用ビュー）を表示
+            return view('user_other', compact('user', 'publicLands'));
+        }
+
+        // 自分のマイページ
         $user = Auth::user();
 
         // ログインユーザーの公開中の土地を取得

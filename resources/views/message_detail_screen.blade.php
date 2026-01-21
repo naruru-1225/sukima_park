@@ -394,10 +394,10 @@
     <div class="container">
         <div class="chat-header">
             <a href="{{ route('messages.index') }}" class="back-btn">←</a>
-            <div class="chat-user-info">
+            <a href="{{ route('mypage', $recipient->id) }}" class="chat-user-info" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
                 <div class="chat-avatar">{{ mb_substr($recipient->name ?? '相手', 0, 1) }}</div>
                 <div class="chat-user-name">{{ $recipient->name ?? '相手' }}</div>
-            </div>
+            </a>
             <button class="chat-menu-btn">⋮</button>
         </div>
 
@@ -423,7 +423,9 @@
                         @if($message->is_sent)
                             私
                         @else
-                            {{ mb_substr($recipient->name ?? '相手', 0, 1) }}
+                            <a href="{{ route('mypage', $recipient->id) }}" style="text-decoration: none; color: inherit;">
+                                {{ mb_substr($recipient->name ?? '相手', 0, 1) }}
+                            </a>
                         @endif
                     </div>
                     <div class="message-content">
@@ -529,6 +531,7 @@
 
     // ===== ポーリングによるリアルタイム更新 =====
     const pollUrl = '{{ route("messages.poll", $recipient->id) }}';
+    const recipientId = {{ $recipient->id }};
     const recipientName = '{{ $recipient->name ?? "相手" }}';
     const recipientInitial = '{{ mb_substr($recipient->name ?? "相手", 0, 1) }}';
     let lastMessageId = {{ $messages->isNotEmpty() ? $messages->last()->id ?? 0 : 0 }};
@@ -569,9 +572,16 @@
 
     // メッセージをDOMに追加
     function appendMessage(msg) {
+        let avatarContent;
+        if (msg.is_sent) {
+            avatarContent = '私';
+        } else {
+            avatarContent = `<a href="/mypage/${recipientId}" style="text-decoration: none; color: inherit;">${recipientInitial}</a>`;
+        }
+
         const messageHTML = 
             '<div class="message ' + (msg.is_sent ? 'sent' : 'received') + '">' +
-                '<div class="message-avatar">' + (msg.is_sent ? '私' : recipientInitial) + '</div>' +
+                '<div class="message-avatar">' + avatarContent + '</div>' +
                 '<div class="message-content">' +
                     '<div class="message-bubble">' + escapeHtml(msg.content) + '</div>' +
                     '<div class="message-time">' + msg.time + '</div>' +
