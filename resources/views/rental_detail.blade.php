@@ -63,17 +63,33 @@
                     <div class="info-row">
                         <span class="info-label">レンタル期間:</span>
                         <span class="info-value">
-                            {{ $rental->RENTAL_START_DATE->format('Y年m月d日') }}
+                            @if(is_string($rental->RENTAL_START_DATE))
+                                {{ $rental->RENTAL_START_DATE }}
+                            @else
+                                {{ $rental->RENTAL_START_DATE->format('Y年m月d日') }}
+                            @endif
                             ～
-                            {{ $rental->RENTAL_END_DATE->format('Y年m月d日') }}
+                            @if(is_string($rental->RENTAL_END_DATE))
+                                {{ $rental->RENTAL_END_DATE }}
+                            @else
+                                {{ $rental->RENTAL_END_DATE->format('Y年m月d日') }}
+                            @endif
                         </span>
                     </div>
                     <div class="info-row">
                         <span class="info-label">利用時間:</span>
                         <span class="info-value">
-                            {{ $rental->RENTAL_START_TIME->format('H:i') }}
+                            @if(is_string($rental->RENTAL_START_TIME))
+                                {{ $rental->RENTAL_START_TIME }}
+                            @else
+                                {{ $rental->RENTAL_START_TIME->format('H:i') }}
+                            @endif
                             ～
-                            {{ $rental->RENTAL_END_TIME->format('H:i') }}
+                            @if(is_string($rental->RENTAL_END_TIME))
+                                {{ $rental->RENTAL_END_TIME }}
+                            @else
+                                {{ $rental->RENTAL_END_TIME->format('H:i') }}
+                            @endif
                         </span>
                     </div>
                     <div class="info-row">
@@ -104,7 +120,18 @@
                         @endfor
                     </span>
                 </div>
-                <div class="review-date">投稿日: {{ $rental->review->created_at->format('Y年m月d日') }}</div>
+                <div class="review-date">
+                    投稿日: 
+                    @if($rental->review->created_at)
+                        @if(is_string($rental->review->created_at))
+                            {{ $rental->review->created_at }}
+                        @else
+                            {{ $rental->review->created_at->format('Y年m月d日') }}
+                        @endif
+                    @else
+                        -
+                    @endif
+                </div>
                 <div class="review-comment">
                     {{ $rental->review->COMMENT }}
                 </div>
@@ -117,5 +144,5 @@
 @endsection
 
 @push('styles')
-<link rel="stylesheet" href="{{ asset('css/rental_detail.css') }}">
+<link rel="stylesheet" href="{{ asset('css/detail.css') }}">
 @endpush

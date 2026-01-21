@@ -28,6 +28,8 @@ use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
 use App\Http\Controllers\MyLandListController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserListController;
+use App\Http\Controllers\UserDetailController;
 use App\Http\Controllers\RentalController;
 use Illuminate\Support\Facades\Route;
 
@@ -72,10 +74,17 @@ Route::middleware('auth')->group(function () {
     // --- マイページ ---
     Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
 
-    // --- プロフィール編集（仮実装） ---
+    // --- プロフィール編集 ---
     Route::get('/prof_custom', function () {
-        return 'プロフィール編集画面（未実装）';
+        $user = \Illuminate\Support\Facades\Auth::user();
+        return view('profile_edit_screen', compact('user'));
     })->name('prof_custom');
+
+    // プロフィール確認画面
+    Route::get('/profile/confirm', function () {
+        $user = \Illuminate\Support\Facades\Auth::user();
+        return view('profile_comfirmation_screen', compact('user'));
+    })->name('profile.confirm');
 
     // --- 土地管理 ---
     Route::get('/my_land_list', [MyLandListController::class, 'index'])->name('my_land_list');
@@ -84,19 +93,48 @@ Route::middleware('auth')->group(function () {
     Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
 
     // --- 土地登録 ---
-    Route::get('/land/register', [LandController::class, 'showRegisterForm'])->name('land.register');
-    Route::post('/land/register', [LandController::class, 'register']);
-    Route::get('/land/register/confirm', [LandController::class, 'showConfirm'])->name('land.register.confirm');
-    Route::post('/land/register/store', [LandController::class, 'store'])->name('land.register.store');
+    Route::get('/land/register', function () {
+        return view('land_register');
+    })->name('land.register');
+
+    Route::get('/land/register/confirm', function () {
+        return view('land_register_confirm');
+    })->name('land.register.confirm');
 
     // --- レンタル一覧（借りている土地一覧） ---
     Route::get('/rental_list', [RentalController::class, 'index'])->name('rental_list');
     Route::get('/rental_list/{id}', [RentalController::class, 'show'])->name('rental_list.show');
 
     // --- 取引完了一覧 ---
-    Route::get('/trade_fin_list', function () {
-        return view('trade_list', ['trades' => collect([])]);
-    })->name('trade_fin_list');
+    Route::get('/trade_fin_list', [RentalController::class, 'completedList'])->name('trade_fin_list');
+
+    // --- メッセージ ---
+    Route::get('/messages', function () {
+        return view('message_list_screen', ['messages' => collect([])]);
+    })->name('messages.index');
+
+    Route::get('/messages/{id}', function ($id) {
+        return view('message_detail_screen', ['messageId' => $id]);
+    })->name('messages.show');
+});
+
+
+// ============================================================
+// 管理者向けユーザー管理ルート
+// ============================================================
+
+Route::middleware('auth')->group(function () {
+    // ユーザー一覧
+    Route::get('/admin/users', [UserListController::class, 'index'])->name('admin.users.index');
+
+    // ユーザー詳細
+    Route::get('/admin/users/{id}', [UserDetailController::class, 'show'])->name('admin.users.show');
+
+    // ユーザー更新
+    Route::put('/admin/users/{id}', [UserDetailController::class, 'update'])->name('admin.users.update');
+
+    // ユーザー削除
+    Route::delete('/admin/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.users.destroy');
 });
 
 
@@ -143,13 +181,13 @@ Route::get('/test-layout', function () {
 // レンタル一覧テスト
 Route::get('/test-rentals', function () {
     $rentals = collect([
-        (object)[
+        (object) [
             'RECORD_ID' => 1,
             'PRICE' => 3000,
             'PRICE_UNIT' => 0,
             'RENTAL_START_DATE' => now()->addDays(2),
             'RENTAL_END_DATE' => now()->addDays(9),
-            'land' => (object)[
+            'land' => (object) [
                 'LAND_ID' => 1,
                 'CITY' => '渋谷区',
                 'STREET_ADDRESS' => '神南1-2-3',

@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="detail-box">
-                    <form action="{{ url('/admin/users/' . $user->id) }}" method="POST">
+                    <form action="{{ url('/admin/users/' . $user->USER_ID) }}" method="POST">
                         @csrf
                         @method('PUT')
 
@@ -154,7 +154,7 @@
                     </form>
 
                     {{-- 削除用フォーム（非表示） --}}
-                    <form id="delete-form" action="{{ url('/admin/users/' . $user->id) }}" method="POST"
+                    <form id="delete-form" action="{{ url('/admin/users/' . $user->USER_ID) }}" method="POST"
                         style="display: none;">
                         @csrf
                         @method('DELETE')
