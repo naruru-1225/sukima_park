@@ -121,6 +121,7 @@ Route::middleware('auth')->group(function () {
     // --- メッセージ ---
     Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
     Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::get('/messages/search', [MessageController::class, 'search'])->name('messages.search');
     Route::get('/messages/{partnerId}', [MessageController::class, 'show'])->name('messages.show');
     Route::get('/messages/{partnerId}/poll', [MessageController::class, 'poll'])->name('messages.poll');
     Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');

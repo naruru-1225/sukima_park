@@ -153,12 +153,45 @@ class MessageController extends Controller
             return redirect()->route('login');
         }
 
-        // メッセージ可能なユーザー一覧を取得（自分以外）
-        $users = Member::where('USER_ID', '!=', $user->USER_ID)
-            ->where('ACCOUNT_STATUS', 0) // 通常ユーザーのみ
-            ->get();
+        return view('message_create_screen');
+    }
 
-        return view('message_create_screen', compact('users'));
+    /**
+     * ユーザー検索API
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function search(Request $request)
+    {
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $query = $request->query('q', '');
+        
+        if (strlen($query) < 1) {
+            return response()->json([]);
+        }
+
+        // ユーザー名で検索（自分以外、通常ユーザーのみ）
+        $users = Member::where('USER_ID', '!=', $user->USER_ID)
+            ->where('ACCOUNT_STATUS', 0)
+            ->where('USERNAME', 'LIKE', '%' . $query . '%')
+            ->limit(10)
+            ->get()
+            ->map(function ($member) {
+                return [
+                    'id' => $member->USER_ID,
+                    'name' => $member->USERNAME,
+                    'email' => $member->EMAIL,
+                    'initial' => mb_substr($member->USERNAME, 0, 1),
+                ];
+            });
+
+        return response()->json($users);
     }
 
     /**
@@ -211,7 +244,7 @@ class MessageController extends Controller
             'icon_image' => $recipient->ICON_IMAGE,
         ];
 
-        return view('message_detail_screen', compact('messages', 'recipient'));
+        return view('message_detail_screen', compact('messages', 'recipient'))->with('hideFooter', true);
     }
 
     /**

@@ -41,7 +41,9 @@
     </main>
     
     {{-- フッター --}}
-    @include('layouts.footer')
+    @if(!isset($hideFooter) || !$hideFooter)
+        @include('layouts.footer')
+    @endif
     
     {{-- JavaScript --}}
     @stack('scripts')
