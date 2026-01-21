@@ -26,7 +26,7 @@
 - ユーザ名
 - メールアドレス
 - 登録日
-- アクションボタン（詳細・編集）
+- アクションボタン（詳細）
 
 ============================================================
 --}}
@@ -95,8 +95,7 @@
 
               {{-- アクションボタン --}}
               <div class="card-actions">
-                <a href="{{ url('/admin/users/' . $user->USER_ID) }}" class="btn btn-secondary">詳細</a>
-                <a href="{{ url('/admin/users/' . $user->USER_ID . '/edit') }}" class="btn btn-primary">編集</a>
+                <a href="{{ url('/admin/users/' . $user->USER_ID) }}" class="btn btn-primary">詳細</a>
               </div>
             </div>
           @empty
@@ -190,22 +189,22 @@
       }
 
       .card-grid {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 12px;
       }
 
       .card {
         background: #fff;
-        border-radius: 8px;
+        border-radius: 6px;
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
         border: 1px solid #e0e0e0;
         transition: box-shadow 0.2s;
         display: flex;
         flex-direction: row;
         align-items: center;
-        padding: 16px 20px;
-        gap: 16px;
+        padding: 10px 12px;
+        gap: 10px;
       }
 
       .card:hover {
@@ -213,48 +212,57 @@
       }
 
       .user-avatar {
-        width: 50px;
-        height: 50px;
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         background: #e0e0e0;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 24px;
+        font-size: 18px;
         flex-shrink: 0;
       }
 
       .card-body {
         flex: 1;
         display: flex;
+        flex-direction: row;
         align-items: center;
-        gap: 24px;
+        gap: 12px;
+        min-width: 0;
       }
 
       .card-title {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         color: #222;
-        min-width: 120px;
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 80px;
       }
 
       .card-text {
-        font-size: 14px;
+        font-size: 12px;
         color: #666;
-        min-width: 200px;
         margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        flex: 1;
       }
 
       .card-date {
-        font-size: 13px;
+        font-size: 11px;
         color: #888;
+        white-space: nowrap;
       }
 
       .card-actions {
         display: flex;
         gap: 8px;
-        margin-left: auto;
+        flex-shrink: 0;
       }
 
       .btn {
@@ -315,29 +323,20 @@
           grid-column: 1 !important;
         }
 
-        .card {
-          flex-direction: column;
-          align-items: flex-start;
-          text-align: left;
+        .card-grid {
+          grid-template-columns: 1fr;
         }
 
         .card-body {
           flex-direction: column;
           align-items: flex-start;
-          gap: 8px;
-          width: 100%;
+          gap: 4px;
         }
 
         .card-title,
         .card-text {
           min-width: unset;
-        }
-
-        .card-actions {
-          margin-left: 0;
-          margin-top: 12px;
-          width: 100%;
-          justify-content: flex-end;
+          white-space: normal;
         }
       }
     </style>
