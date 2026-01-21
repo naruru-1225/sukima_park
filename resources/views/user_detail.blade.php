@@ -28,7 +28,7 @@
 --}}
 
 {{-- layouts/app.blade.phpを継承（共通のHTML構造を使用） --}}
-@extends('layouts.app')
+@extends('layouts.admin')
 
 {{-- ページタイトル（<title>タグの内容） --}}
     @section('title', 'ユーザー詳細 - スキマパーク管理')

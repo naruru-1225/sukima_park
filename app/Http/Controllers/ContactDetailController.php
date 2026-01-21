@@ -42,7 +42,7 @@ class ContactDetailController extends Controller
   public function show($id)
   {
     // 問い合わせをIDで取得（ユーザー情報も取得）
-    $contact = Contact::with('user')->findOrFail($id);
+    $contact = Contact::with('sender')->findOrFail($id);
 
     // contact_detail.blade.phpを表示し、データを渡す
     return view('contact_detail', compact('contact'));
@@ -64,14 +64,14 @@ class ContactDetailController extends Controller
   {
     // バリデーション
     $request->validate([
-      'status' => 'required|in:new,open,closed',
+      'status' => 'required|in:0,1,2',
     ]);
 
     // 問い合わせをIDで取得
     $contact = Contact::findOrFail($id);
 
     // ステータスを更新
-    $contact->status = $request->input('status');
+    $contact->STATUS = $request->input('status');
     $contact->save();
 
     // 成功メッセージと共に詳細画面にリダイレクト
@@ -102,13 +102,13 @@ class ContactDetailController extends Controller
     ]);
 
     // 問い合わせをIDで取得（ユーザー情報も取得）
-    $contact = Contact::with('user')->findOrFail($id);
+    $contact = Contact::with('sender')->findOrFail($id);
 
     // 返信内容を取得
     $replyBody = $request->input('reply_body');
 
     // ユーザーのメールアドレスを取得
-    $userEmail = $contact->user->email ?? $contact->user->EMAIL ?? null;
+    $userEmail = $contact->sender->EMAIL ?? null;
 
     if ($userEmail) {
       try {
@@ -119,8 +119,8 @@ class ContactDetailController extends Controller
         // });
 
         // ステータスを「対応中」に変更（まだ完了でない場合）
-        if ($contact->status === 'new') {
-          $contact->status = 'open';
+        if ($contact->STATUS === 0) {
+          $contact->STATUS = 1;
           $contact->save();
         }
 

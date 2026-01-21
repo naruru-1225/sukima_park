@@ -39,36 +39,28 @@ class MemberTableSeeder extends Seeder
         DB::table('MEMBER_TABLE')->truncate();
         Schema::enableForeignKeyConstraints();
 
-        Member::create([
-            'EMAIL' => 'userA@example.com',
-            'PASSWORD' => Hash::make('A1234567890'),
-            'TEL' => '090-0000-0001',
-            'BIRTH' => '1990-01-15',
-            'SHOW_BIRTH' => true,
-            'GENDER' => 0,
-            'SHOW_GENDER' => true,
-            'IDENTITY' => 'id_card_a.png',
-            'USERNAME' => 'User A',
-            'SELF_INTRODUCTION' => 'Seeder user A',
-            'ICON_IMAGE' => 'default_icon.png',
-            'ACCOUNT_STATUS' => 0,
-        ]);
+        // ユーザA～Zを作成（26人）
+        for ($i = 0; $i < 26; $i++) {
+            $letter = chr(65 + $i); // A～Z
+            $num = str_pad($i + 1, 4, '0', STR_PAD_LEFT); // 0001～0026
+            
+            Member::create([
+                'EMAIL' => "user{$letter}@example.com",
+                'PASSWORD' => Hash::make("{$letter}1234567890"),
+                'TEL' => "090-0000-{$num}",
+                'BIRTH' => sprintf('1980-%02d-15', ($i % 12) + 1),
+                'SHOW_BIRTH' => true,
+                'GENDER' => $i % 3,
+                'SHOW_GENDER' => true,
+                'IDENTITY' => "id_card_{$letter}.png",
+                'USERNAME' => "User {$letter}",
+                'SELF_INTRODUCTION' => "Seeder user {$letter}",
+                'ICON_IMAGE' => 'default_icon.png',
+                'ACCOUNT_STATUS' => 0,
+            ]);
+        }
 
-        Member::create([
-            'EMAIL' => 'userB@example.com',
-            'PASSWORD' => Hash::make('B1234567890'),
-            'TEL' => '090-0000-0002',
-            'BIRTH' => '1992-05-20',
-            'SHOW_BIRTH' => true,
-            'GENDER' => 1,
-            'SHOW_GENDER' => true,
-            'IDENTITY' => 'id_card_b.png',
-            'USERNAME' => 'User B',
-            'SELF_INTRODUCTION' => 'Seeder user B',
-            'ICON_IMAGE' => 'default_icon.png',
-            'ACCOUNT_STATUS' => 0,
-        ]);
-
+        // 管理者ユーザ
         Member::create([
             'EMAIL' => 'admin@example.com',
             'PASSWORD' => Hash::make('admin1234567890'),
@@ -84,10 +76,11 @@ class MemberTableSeeder extends Seeder
             'ACCOUNT_STATUS' => 2
         ]);
 
+        // 凍結ユーザ
         Member::create([
             'EMAIL' => 'BAN@example.com',
             'PASSWORD' => Hash::make('BAN1234567890'),
-            'TEL' => '090-0000-0003',
+            'TEL' => '090-0000-9999',
             'BIRTH' => '1988-03-10',
             'SHOW_BIRTH' => false,
             'GENDER' => 0,
