@@ -390,21 +390,10 @@
 @endpush
 
 @section('content')
-<header>
-    <div class="container header-inner">
-        <a href="{{ route('home') }}" class="logo">スキマパーク</a>
-        <div class="header-nav">
-            <a href="{{ route('land.register') }}" class="btn btn-primary">土地を登録</a>
-            <button class="icon-btn" title="メッセージ">💬</button>
-            <button class="icon-btn" title="アカウント">👤</button>
-        </div>
-    </div>
-</header>
-
-<main class="main-content">
+<div class="section">
     <div class="container">
         <div class="chat-header">
-            <button class="back-btn" onclick="history.back()">←</button>
+            <a href="{{ route('messages.index') }}" class="back-btn">←</a>
             <div class="chat-user-info">
                 <div class="chat-avatar">{{ mb_substr($recipient->name ?? '相手', 0, 1) }}</div>
                 <div class="chat-user-name">{{ $recipient->name ?? '相手' }}</div>
@@ -460,24 +449,7 @@
             </div>
         </div>
     </div>
-</main>
-
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-logo">スキマパーク</div>
-            <div class="footer-links">
-                <a href="#" class="footer-link">利用規約</a>
-                <a href="#" class="footer-link">プライバシーポリシー</a>
-                <a href="#" class="footer-link">ヘルプ</a>
-                <a href="#" class="footer-link">お問い合わせ</a>
-            </div>
-        </div>
-        <div class="footer-copyright">
-            &copy; 2025 スキマパーク All rights reserved.
-        </div>
-    </div>
-</footer>
+</div>
 @endsection
 
 @push('scripts')
@@ -554,5 +526,68 @@
         div.textContent = text;
         return div.innerHTML;
     }
+
+    // ===== ポーリングによるリアルタイム更新 =====
+    const pollUrl = '{{ route("messages.poll", $recipient->id) }}';
+    const recipientName = '{{ $recipient->name ?? "相手" }}';
+    const recipientInitial = '{{ mb_substr($recipient->name ?? "相手", 0, 1) }}';
+    let lastMessageId = {{ $messages->isNotEmpty() ? $messages->last()->id ?? 0 : 0 }};
+    let isPolling = true;
+
+    // 新着メッセージをチェック
+    async function pollMessages() {
+        if (!isPolling) return;
+
+        try {
+            const response = await fetch(`${pollUrl}?last_id=${lastMessageId}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(msg => {
+                        // 送信済みでない新着メッセージのみ追加
+                        if (!msg.is_sent) {
+                            appendMessage(msg);
+                        }
+                    });
+                    lastMessageId = data.last_id;
+                }
+            }
+        } catch (error) {
+            console.error('Polling error:', error);
+        }
+
+        // 3秒後に再度チェック
+        setTimeout(pollMessages, 3000);
+    }
+
+    // メッセージをDOMに追加
+    function appendMessage(msg) {
+        const messageHTML = 
+            '<div class="message ' + (msg.is_sent ? 'sent' : 'received') + '">' +
+                '<div class="message-avatar">' + (msg.is_sent ? '私' : recipientInitial) + '</div>' +
+                '<div class="message-content">' +
+                    '<div class="message-bubble">' + escapeHtml(msg.content) + '</div>' +
+                    '<div class="message-time">' + msg.time + '</div>' +
+                '</div>' +
+            '</div>';
+
+        messagesContainer.insertAdjacentHTML('beforeend', messageHTML);
+        scrollToBottom();
+    }
+
+    // ページ離脱時にポーリング停止
+    window.addEventListener('beforeunload', () => {
+        isPolling = false;
+    });
+
+    // ポーリング開始
+    setTimeout(pollMessages, 3000);
 </script>
 @endpush

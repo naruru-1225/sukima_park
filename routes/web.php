@@ -34,6 +34,7 @@ use App\Http\Controllers\RentalController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\ContactDetailController;
+use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -117,13 +118,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/review/store/{recordId}', [ReviewController::class, 'store'])->name('review.store');
 
     // --- メッセージ ---
-    Route::get('/messages', function () {
-        return view('message_list_screen', ['messages' => collect([])]);
-    })->name('messages.index');
-
-    Route::get('/messages/{id}', function ($id) {
-        return view('message_detail_screen', ['messageId' => $id]);
-    })->name('messages.show');
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::get('/messages/{partnerId}', [MessageController::class, 'show'])->name('messages.show');
+    Route::get('/messages/{partnerId}/poll', [MessageController::class, 'poll'])->name('messages.poll');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
 });
 
 
