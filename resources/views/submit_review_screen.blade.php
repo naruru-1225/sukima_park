@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="section">
-      <a href="{{ route('rental-history.show', $rental->id) }}" class="back-link">
+      <a href="{{ route('trade.detail', $rental->RECORD_ID) }}" class="back-link">
         ← 詳細に戻る
       </a>
 
@@ -16,9 +16,9 @@
 
           <!-- レビュー対象のサマリー -->
           <div class="review-summary">
-            <div class="summary-title">{{ $rental->land->title }}</div>
+            <div class="summary-title">{{ $rental->land->CITY ?? '' }} {{ $rental->land->STREET_ADDRESS ?? '' }}</div>
             <div class="summary-period">
-              利用期間: {{ $rental->start_date->format('Y/m/d') }} 〜 {{ $rental->end_date->format('Y/m/d') }}
+              利用期間: {{ $rental->RENTAL_START_DATE ? \Carbon\Carbon::parse($rental->RENTAL_START_DATE)->format('Y/m/d') : '-' }} 〜 {{ $rental->RENTAL_END_DATE ? \Carbon\Carbon::parse($rental->RENTAL_END_DATE)->format('Y/m/d') : '-' }}
             </div>
           </div>
 
@@ -33,7 +33,7 @@
           </div>
 
           <!-- レビューフォーム -->
-          <form action="{{ route('reviews.store', $rental->id) }}" method="POST" class="review-form-container">
+          <form action="{{ route('review.store', $rental->RECORD_ID) }}" method="POST" class="review-form-container">
             @csrf
             
             @if($errors->any())
@@ -92,7 +92,7 @@
 
             <!-- 貸し手の評価 -->
             <div class="form-section">
-              <h2 class="section-heading">👤 貸し手（{{ $rental->land->owner->name }}さん）の対応はいかがでしたか？</h2>
+              <h2 class="section-heading">👤 貸し手（{{ $rental->land->owner->USERNAME ?? '貸し手' }}さん）の対応はいかがでしたか？</h2>
 
               <div class="form-group">
                 <label class="form-label">
@@ -140,7 +140,7 @@
               <button type="submit" class="submit-btn">
                 レビューを送信する
               </button>
-              <a href="{{ route('rental-history.show', $rental->id) }}" class="cancel-btn">
+              <a href="{{ route('trade.detail', $rental->RECORD_ID) }}" class="cancel-btn">
                 キャンセル
               </a>
             </div>

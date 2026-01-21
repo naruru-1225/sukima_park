@@ -68,7 +68,7 @@
         </div>
         <div class="rental-card-footer">
             @unless($trade->review)
-                <a href="{{ route('trade.detail', $trade->RECORD_ID) }}#review-form" class="btn btn-secondary" style="margin-right: 8px;">レビューを投稿する</a>
+                <a href="{{ route('review.create', $trade->RECORD_ID) }}" class="btn btn-secondary" style="margin-right: 8px;">レビューを投稿する</a>
             @endunless
             <a href="{{ route('trade.detail', $trade->RECORD_ID) }}" class="btn btn-primary">詳細を見る</a>
         </div>

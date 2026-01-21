@@ -84,7 +84,7 @@
                     この取引についてのレビューを投稿できます。<br>
                     土地とオーナーについてのご意見をお聞かせください。
                 </p>
-                <a href="{{ route('trade.detail', $rental->RECORD_ID) }}#review-form" class="submit-btn" style="display: inline-block; margin-top: 16px;">
+                <a href="{{ route('review.create', $rental->RECORD_ID) }}" class="submit-btn" style="display: inline-block; margin-top: 16px;">
                     レビューを投稿する
                 </a>
             </div>

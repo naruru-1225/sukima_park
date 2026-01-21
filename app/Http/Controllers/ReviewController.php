@@ -50,7 +50,7 @@ class ReviewController extends Controller
         // 既存のレビューがあれば取得
         $existingReview = ReviewComment::where('RECORD_ID', $recordId)->first();
 
-        return view('review_create', [
+        return view('submit_review_screen', [
             'rental' => $rental,
             'existingReview' => $existingReview,
         ]);
@@ -77,19 +77,19 @@ class ReviewController extends Controller
             ->with('land')
             ->firstOrFail();
 
-        // バリデーション
+        // バリデーション（ビューのフォームフィールド名に合わせる）
         $validated = $request->validate([
-            'land_review' => 'required|integer|between:1,5',
-            'land_comment' => 'nullable|string|max:512',
-            'user_review' => 'required|integer|between:1,5',
-            'user_comment' => 'nullable|string|max:512',
+            'land_rating' => 'required|integer|between:1,5',
+            'land_comment' => 'nullable|string|max:500',
+            'owner_rating' => 'required|integer|between:1,5',
+            'owner_comment' => 'nullable|string|max:500',
         ], [
-            'land_review.required' => '土地の評価は必須です',
-            'land_review.between' => '土地の評価は1から5の間で選択してください',
-            'user_review.required' => '貸し手の評価は必須です',
-            'user_review.between' => '貸し手の評価は1から5の間で選択してください',
-            'land_comment.max' => 'コメントは512文字以内です',
-            'user_comment.max' => 'コメントは512文字以内です',
+            'land_rating.required' => '土地の評価は必須です',
+            'land_rating.between' => '土地の評価は1から5の間で選択してください',
+            'owner_rating.required' => '貸し手の評価は必須です',
+            'owner_rating.between' => '貸し手の評価は1から5の間で選択してください',
+            'land_comment.max' => 'コメントは500文字以内です',
+            'owner_comment.max' => 'コメントは500文字以内です',
         ]);
 
         // 既存のレビューをチェック
@@ -98,19 +98,19 @@ class ReviewController extends Controller
         if ($existingReview) {
             // 既存のレビューを更新
             $existingReview->update([
-                'LAND_REVIEW' => $validated['land_review'],
+                'LAND_REVIEW' => $validated['land_rating'],
                 'LAND_COMMENT' => $validated['land_comment'] ?? null,
-                'USER_REVIEW' => $validated['user_review'],
-                'USER_COMMENT' => $validated['user_comment'] ?? null,
+                'USER_REVIEW' => $validated['owner_rating'],
+                'USER_COMMENT' => $validated['owner_comment'] ?? null,
                 'DATE' => now()->toDateString(),
             ]);
         } else {
             // 新しいレビューを作成
             ReviewComment::create([
-                'LAND_REVIEW' => $validated['land_review'],
+                'LAND_REVIEW' => $validated['land_rating'],
                 'LAND_COMMENT' => $validated['land_comment'] ?? null,
-                'USER_REVIEW' => $validated['user_review'],
-                'USER_COMMENT' => $validated['user_comment'] ?? null,
+                'USER_REVIEW' => $validated['owner_rating'],
+                'USER_COMMENT' => $validated['owner_comment'] ?? null,
                 'DATE' => now()->toDateString(),
                 'USER_ID' => $user->USER_ID,
                 'LAND_ID' => $rental->LAND_ID,
