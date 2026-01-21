@@ -145,6 +145,7 @@
                     <div class="owner-header">
                         <div class="owner-avatar">
                             @if($rental->land->owner->ICON_IMAGE)
+                            
                                 <img src="{{ Storage::url($rental->land->owner->ICON_IMAGE) }}" alt="{{ $rental->land->owner->name }}">
                             @else
                                 👤
