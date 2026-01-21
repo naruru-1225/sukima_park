@@ -32,7 +32,7 @@
 --}}
 
 {{-- layouts/app.blade.phpを継承（共通のHTML構造を使用） --}}
-@extends('layouts.app')
+@extends('layouts.admin')
 
 {{-- ページタイトル（<title>タグの内容） --}}
   @section('title', 'ユーザ一覧 - スキマパーク管理')
@@ -95,7 +95,7 @@
 
               {{-- アクションボタン --}}
               <div class="card-actions">
-                <a href="{{ url('/admin/users/' . $user->USER_ID) }}" class="btn btn-primary">詳細</a>
+                <a href="{{ url('/admin/users/' . $user->USER_ID) }}" class="btn btn-secondary">詳細</a>
               </div>
             </div>
           @empty
