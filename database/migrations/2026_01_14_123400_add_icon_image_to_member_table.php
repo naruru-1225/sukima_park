@@ -14,7 +14,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('MEMBER_TABLE', function (Blueprint $table) {
-            $table->string('ICON_IMAGE')->nullable()->after('IDENTITY_IMAGE');
+            if (!Schema::hasColumn('MEMBER_TABLE', 'ICON_IMAGE')) {
+                $table->string('ICON_IMAGE')->nullable();
+            }
         });
     }
 

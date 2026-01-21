@@ -96,13 +96,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
 
     // --- 土地登録 ---
-    Route::get('/land/register', function () {
-        return view('land_register');
-    })->name('land.register');
-
-    Route::get('/land/register/confirm', function () {
-        return view('land_register_confirm');
-    })->name('land.register.confirm');
+    Route::get('/land/register', [LandController::class, 'showRegisterForm'])->name('land.register');
+    Route::post('/land/register', [LandController::class, 'register']);
+    Route::get('/land/register/confirm', [LandController::class, 'showConfirm'])->name('land.register.confirm');
+    Route::post('/land/register/store', [LandController::class, 'store'])->name('land.register.store');
 
     // --- レンタル一覧（借りている土地一覧） ---
     Route::get('/rental_list', [RentalController::class, 'index'])->name('rental_list');

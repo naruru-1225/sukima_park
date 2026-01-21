@@ -11,7 +11,7 @@
                 {{-- ログイン済み --}}
                 <ul class="nav-list">
                     <li>
-                        <a href="{{ url('/lands/create') }}" class="btn btn-primary">
+                    <a href="{{ route('land.register') }}" class="btn btn-primary">
                             土地を登録
                         </a>
                     </li>

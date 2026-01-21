@@ -33,7 +33,10 @@ return new class extends Migration
     {
         Schema::table('MEMBER_TABLE', function (Blueprint $table) {
             // IDENTITY_IMAGEカラムを追加（varchar(255), NULL許可）
-            $table->string('IDENTITY_IMAGE')->nullable()->after('IDENTITY');
+            // カラムが存在しない場合のみ追加
+            if (!Schema::hasColumn('MEMBER_TABLE', 'IDENTITY_IMAGE')) {
+                $table->string('IDENTITY_IMAGE')->nullable();
+            }
         });
     }
 
