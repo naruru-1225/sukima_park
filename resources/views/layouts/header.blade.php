@@ -29,6 +29,12 @@
                             @endif
                         </a>
                     </li>
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="logout-btn nav-icon-btn"title="ログアウト">🚪</button>
+                        </form>
+                    </li>
                 </ul>
             @else
                 {{-- 未ログイン --}}
