@@ -23,10 +23,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LandDetailController;
 use App\Http\Controllers\LandController;
 use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
 use App\Http\Controllers\MyLandListController;
+use App\Http\Controllers\SearchListController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserListController;
 use App\Http\Controllers\UserDetailController;
@@ -151,7 +153,23 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 // 公開ビュー確認用ルート（認証不要）
 // ============================================================
 
-// 土地検索結果
+// 土地検索結果一覧（SearchListControllerで処理）
+Route::get('/lands', [SearchListController::class, 'index'])->name('lands.index');
+Route::get('/lands/{id}', [LandDetailController::class, 'show'])->name('lands.show');
+
+// レンタル確認画面（ログイン必須）
+Route::middleware('auth')->group(function () {
+    Route::get('/rental/confirm/{id}', function ($id) {
+        $land = \App\Models\Land::with('owner')->findOrFail($id);
+        return view('rental_confirm', [
+            'land' => $land,
+            'time_start' => request('time_start'),
+            'time_end' => request('time_end'),
+        ]);
+    })->name('rental.confirm');
+});
+
+// 土地検索結果（レガシールート - 互換性のため残す）
 Route::get('/search', function () {
     return view('search_list', ['lands' => collect([])]);
 })->name('search');
