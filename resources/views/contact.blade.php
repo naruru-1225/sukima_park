@@ -152,7 +152,7 @@
             </div>
         @endif
 
-        <form action="{{ route('contact') }}" method="POST">
+        <form action="{{ route('contact.store') }}" method="POST">
             @csrf
 
             <div class="form-group">
