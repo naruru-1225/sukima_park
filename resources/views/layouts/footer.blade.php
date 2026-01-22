@@ -7,7 +7,7 @@
                 <p class="footer-tagline">あなたのスキマ、誰かの価値に。</p>
             </div>
             <div class="footer-links">
-                <a href="{{ route('contact.form') }}" class="footer-link">📩 お問い合わせ</a>
+                <a href="{{ route('contact') }}" class="footer-link">📩 お問い合わせ</a>
             </div>
         </div>
         
