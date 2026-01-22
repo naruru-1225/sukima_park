@@ -58,7 +58,12 @@ class SearchListController extends Controller
         // 1. クエリビルダーの初期化
         // ============================================================
         // 公開中の土地のみを対象（STATUS = true）
-        $query = Land::where('STATUS', true);
+        //$query = Land::where('STATUS', true);
+        // STATUSカラムが存在しない場合は全土地を対象
+        $query = Land::query();
+        if (\Illuminate\Support\Facades\Schema::hasColumn('LAND_TABLE', 'STATUS')) {
+            $query->where('STATUS', true);
+        }
 
         // ============================================================
         // 2. フリーワード検索
