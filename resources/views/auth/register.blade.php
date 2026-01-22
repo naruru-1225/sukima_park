@@ -479,7 +479,7 @@
               {{-- 電話番号入力欄 --}}
               <div class="form-group">
                 <label for="phone"
-                  >電話番号<span class="required">必須</span></label
+                  >電話番号<span class="form-control-hint" style="margin-left: 8px;">任意</span></label
                 >
                 <input
                   type="tel"
@@ -487,7 +487,6 @@
                   name="tel"
                   class="form-control"
                   placeholder="例: 09012345678（ハイフンなし）"
-                  required
                   pattern="[0-9]{10,11}"
                   autocomplete="tel"
                   value="{{ old('tel') }}"
@@ -501,14 +500,13 @@
               {{-- 生年月日入力欄 --}}
               <div class="form-group">
                 <label for="birthdate"
-                  >生年月日<span class="required">必須</span></label
+                  >生年月日<span class="form-control-hint" style="margin-left: 8px;">任意</span></label
                 >
                 <input
                   type="date"
                   id="birthdate"
                   name="birth"
                   class="form-control"
-                  required
                   max=""
                   autocomplete="bday"
                   value="{{ old('birth') }}"
@@ -518,10 +516,10 @@
 
               {{-- 性別選択（ラジオボタン） --}}
               <div class="form-group">
-                <label>性別<span class="required">必須</span></label>
+                <label>性別<span class="form-control-hint" style="margin-left: 8px;">任意</span></label>
                 <div class="radio-group">
                   <label class="radio-label">
-                    <input type="radio" name="gender" value="0" required />
+                    <input type="radio" name="gender" value="0" />
                     <span>男性</span>
                   </label>
                   <label class="radio-label">
@@ -725,35 +723,16 @@
         }
 
         // ============================================================
-        // 電話番号のバリデーション
+        // 電話番号のバリデーション（任意、入力時のみチェック）
         // ============================================================
         const phone = document.getElementById("phone").value.trim();
-        if (!phone) {
-          showError("phone", "電話番号を入力してください");
-          isValid = false;
-        } else if (!/^[0-9]{10,11}$/.test(phone)) {
+        if (phone && !/^[0-9]{10,11}$/.test(phone)) {
           // 正規表現: 10〜11桁の数字のみ
           showError("phone", "10〜11桁の数字で入力してください（ハイフンなし）");
           isValid = false;
         }
 
-        // ============================================================
-        // 生年月日のバリデーション
-        // ============================================================
-        const birthdate = document.getElementById("birthdate").value;
-        if (!birthdate) {
-          showError("birthdate", "生年月日を選択してください");
-          isValid = false;
-        }
-
-        // ============================================================
-        // 性別のバリデーション
-        // ============================================================
-        const gender = document.querySelector('input[name="gender"]:checked');
-        if (!gender) {
-          showError("gender", "性別を選択してください");
-          isValid = false;
-        }
+        // 生年月日・性別は任意のためバリデーション不要
 
         // ============================================================
         // 本人確認書類のバリデーション
