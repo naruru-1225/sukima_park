@@ -234,7 +234,7 @@
 
                 {{-- ページネーション --}}
                 <div class="pagination-wrapper">
-                    {{ $lands->appends(request()->query())->links() }}
+                    {{ $lands->appends(request()->query())->links('components.custom-pagination') }}
                 </div>
             @else
                 {{-- 検索結果0件 --}}
@@ -492,6 +492,87 @@
             margin-top: 32px;
             display: flex;
             justify-content: center;
+        }
+
+        .custom-pagination {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* 結果表示テキスト: ( 21 ~ 40 of 100 ) */
+        .pagination-info {
+            font-size: 14px;
+            color: var(--text-gray);
+        }
+
+        /* ページネーションリンクのコンテナ */
+        .pagination-links {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ページ番号共通スタイル */
+        .pagination-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            border-radius: 6px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            color: var(--text-dark);
+            border: none;
+            background: transparent;
+        }
+
+        .pagination-number:hover {
+            color: var(--primary);
+        }
+
+        /* 現在のページ */
+        .pagination-number.active {
+            color: var(--primary);
+            font-weight: bold;
+            background: transparent;
+            border: none;
+        }
+
+        /* 矢印 (< >) - 数字の1.5倍の大きさ */
+        .pagination-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 8px;
+            font-size: 21px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+            color: var(--text-dark);
+            border: none;
+            background: transparent;
+        }
+
+        .pagination-arrow:hover {
+            color: var(--primary);
+        }
+
+        /* ... のスタイル */
+        .pagination-dots {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            font-size: 14px;
+            color: var(--text-gray);
         }
 
         /* 検索結果0件 */
