@@ -41,7 +41,7 @@
         <div class="container">
             <div class="section-header">
                 <h2 class="section-title">問い合わせ詳細 (ID: {{ $contact->CONTACT_ID ?? '---' }})</h2>
-                <a href="{{ url('/admin/contacts') }}" class="view-all">← 問い合わせ一覧に戻る</a>
+                <a href="{{ url('/admin/contact_list') }}" class="view-all">← 問い合わせ一覧に戻る</a>
             </div>
 
             {{-- 成功メッセージ --}}
@@ -85,7 +85,7 @@
                 </div>
 
                 <form class="status-form" method="POST"
-                    action="{{ url('/admin/contacts/' . ($contact->CONTACT_ID ?? 0) . '/status') }}">
+                    action="{{ url('/admin/contact/' . ($contact->CONTACT_ID ?? 0) . '/status') }}">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
@@ -104,7 +104,7 @@
 
             <div class="reply-box">
                 <h3>返信する</h3>
-                <form method="POST" action="{{ url('/admin/contacts/' . ($contact->CONTACT_ID ?? 0) . '/reply') }}">
+                <form method="POST" action="{{ url('/admin/contact/' . ($contact->CONTACT_ID ?? 0) . '/reply') }}">
                     @csrf
                     <div class="form-group">
                         <label for="reply_body">返信内容</label>
