@@ -112,10 +112,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/rental_list/{id}', [RentalController::class, 'show'])->name('rental_list.show');
 
     // --- 取引完了一覧 ---
-    Route::get('/trade_fin_list', function () {
-        return view('trade_list', ['trades' => collect([])]);
-    })->name('trade_fin_list');
-    Route::get('/rental/history', [RentalController::class, 'history'])->name('rental.history'); // trade_fin_list のエイリアス
+    Route::get('/trade_fin_list', [RentalController::class, 'completedList'])->name('trade_fin_list');
+    Route::get('/rental/history', [RentalController::class, 'completedList'])->name('rental.history'); // trade_fin_list のエイリアス
 
     // --- 取引完了詳細 ---
     Route::get('/trade/{id}', [TradeDetailController::class, 'show'])->name('trade.detail');
