@@ -68,12 +68,9 @@ class UserDetailController extends Controller
     $user = Member::findOrFail($id);
 
     // ステータスを更新
+    // status: "0" = 有効, "1" = 利用停止中
     $status = $request->input('status');
-    if ($status === 'active') {
-      $user->STATUS = 1;
-    } elseif ($status === 'suspended') {
-      $user->STATUS = 0;
-    }
+    $user->ACCOUNT_STATUS = (int) $status;
     $user->save();
 
     // 成功メッセージと共に詳細画面にリダイレクト

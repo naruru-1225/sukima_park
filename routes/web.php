@@ -116,7 +116,7 @@ Route::middleware('auth')->group(function () {
         return view('trade_list', ['trades' => collect([])]);
     })->name('trade_fin_list');
     Route::get('/rental/history', [RentalController::class, 'history'])->name('rental.history'); // trade_fin_list のエイリアス
-    
+
     // --- 取引完了詳細 ---
     Route::get('/trade/{id}', [TradeDetailController::class, 'show'])->name('trade.detail');
 
@@ -135,13 +135,13 @@ Route::middleware('auth')->group(function () {
     // --- 管理画面（問い合わせ） ---
     Route::get('/admin/contact_list', [ContactListController::class, 'index'])->name('admin.contact_list');
     Route::get('/admin/contact/{id}', [ContactDetailController::class, 'show'])->name('admin.contact.detail');
-    Route::post('/admin/contact/{id}/status', [ContactDetailController::class, 'updateStatus'])->name('admin.contact.status');
+    Route::put('/admin/contact/{id}/status', [ContactDetailController::class, 'updateStatus'])->name('admin.contact.status');
     Route::post('/admin/contact/{id}/reply', [ContactDetailController::class, 'reply'])->name('admin.contact.reply');
 
     // --- 管理画面（ユーザー管理） ---
     Route::get('/admin/users', [UserListController::class, 'index'])->name('admin.user_list');
     Route::get('/admin/users/{id}', [UserDetailController::class, 'show'])->name('admin.user.detail');
-    Route::post('/admin/users/{id}', [UserDetailController::class, 'update'])->name('admin.user.update');
+    Route::put('/admin/users/{id}', [UserDetailController::class, 'update'])->name('admin.user.update');
     Route::delete('/admin/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.user.destroy');
 });
 
@@ -190,13 +190,13 @@ Route::get('/test-layout', function () {
 // レンタル一覧テスト
 Route::get('/test-rentals', function () {
     $rentals = collect([
-        (object)[
+        (object) [
             'RECORD_ID' => 1,
             'PRICE' => 3000,
             'PRICE_UNIT' => 0,
             'RENTAL_START_DATE' => now()->addDays(2),
             'RENTAL_END_DATE' => now()->addDays(9),
-            'land' => (object)[
+            'land' => (object) [
                 'LAND_ID' => 1,
                 'CITY' => '渋谷区',
                 'STREET_ADDRESS' => '神南1-2-3',
