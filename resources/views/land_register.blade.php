@@ -28,6 +28,11 @@
 
 @section('content')
 
+@php
+    // セッションから登録データを取得（確認画面から戻った場合用）
+    $sessionData = session('land_register', []);
+@endphp
+
 {{-- ページ固有のスタイル --}}
 <style>
     :root {
@@ -275,7 +280,7 @@
                             placeholder="例: 駅前スペース"
                             required
                             maxlength="255"
-                            value="{{ old('name') }}"
+                            value="{{ old('name', $sessionData['name'] ?? '') }}"
                         />
                         <p class="form-control-hint">借り手に分かりやすい名前を付けてください</p>
                         @error('name')
@@ -306,7 +311,7 @@
                                 ];
                             @endphp
                             @foreach ($prefectures as $code => $name)
-                                <option value="{{ $code }}" {{ old('prefectures') == $code ? 'selected' : '' }}>
+                                <option value="{{ $code }}" {{ old('prefectures', $sessionData['prefectures'] ?? '') == $code ? 'selected' : '' }}>
                                     {{ $name }}
                                 </option>
                             @endforeach
@@ -327,7 +332,7 @@
                             placeholder="例: 渋谷区"
                             required
                             maxlength="255"
-                            value="{{ old('city') }}"
+                            value="{{ old('city', $sessionData['city'] ?? '') }}"
                         />
                         @error('city')
                             <p class="error-message">{{ $message }}</p>
@@ -345,7 +350,7 @@
                             placeholder="例: 渋谷1-2-3"
                             required
                             maxlength="255"
-                            value="{{ old('street_address') }}"
+                            value="{{ old('street_address', $sessionData['street_address'] ?? '') }}"
                         />
                         <p class="form-control-hint">正確な住所を入力してください</p>
                         @error('street_address')
@@ -366,7 +371,7 @@
                                 required
                                 min="0.1"
                                 step="0.01"
-                                value="{{ old('area') }}"
+                                value="{{ old('area', $sessionData['area'] ?? '') }}"
                             />
                             <span class="input-group-text">㎡</span>
                         </div>
@@ -386,7 +391,7 @@
                                 class="form-control @error('price') error @enderror"
                                 placeholder="例: 3000"
                                 min="0"
-                                value="{{ old('price') }}"
+                                value="{{ old('price', $sessionData['price'] ?? '') }}"
                             />
                             <span class="input-group-text">円</span>
                         </div>
@@ -405,7 +410,7 @@
                             class="form-control @error('description') error @enderror"
                             placeholder="土地の特徴、利用可能な用途、注意事項などを詳しく記載してください"
                             maxlength="1000"
-                        >{{ old('description') }}</textarea>
+                        >{{ old('description', $sessionData['description'] ?? '') }}</textarea>
                         <p class="form-control-hint">詳細な説明は借り手の判断材料になります（最大1000文字）</p>
                         @error('description')
                             <p class="error-message">{{ $message }}</p>

@@ -42,7 +42,7 @@
             </div>
 
             <div class="filter-box">
-                <form class="filter-form" method="GET" action="{{ url('/admin/contacts') }}">
+                <form class="filter-form" method="GET" action="{{ url('/admin/contact_list') }}">
                     <div class="filter-group" style="grid-column: 1 / span 2">
                         <label for="keyword">件名 or 内容</label>
                         <input
@@ -113,7 +113,7 @@
                                     @endswitch
                                 </td>
                                 <td>
-                                    <a href="{{ url('/admin/contacts/' . $contact->CONTACT_ID) }}" class="btn btn-secondary">詳細</a>
+                                    <a href="{{ url('/admin/contact/' . $contact->CONTACT_ID) }}" class="btn btn-secondary">詳細</a>
                                 </td>
                             </tr>
                         @empty

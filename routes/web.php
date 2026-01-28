@@ -39,6 +39,8 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SearchListController;
 use App\Http\Controllers\TradeDetailController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserDetailController;
+use App\Http\Controllers\UserListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -135,6 +137,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/admin/contact/{id}', [ContactDetailController::class, 'show'])->name('admin.contact.detail');
     Route::post('/admin/contact/{id}/status', [ContactDetailController::class, 'updateStatus'])->name('admin.contact.status');
     Route::post('/admin/contact/{id}/reply', [ContactDetailController::class, 'reply'])->name('admin.contact.reply');
+
+    // --- 管理画面（ユーザー管理） ---
+    Route::get('/admin/users', [UserListController::class, 'index'])->name('admin.user_list');
+    Route::get('/admin/users/{id}', [UserDetailController::class, 'show'])->name('admin.user.detail');
+    Route::post('/admin/users/{id}', [UserDetailController::class, 'update'])->name('admin.user.update');
+    Route::delete('/admin/users/{id}', [UserDetailController::class, 'destroy'])->name('admin.user.destroy');
 });
 
 

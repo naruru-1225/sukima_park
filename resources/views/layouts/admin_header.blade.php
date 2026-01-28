@@ -27,7 +27,7 @@
       <ul class="nav-list">
         {{-- 問い合わせ一覧リンク --}}
         <li>
-          <a href="{{ url('/admin/contacts') }}" class="nav-link">
+          <a href="{{ url('/admin/contact_list') }}" class="nav-link">
             問い合わせ一覧
           </a>
         </li>

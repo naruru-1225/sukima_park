@@ -211,16 +211,6 @@
                     <button type="submit" class="btn btn-primary btn-block">検索する</button>
                 </form>
 
-                {{-- 
-                地図から検索エリア
-                将来的にGoogle Maps APIを使用予定
-                クリックで地図検索画面に遷移
-                --}}
-                <div class="map-search">
-                    <div class="map-icon">🗺️</div>
-                    <div class="map-text">地図から検索</div>
-                    <div class="map-subtext">マップ上で直接エリアを選んで土地を探せます</div>
-                </div>
             </div>
         </div>
     </div>
@@ -390,35 +380,7 @@
         color: #666;
         font-size: 14px;
     }
-    .map-search {
-        background: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
-        border: 2px dashed #66bb6a;
-        border-radius: 12px;
-        padding: 30px 20px;
-        text-align: center;
-        margin-top: 24px;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-    .map-search:hover {
-        background: linear-gradient(135deg, #bbdefb 0%, #c8e6c9 100%);
-        border-color: #43a047;
-        transform: translateY(-2px);
-    }
-    .map-icon {
-        font-size: 48px;
-        margin-bottom: 12px;
-    }
-    .map-text {
-        font-size: 18px;
-        font-weight: 600;
-        color: #1b5e20;
-        margin-bottom: 8px;
-    }
-    .map-subtext {
-        font-size: 14px;
-        color: #558b2f;
-    }
+
     .section {
         padding: 60px 0;
     }
