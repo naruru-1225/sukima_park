@@ -218,7 +218,7 @@ class LandController extends Controller
             'RENTAL_START_TIME' => null,  
             'RENTAL_END_TIME' => null,    
             'PRICE' => $landData['price'] ?? 0,
-            'PRICE_UNIT' => 0,            // デフォルト: 時間単位
+            'PRICE_UNIT' => 0,            // デフォルト: 日単位（0:日 1:時間 2:15分）
             'USER_ID' => Auth::id(),      // ログインユーザーのID
             'STATUS' => false,            // 初期状態: 非公開
         ]);
