@@ -224,17 +224,6 @@
 @endpush
 
 @section('content')
-<header>
-    <div class="container header-inner">
-        <a href="{{ route('home') }}" class="logo">スキマパーク</a>
-        <div class="header-nav">
-            <a href="{{ route('land.register') }}" class="btn btn-primary">土地を登録</a>
-            <button class="icon-btn" title="メッセージ">💬</button>
-            <button class="icon-btn" title="アカウント">👤</button>
-        </div>
-    </div>
-</header>
-
 <main class="main-content">
     <div class="container">
         <h2>プロフィール確認</h2>
@@ -340,8 +329,6 @@
         </form>
     </div>
 </main>
-
-@include('partials.footer')
 @endsection
 
 @push('scripts')
