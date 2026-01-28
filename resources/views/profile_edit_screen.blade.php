@@ -321,26 +321,25 @@
     <div class="container">
         <h2>プロフィール編集</h2>
         
-        <form id="profileForm" action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        <form id="profileForm" action="{{ route('prof_custom.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
 
             <!-- アイコン画像 -->
             <div class="profile-image-section">
                 <label style="text-align: center;">アイコン画像</label>
                 <div class="profile-image-container">
                     <div class="profile-image" id="profileImg">
-                        @if(isset($user) && $user->profile_image)
-                            <img src="{{ asset('storage/' . $user->profile_image) }}" alt="プロフィール画像" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
+                        @if(isset($user) && $user->ICON_IMAGE)
+                            <img src="{{ asset('storage/' . $user->ICON_IMAGE) }}" alt="プロフィール画像" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
                         @else
                             👤
                         @endif
                     </div>
                     <button type="button" class="upload-btn" onclick="document.getElementById('imageInput').click()">📷</button>
-                    <input type="file" id="imageInput" name="profile_image" accept="image/*">
+                    <input type="file" id="imageInput" name="icon_image" accept="image/*">
                 </div>
                 <div class="file-name" id="fileName"></div>
-                @error('profile_image')
+                @error('icon_image')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -349,36 +348,29 @@
             <h3 style="color: #2e7d32; margin-bottom: 20px; border-bottom: 2px solid #c8e6c9; padding-bottom: 10px;">非公開情報</h3>
             
             <div class="form-group">
-                <label for="loginId">ログインID</label>
-                <input type="text" id="loginId" name="login_id" placeholder="例: yamada_taro" 
-                       value="{{ old('login_id', $user->login_id ?? '') }}" required>
-                @error('login_id')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="email">メールアドレス</label>
-                <input type="email" id="email" name="email" placeholder="example@email.com" 
-                       value="{{ old('email', $user->email ?? '') }}" required>
+                <label for="email">メールアドレス（変更不可）</label>
+                <input type="email" id="email" name="email" 
+                       value="{{ old('email', $user->EMAIL ?? '') }}" readonly 
+                       style="background-color: #f5f5f5; cursor: not-allowed;">
                 @error('email')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password">パスワード</label>
-                <input type="password" id="password" name="password" placeholder="パスワードを変更する場合は入力してください">
+                <label for="password">パスワード（変更する場合のみ入力）</label>
+                <input type="password" id="password" name="password" placeholder="変更しない場合は空欄のまま">
                 @error('password')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="phone">電話番号</label>
-                <input type="tel" id="phone" name="phone" placeholder="090-1234-5678" 
-                       value="{{ old('phone', $user->phone ?? '') }}" required>
-                @error('phone')
+                <label for="tel">電話番号（変更不可）</label>
+                <input type="tel" id="tel" name="tel" 
+                       value="{{ old('tel', $user->TEL ?? '') }}" readonly
+                       style="background-color: #f5f5f5; cursor: not-allowed;">
+                @error('tel')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -387,22 +379,22 @@
             <h3 style="color: #2e7d32; margin: 40px 0 20px; border-bottom: 2px solid #c8e6c9; padding-bottom: 10px;">公開情報</h3>
 
             <div class="form-group">
-                <label for="birthdate">生年月日</label>
-                <input type="date" id="birthdate" name="birthdate" 
-                       value="{{ old('birthdate', $user->birthdate ?? '') }}" required>
-                @error('birthdate')
+                <label for="birth">生年月日</label>
+                <input type="date" id="birth" name="birth" 
+                       value="{{ old('birth', $user->BIRTH ? $user->BIRTH->format('Y-m-d') : '') }}" required>
+                @error('birth')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="birthdateVisibility">生年月日の公開設定</label>
-                <select id="birthdateVisibility" name="birthdate_visibility" 
+                <label for="showBirth">生年月日の公開設定</label>
+                <select id="showBirth" name="show_birth" 
                         style="width: 100%; padding: 12px 16px; border: 2px solid #c8e6c9; border-radius: 10px; font-size: 16px; background: #fafafa;">
-                    <option value="public" {{ old('birthdate_visibility', $user->birthdate_visibility ?? '') == 'public' ? 'selected' : '' }}>公開</option>
-                    <option value="private" {{ old('birthdate_visibility', $user->birthdate_visibility ?? '') == 'private' ? 'selected' : '' }}>非公開</option>
+                    <option value="1" {{ old('show_birth', $user->SHOW_BIRTH ?? 0) == 1 ? 'selected' : '' }}>公開</option>
+                    <option value="0" {{ old('show_birth', $user->SHOW_BIRTH ?? 0) == 0 ? 'selected' : '' }}>非公開</option>
                 </select>
-                @error('birthdate_visibility')
+                @error('show_birth')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -411,11 +403,9 @@
                 <label for="gender">性別</label>
                 <select id="gender" name="gender" 
                         style="width: 100%; padding: 12px 16px; border: 2px solid #c8e6c9; border-radius: 10px; font-size: 16px; background: #fafafa;" required>
-                    <option value="">選択してください</option>
-                    <option value="male" {{ old('gender', $user->gender ?? '') == 'male' ? 'selected' : '' }}>男性</option>
-                    <option value="female" {{ old('gender', $user->gender ?? '') == 'female' ? 'selected' : '' }}>女性</option>
-                    <option value="other" {{ old('gender', $user->gender ?? '') == 'other' ? 'selected' : '' }}>その他</option>
-                    <option value="no_answer" {{ old('gender', $user->gender ?? '') == 'no_answer' ? 'selected' : '' }}>回答しない</option>
+                    <option value="0" {{ old('gender', $user->GENDER ?? 0) == 0 ? 'selected' : '' }}>未設定</option>
+                    <option value="1" {{ old('gender', $user->GENDER ?? 0) == 1 ? 'selected' : '' }}>男性</option>
+                    <option value="2" {{ old('gender', $user->GENDER ?? 0) == 2 ? 'selected' : '' }}>女性</option>
                 </select>
                 @error('gender')
                     <span class="text-danger">{{ $message }}</span>
@@ -423,13 +413,13 @@
             </div>
 
             <div class="form-group">
-                <label for="genderVisibility">性別の公開設定</label>
-                <select id="genderVisibility" name="gender_visibility" 
+                <label for="showGender">性別の公開設定</label>
+                <select id="showGender" name="show_gender" 
                         style="width: 100%; padding: 12px 16px; border: 2px solid #c8e6c9; border-radius: 10px; font-size: 16px; background: #fafafa;">
-                    <option value="public" {{ old('gender_visibility', $user->gender_visibility ?? '') == 'public' ? 'selected' : '' }}>公開</option>
-                    <option value="private" {{ old('gender_visibility', $user->gender_visibility ?? '') == 'private' ? 'selected' : '' }}>非公開</option>
+                    <option value="1" {{ old('show_gender', $user->SHOW_GENDER ?? 0) == 1 ? 'selected' : '' }}>公開</option>
+                    <option value="0" {{ old('show_gender', $user->SHOW_GENDER ?? 0) == 0 ? 'selected' : '' }}>非公開</option>
                 </select>
-                @error('gender_visibility')
+                @error('show_gender')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
@@ -437,24 +427,24 @@
             <div class="form-group">
                 <label for="username">ユーザ名</label>
                 <input type="text" id="username" name="username" placeholder="例: 山田 太郎" 
-                       value="{{ old('username', $user->username ?? '') }}" required>
+                       value="{{ old('username', $user->USERNAME ?? '') }}" required>
                 @error('username')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="bio">自己紹介</label>
-                <textarea id="bio" name="bio" rows="5" placeholder="あなたについて教えてください" 
-                          style="width: 100%; padding: 12px 16px; border: 2px solid #c8e6c9; border-radius: 10px; font-size: 16px; background: #fafafa; font-family: inherit; resize: vertical;">{{ old('bio', $user->bio ?? '') }}</textarea>
-                @error('bio')
+                <label for="selfIntroduction">自己紹介</label>
+                <textarea id="selfIntroduction" name="self_introduction" rows="5" placeholder="あなたについて教えてください（140字以内）" 
+                          style="width: 100%; padding: 12px 16px; border: 2px solid #c8e6c9; border-radius: 10px; font-size: 16px; background: #fafafa; font-family: inherit; resize: vertical;">{{ old('self_introduction', $user->SELF_INTRODUCTION ?? '') }}</textarea>
+                @error('self_introduction')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
             </div>
 
             <div class="button-group">
-                <button type="button" onclick="history.back()">キャンセル</button>
-                <button type="submit">保存する</button>
+                <button type="button" onclick="if(confirm('編集内容を破棄してもよろしいですか？')) { window.location.href = '{{ route('mypage') }}'; }">キャンセル</button>
+                <button type="submit">確認する</button>
             </div>
         </form>
     </div>

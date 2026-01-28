@@ -22,12 +22,23 @@
  */
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ContactDetailController;
+use App\Http\Controllers\ContactListController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LandController;
+use App\Http\Controllers\LandDetailController;
 use App\Http\Controllers\LandPublicController;
 use App\Http\Controllers\LoanDetailController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\MyLandListController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RentalController;
+use App\Http\Controllers\Rental_ConfirmController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\SearchListController;
+use App\Http\Controllers\TradeDetailController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,16 +82,28 @@ Route::middleware('auth')->group(function () {
     // --- マイページ ---
     Route::get('/mypage', [UserController::class, 'mypage'])->name('mypage');
 
-    // --- プロフィール編集（仮実装） ---
-    Route::get('/prof_custom', function () {
-        return 'プロフィール編集画面（未実装）';
-    })->name('prof_custom');
+    // --- プロフィール編集 ---
+    Route::get('/prof_custom', [ProfileController::class, 'edit'])->name('prof_custom');
+    Route::post('/prof_custom', [ProfileController::class, 'update'])->name('prof_custom.update');
+    Route::get('/prof_check', [ProfileController::class, 'confirm'])->name('prof_check');
+    Route::post('/prof_check', [ProfileController::class, 'store'])->name('prof_check.store');
 
     // --- 土地管理 ---
     Route::get('/my_land_list', [MyLandListController::class, 'index'])->name('my_land_list');
     Route::get('/loan_detail/{id}', [LoanDetailController::class, 'show'])->name('loan_detail');
     Route::get('/land_public/{id}', [LandPublicController::class, 'edit'])->name('land_public');
     Route::post('/land_public/{id}/toggle_status', [LandPublicController::class, 'toggleStatus'])->name('land_public.toggle_status');
+
+    // --- 土地登録 ---
+    Route::get('/land/register', [LandController::class, 'showRegisterForm'])->name('land.register');
+    Route::post('/land/register', [LandController::class, 'register']);
+    Route::get('/land/register/confirm', [LandController::class, 'showConfirm'])->name('land.register.confirm');
+    Route::post('/land/register/store', [LandController::class, 'store'])->name('land.register.store');
+
+    // --- 土地詳細・予約 ---
+    Route::get('/land/{id}', [LandDetailController::class, 'show'])->name('land.detail');
+    Route::get('/rental/confirm/{id}', [Rental_ConfirmController::class, 'show'])->name('rental.confirm');
+    Route::post('/rental/confirm/{id}', [Rental_ConfirmController::class, 'store'])->name('rental.store');
 
     // --- レンタル一覧（借りている土地一覧） ---
     Route::get('/rental_list', [RentalController::class, 'index'])->name('rental_list');
@@ -90,6 +113,28 @@ Route::middleware('auth')->group(function () {
     Route::get('/trade_fin_list', function () {
         return view('trade_list', ['trades' => collect([])]);
     })->name('trade_fin_list');
+    Route::get('/rental/history', [RentalController::class, 'history'])->name('rental.history'); // trade_fin_list のエイリアス
+    
+    // --- 取引完了詳細 ---
+    Route::get('/trade/{id}', [TradeDetailController::class, 'show'])->name('trade.detail');
+
+    // --- メッセージ（DM）---
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/create', [MessageController::class, 'create'])->name('messages.create');
+    Route::get('/messages/{userId}', [MessageController::class, 'show'])->name('messages.show');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+    Route::get('/messages/poll/{userId}', [MessageController::class, 'poll'])->name('messages.poll');
+    Route::post('/messages/search', [MessageController::class, 'search'])->name('messages.search');
+
+    // --- レビュー ---
+    Route::get('/review/create/{recordId}', [ReviewController::class, 'create'])->name('review.create');
+    Route::post('/review/{recordId}', [ReviewController::class, 'store'])->name('review.store');
+
+    // --- 管理画面（問い合わせ） ---
+    Route::get('/admin/contact_list', [ContactListController::class, 'index'])->name('admin.contact_list');
+    Route::get('/admin/contact/{id}', [ContactDetailController::class, 'show'])->name('admin.contact.detail');
+    Route::post('/admin/contact/{id}/status', [ContactDetailController::class, 'updateStatus'])->name('admin.contact.status');
+    Route::post('/admin/contact/{id}/reply', [ContactDetailController::class, 'reply'])->name('admin.contact.reply');
 });
 
 
@@ -98,14 +143,15 @@ Route::middleware('auth')->group(function () {
 // ============================================================
 
 // 土地検索結果
-Route::get('/search', function () {
-    return view('search_list', ['lands' => collect([])]);
-})->name('search');
+Route::get('/search', [SearchListController::class, 'index'])->name('search');
+Route::get('/lands', [SearchListController::class, 'index'])->name('lands.index'); // search のエイリアス
+Route::get('/lands/{id}', [LandDetailController::class, 'show'])->name('lands.show'); // land.detail のエイリアス
 
 // お問い合わせフォーム
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 // ユーザー詳細（他ユーザープロフィール）
 Route::get('/users/{id}', function ($id) {

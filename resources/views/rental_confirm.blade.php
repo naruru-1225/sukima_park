@@ -31,9 +31,9 @@
         <nav class="breadcrumb-list">
             <a href="{{ route('home') }}" class="breadcrumb-item">トップ</a>
             <span class="breadcrumb-separator">›</span>
-            <a href="{{ route('lands.index') }}" class="breadcrumb-item">検索結果</a>
+            <a href="{{ route('search') }}" class="breadcrumb-item">検索結果</a>
             <span class="breadcrumb-separator">›</span>
-            <a href="{{ route('lands.show', $land->LAND_ID) }}" class="breadcrumb-item">
+            <a href="{{ route('land.detail', $land->LAND_ID) }}" class="breadcrumb-item">
                 {{ $land->NAME ?? $land->CITY . $land->STREET_ADDRESS }}
             </a>
             <span class="breadcrumb-separator">›</span>
@@ -43,7 +43,7 @@
 
     <div class="confirm-section">
         {{-- 戻るリンク --}}
-        <a href="{{ route('lands.show', $land->LAND_ID) }}" class="back-link">
+        <a href="{{ route('land.detail', $land->LAND_ID) }}" class="back-link">
             ← 土地詳細に戻る
         </a>
 

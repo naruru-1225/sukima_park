@@ -245,7 +245,7 @@
             内容を確認の上、「登録する」ボタンを押してください。修正する場合は「戻る」ボタンを押してください。
         </div>
 
-        <form action="{{ route('profile.store') }}" method="POST">
+        <form action="{{ route('prof_check.store') }}" method="POST">
             @csrf
             
             <!-- 非公開情報 -->
@@ -278,10 +278,10 @@
                 <div class="confirm-item">
                     <div class="confirm-label">生年月日</div>
                     <div class="confirm-value">
-                        @if(isset($profileData['birthdate']))
-                            {{ \Carbon\Carbon::parse($profileData['birthdate'])->locale('ja')->isoFormat('YYYY年M月D日') }}
+                        @if(isset($profileData['birth']))
+                            {{ \Carbon\Carbon::parse($profileData['birth'])->locale('ja')->isoFormat('YYYY年M月D日') }}
                         @else
-                            1990年1月1日
+                            -
                         @endif
                     </div>
                 </div>
@@ -289,7 +289,7 @@
                 <div class="confirm-item">
                     <div class="confirm-label">生年月日の公開設定</div>
                     <div class="confirm-value">
-                        {{ ($profileData['birthdate_visibility'] ?? 'public') === 'public' ? '公開' : '非公開' }}
+                        {{ ($profileData['show_birth'] ?? 0) == 1 ? '公開' : '非公開' }}
                     </div>
                 </div>
 
@@ -298,49 +298,37 @@
                     <div class="confirm-value">
                         @php
                             $genderLabels = [
-                                'male' => '男性',
-                                'female' => '女性',
-                                'other' => 'その他',
-                                'no_answer' => '回答しない'
+                                0 => '未設定',
+                                1 => '男性',
+                                2 => '女性'
                             ];
-                            $gender = $profileData['gender'] ?? 'male';
+                            $gender = $profileData['gender'] ?? 0;
                         @endphp
-                        {{ $genderLabels[$gender] ?? $gender }}
+                        {{ $genderLabels[$gender] ?? '未設定' }}
                     </div>
                 </div>
 
                 <div class="confirm-item">
                     <div class="confirm-label">性別の公開設定</div>
                     <div class="confirm-value">
-                        {{ ($profileData['gender_visibility'] ?? 'public') === 'public' ? '公開' : '非公開' }}
+                        {{ ($profileData['show_gender'] ?? 0) == 1 ? '公開' : '非公開' }}
                     </div>
                 </div>
 
                 <div class="confirm-item">
                     <div class="confirm-label">ユーザ名</div>
-                    <div class="confirm-value">{{ $profileData['username'] ?? '山田 太郎' }}</div>
+                    <div class="confirm-value">{{ $profileData['username'] ?? '' }}</div>
                 </div>
 
                 <div class="confirm-item">
                     <div class="confirm-label">自己紹介</div>
-                    <div class="confirm-value">{{ $profileData['bio'] ?? 'よろしくお願いします。' }}</div>
-                </div>
-
-                <div class="confirm-item">
-                    <div class="confirm-label">アイコン画像</div>
-                    <div class="profile-image-section" style="margin-top: 10px;">
-                        @if(isset($profileData['profile_image']))
-                            <img src="{{ $profileData['profile_image'] }}" alt="プロフィール画像" class="profile-image">
-                        @else
-                            <div class="profile-image">👤</div>
-                        @endif
-                    </div>
+                    <div class="confirm-value">{{ $profileData['self_introduction'] ?? '' }}</div>
                 </div>
             </div>
 
             <!-- 隠しフィールドでデータを保持 -->
             @foreach($profileData ?? [] as $key => $value)
-                @if($key !== 'password' && $key !== 'profile_image')
+                @if($key !== 'icon_image_preview' && !is_null($value))
                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                 @endif
             @endforeach
